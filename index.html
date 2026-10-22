@@ -131,6 +131,32 @@ h1 span {
   margin: 13px 0 0;
 }
 
+/* KATTA TAQVIM TUGMASI */
+.calendar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 70px;
+  margin-top: 20px;
+  padding: 18px 20px;
+  border: 1px solid #e10600;
+  border-radius: 10px;
+  background: #e10600;
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: .3px;
+  box-shadow: 0 8px 25px #e1060040;
+  transition: .2s;
+}
+
+.calendar-btn:hover {
+  background: #b90500;
+  transform: translateY(-2px);
+}
+
 .player-wrap {
   padding: 5px;
   border: 1px solid #373737;
@@ -287,6 +313,15 @@ footer span {
 
   .intro p {
     font-size: 13px;
+  }
+
+  /* MOBILDA HAM KATTA */
+  .calendar-btn {
+    min-height: 65px;
+    margin-top: 18px;
+    padding: 16px 14px;
+    font-size: 16px;
+    border-radius: 9px;
   }
 
   .player-wrap {
@@ -455,7 +490,6 @@ footer span {
     height: 280px;
   }
 }
-
 </style>
 </head>
 
@@ -477,12 +511,20 @@ footer span {
 </header>
 
 <main>
+
   <section class="intro">
     <div class="eyebrow">F1 UZBEKISTAN</div>
-    <h1>F1 Uzbekistan TV<br><span>Jonli efir</span></h1>
+
+    <h1>
+      F1 Uzbekistan TV<br>
+      <span>Jonli efir</span>
+    </h1>
+
     <p>Jonli translyatsiyani shu yerda tomosha qiling.</p>
+
+    <!-- KATTA TAQVIM TUGMASI -->
     <a class="calendar-btn" href="f1_calendar_fixed.html">
-  📅 F1 TAQVIMI 2026–2027
+      📅 F1 TAQVIMI 2026–2027
     </a>
   </section>
 
@@ -501,23 +543,40 @@ footer span {
   <div class="stream-info">
     <div>
       <div class="stream-title">F1 Uzbekistan TV</div>
+
       <div class="stream-caption">
         Jonli sport translyatsiyasi
       </div>
     </div>
-    <div class="hd-badge">HD · TV</div>
+
+    <div class="hd-badge">
+      HD · TV
+    </div>
   </div>
 
-
   <section class="chat">
-    <h2>💬 Jonli chat</h2>
-    <p class="chat-subtitle">F1 Uzbekistan TV tomoshabinlari bilan suhbatlashing.</p>
 
-    <div id="chatMessages" class="chat-messages" aria-live="polite">
-      <div id="chatEmpty" class="chat-empty">Hozircha xabarlar yo‘q. Birinchi bo‘lib yozing!</div>
+    <h2>💬 Jonli chat</h2>
+
+    <p class="chat-subtitle">
+      F1 Uzbekistan TV tomoshabinlari bilan suhbatlashing.
+    </p>
+
+    <div
+      id="chatMessages"
+      class="chat-messages"
+      aria-live="polite">
+
+      <div
+        id="chatEmpty"
+        class="chat-empty">
+        Hozircha xabarlar yo‘q. Birinchi bo‘lib yozing!
+      </div>
+
     </div>
 
     <form id="chatForm" class="chat-form">
+
       <input
         id="chatName"
         type="text"
@@ -536,14 +595,27 @@ footer span {
         aria-label="Xabaringiz"
         required>
 
-      <button id="chatSend" type="submit">Yuborish</button>
+      <button
+        id="chatSend"
+        type="submit">
+        Yuborish
+      </button>
+
     </form>
 
-    <div id="chatStatus" class="chat-status"></div>
+    <div
+      id="chatStatus"
+      class="chat-status">
+    </div>
+
   </section>
 
   <section class="telegram">
-    <h2>F1 yangiliklaridan xabardor bo‘ling!</h2>
+
+    <h2>
+      F1 yangiliklaridan xabardor bo‘ling!
+    </h2>
+
     <p>
       Eng so‘nggi Formula 1 yangiliklari, jonli efir
       e’lonlari va muhim xabarlar uchun Telegram kanalimizga qo‘shiling.
@@ -554,21 +626,32 @@ footer span {
       href="https://t.me/F1_Uzbekistan"
       target="_blank"
       rel="noopener noreferrer">
+
       <span class="telegram-icon">➤</span>
+
       Telegram kanaliga obuna bo‘lish
+
     </a>
+
   </section>
+
 </main>
 
 <footer>
   <span>F1 UZBEKISTAN TV</span> · JONLI EFIR
 </footer>
 
-<!-- Firebase + Analytics -->
 <!-- Firebase + Analytics + Realtime Database Chat -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-analytics.js";
+
+  import {
+    initializeApp
+  } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+
+  import {
+    getAnalytics
+  } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-analytics.js";
+
   import {
     getDatabase,
     ref,
@@ -579,186 +662,493 @@ footer span {
     onChildRemoved
   } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-database.js";
 
+
   const firebaseConfig = {
+
     apiKey: "AIzaSyC14M6bg7n4WVn8fcBVleBHGC8yWpwrtw8",
-    authDomain: "f1-uzbekistan.firebaseapp.com",
-    databaseURL: "https://f1-uzbekistan-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "f1-uzbekistan",
-    storageBucket: "f1-uzbekistan.firebasestorage.app",
-    messagingSenderId: "234814349924",
-    appId: "1:234814349924:web:66c7affa25a58fd335b571",
-    measurementId: "G-PV3CPBLB6H"
+
+    authDomain:
+      "f1-uzbekistan.firebaseapp.com",
+
+    databaseURL:
+      "https://f1-uzbekistan-default-rtdb.europe-west1.firebasedatabase.app",
+
+    projectId:
+      "f1-uzbekistan",
+
+    storageBucket:
+      "f1-uzbekistan.firebasestorage.app",
+
+    messagingSenderId:
+      "234814349924",
+
+    appId:
+      "1:234814349924:web:66c7affa25a58fd335b571",
+
+    measurementId:
+      "G-PV3CPBLB6H"
   };
+
 
   const app = initializeApp(firebaseConfig);
 
+
   try {
+
     getAnalytics(app);
+
   } catch (error) {
-    console.warn("Firebase Analytics ishga tushmadi:", error);
+
+    console.warn(
+      "Firebase Analytics ishga tushmadi:",
+      error
+    );
+
   }
+
 
   const db = getDatabase(app);
-  const messagesRef = ref(db, "messages");
-  const messagesQuery = query(messagesRef, limitToLast(100));
 
-  const chatMessages = document.getElementById("chatMessages");
-  const chatEmpty = document.getElementById("chatEmpty");
-  const chatForm = document.getElementById("chatForm");
-  const chatName = document.getElementById("chatName");
-  const chatText = document.getElementById("chatText");
-  const chatSend = document.getElementById("chatSend");
-  const chatStatus = document.getElementById("chatStatus");
+  const messagesRef =
+    ref(db, "messages");
 
-  const savedName = localStorage.getItem("f1_chat_name");
+  const messagesQuery =
+    query(
+      messagesRef,
+      limitToLast(100)
+    );
+
+
+  const chatMessages =
+    document.getElementById(
+      "chatMessages"
+    );
+
+  const chatEmpty =
+    document.getElementById(
+      "chatEmpty"
+    );
+
+  const chatForm =
+    document.getElementById(
+      "chatForm"
+    );
+
+  const chatName =
+    document.getElementById(
+      "chatName"
+    );
+
+  const chatText =
+    document.getElementById(
+      "chatText"
+    );
+
+  const chatSend =
+    document.getElementById(
+      "chatSend"
+    );
+
+  const chatStatus =
+    document.getElementById(
+      "chatStatus"
+    );
+
+
+  const savedName =
+    localStorage.getItem(
+      "f1_chat_name"
+    );
+
+
   if (savedName) {
-    chatName.value = savedName;
+
+    chatName.value =
+      savedName;
+
   }
 
-  const renderedMessages = new Map();
+
+  const renderedMessages =
+    new Map();
+
   let sendCooldown = false;
 
-  function setStatus(message, isError = false) {
-    chatStatus.textContent = message;
-    chatStatus.className = isError
-      ? "chat-status error"
-      : "chat-status";
+
+  function setStatus(
+    message,
+    isError = false
+  ) {
+
+    chatStatus.textContent =
+      message;
+
+    chatStatus.className =
+      isError
+        ? "chat-status error"
+        : "chat-status";
   }
 
-  function formatTime(timestamp) {
+
+  function formatTime(
+    timestamp
+  ) {
+
     if (!timestamp) return "";
-    return new Date(timestamp).toLocaleTimeString("uz-UZ", {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
+
+    return new Date(
+      timestamp
+    ).toLocaleTimeString(
+      "uz-UZ",
+      {
+        hour: "2-digit",
+        minute: "2-digit"
+      }
+    );
+
   }
+
 
   function scrollChatToBottom() {
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    chatMessages.scrollTop =
+      chatMessages.scrollHeight;
+
   }
 
-  function renderMessage(key, data) {
-    if (!data || renderedMessages.has(key)) return;
 
-    const message = document.createElement("div");
-    message.className = "chat-message";
-    message.dataset.key = key;
+  function renderMessage(
+    key,
+    data
+  ) {
 
-    const name = document.createElement("span");
-    name.className = "chat-name";
-    name.textContent = data.name || "Foydalanuvchi";
-
-    const time = document.createElement("span");
-    time.className = "chat-time";
-    time.textContent = formatTime(data.createdAt);
-
-    const text = document.createElement("div");
-    text.className = "chat-text";
-    text.textContent = data.text || "";
-
-    message.append(name, time, text);
-    chatMessages.appendChild(message);
-
-    renderedMessages.set(key, message);
-    chatEmpty.style.display = "none";
-    scrollChatToBottom();
-  }
-
-  function removeMessage(key) {
-    const message = renderedMessages.get(key);
-    if (message) {
-      message.remove();
-      renderedMessages.delete(key);
+    if (
+      !data ||
+      renderedMessages.has(key)
+    ) {
+      return;
     }
 
-    if (renderedMessages.size === 0) {
-      chatEmpty.style.display = "grid";
-    }
-  }
 
-  onChildAdded(messagesQuery, (snapshot) => {
-    renderMessage(snapshot.key, snapshot.val());
-  }, (error) => {
-    console.error("Chat o‘qish xatosi:", error);
-
-    if (error.code === "PERMISSION_DENIED") {
-      setStatus(
-        "Chatga kirish rad etildi. Firebase Realtime Database Rules sozlamalarini tekshiring.",
-        true
+    const message =
+      document.createElement(
+        "div"
       );
-    } else {
-      setStatus("Chatni yuklashda xatolik yuz berdi.", true);
+
+    message.className =
+      "chat-message";
+
+    message.dataset.key =
+      key;
+
+
+    const name =
+      document.createElement(
+        "span"
+      );
+
+    name.className =
+      "chat-name";
+
+    name.textContent =
+      data.name ||
+      "Foydalanuvchi";
+
+
+    const time =
+      document.createElement(
+        "span"
+      );
+
+    time.className =
+      "chat-time";
+
+    time.textContent =
+      formatTime(
+        data.createdAt
+      );
+
+
+    const text =
+      document.createElement(
+        "div"
+      );
+
+    text.className =
+      "chat-text";
+
+    text.textContent =
+      data.text || "";
+
+
+    message.append(
+      name,
+      time,
+      text
+    );
+
+
+    chatMessages.appendChild(
+      message
+    );
+
+
+    renderedMessages.set(
+      key,
+      message
+    );
+
+
+    chatEmpty.style.display =
+      "none";
+
+
+    scrollChatToBottom();
+
+  }
+
+
+  function removeMessage(
+    key
+  ) {
+
+    const message =
+      renderedMessages.get(
+        key
+      );
+
+
+    if (message) {
+
+      message.remove();
+
+      renderedMessages.delete(
+        key
+      );
+
     }
-  });
 
-  onChildRemoved(messagesQuery, (snapshot) => {
-    removeMessage(snapshot.key);
-  });
 
-  chatForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
+    if (
+      renderedMessages.size === 0
+    ) {
 
-    if (sendCooldown) return;
+      chatEmpty.style.display =
+        "grid";
 
-    const name = chatName.value.trim().replace(/\s+/g, " ");
-    const text = chatText.value.trim().replace(/\s+/g, " ");
-
-    if (name.length < 1 || name.length > 30) {
-      setStatus("Ism 1–30 belgidan iborat bo‘lishi kerak.", true);
-      chatName.focus();
-      return;
     }
 
-    if (text.length < 1 || text.length > 500) {
-      setStatus("Xabar 1–500 belgidan iborat bo‘lishi kerak.", true);
-      chatText.focus();
-      return;
-    }
+  }
 
-    sendCooldown = true;
-    chatSend.disabled = true;
-    setStatus("Yuborilmoqda...");
 
-    try {
-      await push(messagesRef, {
-        name,
-        text,
-        createdAt: Date.now()
-      });
+  onChildAdded(
+    messagesQuery,
+    (snapshot) => {
 
-      localStorage.setItem("f1_chat_name", name);
-      chatText.value = "";
-      setStatus("Xabar yuborildi.");
+      renderMessage(
+        snapshot.key,
+        snapshot.val()
+      );
 
-      setTimeout(() => {
-        setStatus("");
-      }, 2000);
-    } catch (error) {
-      console.error("Xabar yuborish xatosi:", error);
+    },
+    (error) => {
 
-      if (error.code === "PERMISSION_DENIED") {
+      console.error(
+        "Chat o‘qish xatosi:",
+        error
+      );
+
+
+      if (
+        error.code ===
+        "PERMISSION_DENIED"
+      ) {
+
         setStatus(
-          "Xabar yuborilmadi: Firebase Database Rules yozishga ruxsat bermayapti.",
+          "Chatga kirish rad etildi. Firebase Realtime Database Rules sozlamalarini tekshiring.",
           true
         );
+
       } else {
-        setStatus("Xabar yuborishda xatolik yuz berdi.", true);
+
+        setStatus(
+          "Chatni yuklashda xatolik yuz berdi.",
+          true
+        );
+
       }
-    } finally {
-      setTimeout(() => {
-        sendCooldown = false;
-        chatSend.disabled = false;
-      }, 1000);
+
     }
-  });
+  );
+
+
+  onChildRemoved(
+    messagesQuery,
+    (snapshot) => {
+
+      removeMessage(
+        snapshot.key
+      );
+
+    }
+  );
+
+
+  chatForm.addEventListener(
+    "submit",
+    async (event) => {
+
+      event.preventDefault();
+
+
+      if (sendCooldown) {
+        return;
+      }
+
+
+      const name =
+        chatName.value
+          .trim()
+          .replace(/\s+/g, " ");
+
+
+      const text =
+        chatText.value
+          .trim()
+          .replace(/\s+/g, " ");
+
+
+      if (
+        name.length < 1 ||
+        name.length > 30
+      ) {
+
+        setStatus(
+          "Ism 1–30 belgidan iborat bo‘lishi kerak.",
+          true
+        );
+
+        chatName.focus();
+
+        return;
+
+      }
+
+
+      if (
+        text.length < 1 ||
+        text.length > 500
+      ) {
+
+        setStatus(
+          "Xabar 1–500 belgidan iborat bo‘lishi kerak.",
+          true
+        );
+
+        chatText.focus();
+
+        return;
+
+      }
+
+
+      sendCooldown = true;
+
+      chatSend.disabled =
+        true;
+
+      setStatus(
+        "Yuborilmoqda..."
+      );
+
+
+      try {
+
+        await push(
+          messagesRef,
+          {
+            name,
+            text,
+            createdAt:
+              Date.now()
+          }
+        );
+
+
+        localStorage.setItem(
+          "f1_chat_name",
+          name
+        );
+
+
+        chatText.value =
+          "";
+
+
+        setStatus(
+          "Xabar yuborildi."
+        );
+
+
+        setTimeout(
+          () => {
+
+            setStatus("");
+
+          },
+          2000
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Xabar yuborish xatosi:",
+          error
+        );
+
+
+        if (
+          error.code ===
+          "PERMISSION_DENIED"
+        ) {
+
+          setStatus(
+            "Xabar yuborilmadi: Firebase Database Rules yozishga ruxsat bermayapti.",
+            true
+          );
+
+        } else {
+
+          setStatus(
+            "Xabar yuborishda xatolik yuz berdi.",
+            true
+          );
+
+        }
+
+
+      } finally {
+
+        setTimeout(
+          () => {
+
+            sendCooldown =
+              false;
+
+            chatSend.disabled =
+              false;
+
+          },
+          1000
+        );
+
+      }
+
+    }
+  );
+
 </script>
-
-
-<!--
-  FIREBASE RULES:
-  Chat ishlashi uchun Realtime Database Rules mos bo‘lishi kerak.
-  Frontend kodini o‘zgartirishning o‘zi Rules'ni o‘zgartirmaydi.
--->
 
 </body>
 </html>
