@@ -21,21 +21,31 @@ def get(endpoint, params):
                 url,
                 headers={"User-Agent": "F1UzbekistanTV/1.0"}
             )
+
             with urllib.request.urlopen(req, timeout=30) as response:
                 return json.load(response)
 
         except urllib.error.HTTPError as e:
-            print(f"API HTTP error: {e.code}")
+            print(f"OpenF1 HTTP error: {e.code}")
+
+            if e.code == 401:
+                print(
+                    "Data is not publicly available yet. "
+                    "Will try again on the next scheduled run."
+                )
+                return None
+
             if e.code not in (429, 500, 502, 503, 504):
                 raise
 
         except (urllib.error.URLError, TimeoutError) as e:
-            print(f"Network error: {e}")
+            print("Network error:", e)
 
         if attempt < 3:
             time.sleep(5 * (2 ** attempt))
 
-    raise RuntimeError("OpenF1 API unavailable")
+    print("OpenF1 API unavailable after retries")
+    return None
 
 
 def parse(value):
@@ -49,8 +59,13 @@ def run():
 
     try:
         sessions = get("sessions", {"year": now.year})
+
+        if not sessions:
+            print("Sessions unavailable; keeping old results")
+            return
+
     except Exception as e:
-        print("Sessions API unavailable:", e)
+        print("Cannot load sessions:", e)
         return
 
     ended = sorted(
@@ -73,13 +88,17 @@ def run():
             )
 
             if not results:
-                print("Results not ready:", key)
+                print("Results unavailable:", key)
                 continue
 
             drivers = get(
                 "drivers",
                 {"session_key": key}
             )
+
+            if drivers is None:
+                print("Driver data unavailable:", key)
+                continue
 
             bynum = {
                 d["driver_number"]: d
@@ -109,8 +128,10 @@ def run():
 
                 if isinstance(duration, (int, float)):
                     timing = str(duration)
+
                 elif isinstance(gap, (int, float)):
                     timing = "+" + str(gap)
+
                 else:
                     timing = str(gap or "—")
 
@@ -141,7 +162,10 @@ def run():
 
             if FILE.exists():
                 try:
-                    old = json.loads(FILE.read_text(encoding="utf-8"))
+                    old = json.loads(
+                        FILE.read_text(encoding="utf-8")
+                    )
+
                     if (
                         old.get("session") == data["session"]
                         and old.get("date") == data["date"]
@@ -149,21 +173,30 @@ def run():
                     ):
                         print("Results already up to date")
                         return
+
                 except (OSError, ValueError):
                     pass
 
             FILE.write_text(
-                json.dumps(data, ensure_ascii=False, indent=2) + "\n",
+                json.dumps(
+                    data,
+                    ensure_ascii=False,
+                    indent=2
+                ) + "\n",
                 encoding="utf-8"
             )
 
-            print("Updated:", data["session"])
+            print(
+                "Successfully updated:",
+                data["session"],
+                data["meeting"]
+            )
             return
 
         except Exception as e:
             print("Skipping session:", key, e)
 
-    print("No new usable results; keeping previous data")
+    print("No new results; keeping previous data")
 
 
 if __name__ == "__main__":
