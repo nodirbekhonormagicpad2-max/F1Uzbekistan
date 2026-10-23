@@ -1,0 +1,38 @@
+{
+  "session": "Practice 1",
+  "meeting": "United States",
+  "date": "2026-10-23T18:30:00+00:00",
+  "updated": "2026-10-23T19:12:55.584885+00:00",
+  "results": [
+    {
+      "position": 1,
+      "name": "C LECLERC",
+      "team": "Ferrari",
+      "time": "96.052"
+    },
+    {
+      "position": 2,
+      "name": "M VERSTAPPEN",
+      "team": "Red Bull Racing",
+      "time": "96.136"
+    },
+    {
+      "position": 3,
+      "name": "L NORRIS",
+      "team": "McLaren",
+      "time": "96.297"
+    },
+    {
+      "position": 4,
+      "name": "G RUSSELL",
+      "team": "Mercedes",
+      "time": "96.378"
+    },
+    {
+      "position": 5,
+      "name": "K ANTONELLI",
+      "team": "Mercedes",
+      "time": "96.533"
+    }
+  ]
+}
