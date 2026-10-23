@@ -91,7 +91,8 @@ footer span{color:var(--red);font-weight:bold}
 <div class="results-head"><h2 class="results-title" id="resultsTitle">🏁 OXIRGI SESSIYA</h2><span class="results-pill">TOP 5</span></div>
 <div class="results-meta" id="resultsMeta">Natijalar tekshirilmoqda...</div>
 <div class="results-list" id="resultsList" aria-live="polite"><div class="results-state">Yuklanmoqda...</div></div>
-<button class="results-toggle" id="resultsToggle" type="button" hidden aria-expanded="false">Barchasini ko‘rish ↓</button>
+<button class="results-toggle" id="resultsToggle" type="button" aria-expanded="false">Barchasini ko‘rish ↓</button>
+<div class="results-note" id="resultsExtra" hidden></div>
 <div class="results-note" id="resultsNote">Avtomatik yangilanadi</div>
 </section>
 <section class="calendar-section">
@@ -107,6 +108,7 @@ const meta=document.getElementById('resultsMeta');
 const list=document.getElementById('resultsList');
 const toggle=document.getElementById('resultsToggle');
 const note=document.getElementById('resultsNote');
+const extra=document.getElementById('resultsExtra');
 let results=[], expanded=false;
 // Oxirgi tasdiqlangan JSON nusxasi: tarmoq xatosida ham jadval bo‘sh qolmaydi.
 const savedSession={session:"Practice 1",meeting:"United States",date:"2026-10-23T18:30:00+00:00",results:[
@@ -146,7 +148,9 @@ function render(){
    :String(item.time||'—');
   row.append(pos,stripe,driver,time);list.append(row);
  }
- toggle.hidden=results.length<=5;
+ toggle.hidden=false;
+ extra.hidden=!(expanded&&results.length<=5);
+ extra.textContent=expanded&&results.length<=5?'Hozircha faqat '+results.length+' ta haydovchi natijasi mavjud. Qolganlari JSON yangilanganda shu yerda ko‘rinadi.':'';
  toggle.textContent=expanded?'Yopish ↑':`Barchasini ko‘rish (${results.length}) ↓`;
  toggle.setAttribute('aria-expanded',String(expanded));
 }
