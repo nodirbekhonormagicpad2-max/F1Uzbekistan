@@ -24,7 +24,7 @@ def run():
                 rows.append({'position':pos,'name':d.get('broadcast_name') or d.get('full_name') or '#'+str(r.get('driver_number')),'team':d.get('team_name',''),'time':str(duration) if duration is not None else ('+'+str(gap) if isinstance(gap,(int,float)) else str(gap or '—'))})
             rows.sort(key=lambda x:x['position'])
             if len(rows)<3:continue
-            data={'session':s.get('session_name','Sessiya'),'meeting':s.get('country_name',''),'date':s['date_end'],'updated':now.isoformat(),'results':rows[:5]}
+            data={'session':s.get('session_name','Sessiya'),'meeting':s.get('country_name',''),'date':s['date_end'],'updated':now.isoformat(),'results':rows}
             (ROOT/'latest-session.json').write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
             print('Updated',data['session']);return
         except Exception as e:print('Skipping session',s.get('session_key'),str(e))
