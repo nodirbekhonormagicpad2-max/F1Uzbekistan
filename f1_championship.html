@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="f1-version" content="2026-10-23-v3">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>F1 Uzbekistan — Chempionat</title>
+<meta name="description" content="F1 Uzbekistan — Formula 1 haydovchilar va konstruktorlar chempionati jadvali.">
+<style>
+:root{
+  --red:#e10600;--bg:#070707;--card:#111;--card2:#171717;--line:#272727;
+  --text:#f5f5f5;--muted:#999;--gold:#f2c94c;--silver:#c8c8c8;--bronze:#b77b4b
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:
+ radial-gradient(circle at 50% -10%,rgba(225,6,0,.22),transparent 38%),
+ linear-gradient(180deg,#090909 0%,#050505 100%);
+ color:var(--text);font-family:Arial,Helvetica,sans-serif}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1100px;margin:auto;padding:20px 16px 50px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:24px}
+.brand{font-weight:950;letter-spacing:1px;font-size:20px}
+.brand span{color:var(--red)}
+.back{border:1px solid var(--line);padding:10px 14px;border-radius:12px;color:#ddd;font-size:13px;background:#0d0d0d}
+.hero{border:1px solid #303030;border-radius:24px;overflow:hidden;background:
+ linear-gradient(135deg,rgba(225,6,0,.16),transparent 45%),#0e0e0e;
+ box-shadow:0 20px 70px rgba(0,0,0,.45);padding:28px 24px 22px}
+.kicker{font-size:11px;color:#ff5b55;font-weight:900;letter-spacing:2px}
+h1{font-size:clamp(30px,6vw,58px);line-height:.95;margin:8px 0 10px;letter-spacing:-2px}
+.sub{color:var(--muted);font-size:14px;max-width:650px}
+.controls{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:24px;flex-wrap:wrap}
+.tabs{display:flex;background:#080808;border:1px solid var(--line);border-radius:14px;padding:4px}
+.tab{border:0;background:transparent;color:#aaa;padding:11px 15px;border-radius:10px;font-weight:800;cursor:pointer}
+.tab.active{background:var(--red);color:white}
+.updated{font-size:11px;color:#777}
+.status{margin:16px 0 0;padding:10px 12px;border:1px solid var(--line);border-radius:11px;background:#0b0b0b;color:#aaa;font-size:12px}
+.status.ok{color:#a9d7ad}.status.err{color:#ff8e89}
+.section-title{display:flex;align-items:end;justify-content:space-between;margin:30px 2px 12px}
+.section-title h2{margin:0;font-size:20px}.section-title small{color:#777}
+.podium{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:12px;align-items:end}
+.podium-card{position:relative;min-height:270px;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:
+ linear-gradient(180deg,#181818,#0c0c0c);padding:14px}
+.podium-card.p1{min-height:310px;border-color:#493e19;background:linear-gradient(180deg,rgba(242,201,76,.13),#0c0c0c)}
+.podium-card.p2{border-color:#383838}.podium-card.p3{border-color:#412c20}
+.rank{position:absolute;left:14px;top:12px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:950;background:#242424}
+.p1 .rank{background:var(--gold);color:#111}.p2 .rank{background:var(--silver);color:#111}.p3 .rank{background:var(--bronze);color:#111}
+.big-photo{height:180px;margin:-14px -14px 10px;display:flex;align-items:end;justify-content:center;background:linear-gradient(180deg,#202020,#0b0b0b);overflow:hidden}
+.p1 .big-photo{height:210px}
+.big-photo img{width:100%;height:100%;object-fit:contain;object-position:center bottom;display:block}
+.driver-name{font-size:20px;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p1 .driver-name{font-size:24px}.team{color:#888;font-size:12px;margin-top:3px}
+.points{font-size:28px;font-weight:950;margin-top:10px}.points span{font-size:11px;color:#777;font-weight:700}
+.grid{display:grid;gap:8px}
+.row{display:grid;grid-template-columns:48px 70px minmax(150px,1fr) 140px 95px;align-items:center;gap:10px;
+ min-height:82px;padding:8px 12px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(90deg,#121212,#0d0d0d)}
+.row:hover{border-color:#414141;transform:translateY(-1px)}
+.pos{font-size:22px;font-weight:950;color:#888;text-align:center}.pos.top{color:#fff}
+.thumb{width:58px;height:58px;border-radius:12px;overflow:hidden;background:#222;border:1px solid #333}
+.thumb img{width:100%;height:100%;object-fit:contain;display:block}
+.name{font-weight:900}.code{font-size:10px;color:#666;margin-left:6px}.teamline{font-size:11px;color:#777;margin-top:4px}
+.bar{height:6px;background:#242424;border-radius:99px;overflow:hidden;margin-top:8px;max-width:160px}
+.bar i{display:block;height:100%;background:var(--red);border-radius:99px}
+.pts{text-align:right;font-size:20px;font-weight:950}.wins{text-align:right;color:#888;font-size:11px}
+.constructor-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.team-card{border:1px solid var(--line);border-radius:17px;padding:15px;background:#101010}
+.team-head{display:flex;align-items:center;gap:12px}.team-logo{width:48px;height:48px;object-fit:contain;background:#171717;border-radius:10px}
+.team-pos{font-size:24px;font-weight:950;color:#777;width:28px}.team-name{font-weight:900}.team-points{margin-left:auto;font-weight:950;font-size:20px}
+.teambar{height:7px;background:#242424;border-radius:99px;margin-top:14px;overflow:hidden}.teambar i{height:100%;display:block;background:var(--red);border-radius:99px}
+.empty{text-align:center;padding:40px;color:#777;border:1px dashed #333;border-radius:16px}
+.footer{text-align:center;color:#555;font-size:11px;margin-top:30px}
+@media(max-width:720px){
+ .wrap{padding:14px 10px 35px}.hero{border-radius:18px;padding:22px 16px}
+ .podium{grid-template-columns:1fr;align-items:stretch}.podium-card,.podium-card.p1{min-height:0}
+ .big-photo,.p1 .big-photo{height:230px}
+ .row{grid-template-columns:34px 54px 1fr 70px;gap:7px;min-height:74px;padding:7px}
+ .thumb{width:50px;height:50px}.wins{display:none}.pts{font-size:17px}
+ .constructor-grid{grid-template-columns:1fr}.top{margin-bottom:15px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><span>F1</span> UZBEKISTAN</div>
+    <a class="back" href="/">← Bosh sahifa</a>
+  </div>
+
+  <section class="hero">
+    <div class="kicker">FORMULA 1 • 2026 SEASON</div>
+    <h1>CHEMPIONAT<br>JADVALI</h1>
+    <div class="sub">Haydovchilar va konstruktorlar reytingi. Ochko va natijalar poygalar tugashi bilan yangilanadi.</div>
+    <div class="controls">
+      <div class="tabs">
+        <button class="tab active" data-tab="drivers">🏎 Haydovchilar</button>
+        <button class="tab" data-tab="teams">🏆 Konstruktorlar</button>
+      </div>
+      <div class="updated" id="updated">Ma'lumot yuklanmoqda...</div>
+    </div>
+    <div class="status" id="status">Jadval yuklanmoqda…</div>
+  </section>
+
+  <main id="driversView">
+    <div class="section-title"><h2>TOP 3</h2><small>Chempionat yetakchilari</small></div>
+    <div class="podium" id="podium"></div>
+    <div class="section-title"><h2>BARCHA HAYDOVCHILAR</h2><small>2026</small></div>
+    <div class="grid" id="driverRows"></div>
+  </main>
+
+  <main id="teamsView" style="display:none">
+    <div class="section-title"><h2>KONSTRUKTORLAR</h2><small>2026</small></div>
+    <div class="constructor-grid" id="teamRows"></div>
+  </main>
+
+  <div class="footer">F1 Uzbekistan • Jadval avtomatik ma'lumot manbalaridan olinadi</div>
+</div>
+
+<script>
+const SEASON = 2026;
+const JOLPICA = 'https://api.jolpi.ca/ergast/f1';
+const T1 = 'https://api.t1f1.com/api/static';
+
+const driverCache = new Map();
+const teamCache = new Map();
+
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+function driverId(d){return d.Driver?.driverId || d.driverId || '';}
+function codeOf(d){return (d.Driver?.code || d.code || driverId(d).slice(0,3)).toUpperCase();}
+function nameOf(d){return `${d.Driver?.givenName||d.givenName||''} ${d.Driver?.familyName||d.familyName||''}`.trim();}
+function teamOf(d){return d.Constructors?.[0]?.name || d.constructor?.name || d.team || '—';}
+function portraitCandidates(d){
+  const id = String(driverId(d)).toLowerCase();
+  const name = nameOf(d).toLowerCase();
+
+  // Exact 2026 portrait URLs. Matching is done by driver ID OR full name
+  // so the images do not depend on the API's code field.
+  const verified = {
+    valtteri_bottas:
+      'https://media.formula1.com/image/upload/ar_1%3A1%2Cc_crop%2Cg_north%2Cw_1000/b_rgb%3Aaaaaad/common/f1/2026/cadillac/valbot01/2026cadillacvalbot01front.png',
+    perez:
+      'https://media.formula1.com/image/upload/ar_1%3A1%2Cc_crop%2Cg_north%2Cw_1000/b_rgb%3Aaaaaad/common/f1/2026/cadillac/serper01/2026cadillacserper01front.png',
+    arvid_lindblad:
+      'https://media.formula1.com/image/upload/c_fill%2Cw_840%2Ch_630%2Cg_north/c_pad%2Cw_1200%2Ch_630/b_rgb%3A6C98FF/q_auto/v1740000000/common/f1/2026/racingbulls/arvlin01/2026racingbullsarvlin01right.jpg'
+  };
+
+  if (id === 'valtteri_bottas' || name === 'valtteri bottas') {
+    return [verified.valtteri_bottas];
+  }
+  if (id === 'perez' || id === 'sergio_perez' || name === 'sergio perez' || name === 'sergio pérez') {
+    return [verified.perez];
+  }
+  if (id === 'arvid_lindblad' || name === 'arvid lindblad') {
+    return [verified.arvid_lindblad];
+  }
+
+  const code = codeOf(d).toLowerCase();
+  return [
+    `https://media.formula1.com/image/upload/c_fill,w_300,h_300/q_auto/v1740000000/common/f1/${code}.png`,
+    `https://cdn.racingnews365.com/_400x400_crop_center-center_80_none/${code}.jpg`,
+    `https://api.t1f1.com/api/static/media/drivers/${encodeURIComponent(codeOf(d))}`
+  ];
+}
+function portrait(d){
+  return portraitCandidates(d)[1];
+}
+function setDriverPhoto(img, d){
+  const urls = portraitCandidates(d);
+  let i = 0;
+  const tryNext = () => {
+    if(i >= urls.length){
+      fallbackImg(img, initialsOf(d));
+      return;
+    }
+    const url = urls[i++];
+    img.onerror = tryNext;
+    img.src = url;
+  };
+  tryNext();
+}
+function initialsOf(d){
+  const n = nameOf(d);
+  return (n.split(' ').map(x=>x[0]).join('').slice(0,2) || codeOf(d));
+}
+function logo(name){
+  return `${T1}/media/teams/${encodeURIComponent(name)}`;
+}
+function fallbackImg(el, initials){
+  el.onerror=null;el.src='data:image/svg+xml;charset=UTF-8,'+
+    encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="100%" height="100%" fill="#202020"/><text x="50%" y="54%" text-anchor="middle" fill="#777" font-size="70" font-family="Arial" font-weight="900">${initials}</text></svg>`);
+}
+async function getJSON(url){
+  const r=await fetch(url,{cache:'no-store'});
+  if(!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+async function load(){
+  const status=document.getElementById('status');
+  status.className='status';
+  status.textContent='Jadval yangilanmoqda…';
+  try{
+    const [ds,ts]=await Promise.all([
+      getJSON(`${JOLPICA}/${SEASON}/driverstandings/?limit=100`),
+      getJSON(`${JOLPICA}/${SEASON}/constructorstandings/?limit=100`)
+    ]);
+    const drivers=ds?.MRData?.StandingsTable?.StandingsLists?.[0]?.DriverStandings || [];
+    const teams=ts?.MRData?.StandingsTable?.StandingsLists?.[0]?.ConstructorStandings || [];
+    if(!drivers.length) throw new Error('Haydovchilar jadvali topilmadi');
+    renderDrivers(drivers);
+    renderTeams(teams);
+    const round=ds?.MRData?.StandingsTable?.StandingsLists?.[0]?.round || '—';
+    status.className='status ok';
+    status.textContent=`● Yangilandi • 2026 mavsum • ${round}-raund`;
+    document.getElementById('updated').textContent='Oxirgi yuklash: '+new Date().toLocaleTimeString('uz-UZ',{hour:'2-digit',minute:'2-digit'});
+  }catch(e){
+    status.className='status err';
+    status.textContent='Jadvalni yuklashda xatolik. Internetni tekshiring va qayta urinib ko‘ring.';
+    console.error(e);
+  }
+}
+function renderDrivers(list){
+  window.__drivers=list;
+  const max=Math.max(...list.map(x=>Number(x.points)||0),1);
+  document.getElementById('podium').innerHTML=list.slice(0,3).map((d,i)=>{
+    const n=nameOf(d), c=codeOf(d), team=teamOf(d), p=Number(d.points)||0;
+    const initials=(n.split(' ').map(x=>x[0]).join('').slice(0,2)||c);
+    return `<article class="podium-card p${i+1}">
+      <div class="rank">${i+1}</div>
+      <div class="big-photo"><img src="" alt="${esc(n)}" data-driver-id="${esc(driverId(d))}" onload="" onerror="" class="driver-img"></div>
+      <div class="driver-name">${esc(n)}</div><div class="team">${esc(team)}</div>
+      <div class="points">${p}<span> PTS</span></div>
+    </article>`;
+  }).join('');
+  document.getElementById('driverRows').innerHTML=list.map((d,i)=>{
+    const n=nameOf(d),c=codeOf(d),team=teamOf(d),p=Number(d.points)||0,w=Number(d.wins)||0;
+    const initials=(n.split(' ').map(x=>x[0]).join('').slice(0,2)||c);
+    return `<div class="row">
+      <div class="pos ${i<3?'top':''}">${i+1}</div>
+      <div class="thumb"><img src="" alt="${esc(n)}" data-driver-id="${esc(driverId(d))}" onload="" onerror="" class="driver-img"></div>
+      <div><div class="name">${esc(n)} <span class="code">${esc(c)}</span></div>
+        <div class="teamline">${esc(team)}</div><div class="bar"><i style="width:${Math.max(2,(p/max)*100)}%"></i></div></div>
+      <div class="wins">${w} g‘alaba</div>
+      <div class="pts">${p}</div>
+    </div>`;
+  }).join('');
+  wireDriverImages();
+}
+function wireDriverImages(){
+  document.querySelectorAll('.driver-img').forEach(img=>{
+    const id=img.dataset.driverId;
+    const d=window.__drivers?.find(x=>driverId(x)===id);
+    if(d) setDriverPhoto(img,d);
+  });
+}
+function renderTeams(list){
+  const max=Math.max(...list.map(x=>Number(x.points)||0),1);
+  document.getElementById('teamRows').innerHTML=list.map((t,i)=>{
+    const n=t.Constructor?.name||t.name||'—',p=Number(t.points)||0;
+    return `<div class="team-card"><div class="team-head">
+      <div class="team-pos">${i+1}</div>
+      <img class="team-logo" src="${logo(n)}" alt="${esc(n)}" onerror="this.style.visibility='hidden'">
+      <div class="team-name">${esc(n)}</div><div class="team-points">${p}</div>
+    </div><div class="teambar"><i style="width:${Math.max(2,(p/max)*100)}%"></i></div></div>`;
+  }).join('');
+}
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');
+  const teams=btn.dataset.tab==='teams';
+  document.getElementById('driversView').style.display=teams?'none':'block';
+  document.getElementById('teamsView').style.display=teams?'block':'none';
+}));
+load();
+setInterval(load,10*60*1000);
+</script>
+</body>
+</html>
