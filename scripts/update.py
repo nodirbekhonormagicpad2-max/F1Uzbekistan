@@ -12,6 +12,23 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 FILE = ROOT / "latest-session.json"
 
 
+# F1 sessiya nomlarini o'zbekchaga tarjima qilish
+def uzbek_session_name(name):
+    translations = {
+        "Practice 1": "Amaliyot 1 natijalari",
+        "Practice 2": "Amaliyot 2 natijalari",
+        "Practice 3": "Amaliyot 3 natijalari",
+        "Qualifying": "Saralash natijalari",
+        "Sprint Qualifying": "Sprint saralash natijalari",
+        "Sprint Shootout": "Sprint saralash natijalari",
+        "Sprint": "Sprint natijalari",
+        "Race": "Poyga natijalari"
+    }
+
+    return translations.get(name, name)
+
+
+# OpenF1 API'dan ma'lumot olish
 def get(endpoint, params):
     url = BASE + endpoint + "?" + urllib.parse.urlencode(params)
 
@@ -29,10 +46,7 @@ def get(endpoint, params):
             print(f"OpenF1 HTTP error: {e.code}")
 
             if e.code == 401:
-                print(
-                    "Data is not publicly available yet. "
-                    "Will try again on the next scheduled run."
-                )
+                print("Data not publicly available yet")
                 return None
 
             if e.code not in (429, 500, 502, 503, 504):
@@ -153,7 +167,9 @@ def run():
                 continue
 
             data = {
-                "session": s.get("session_name", "Sessiya"),
+                "session": uzbek_session_name(
+                    s.get("session_name", "Sessiya")
+                ),
                 "meeting": s.get("country_name", ""),
                 "date": s["date_end"],
                 "updated": now.isoformat(),
