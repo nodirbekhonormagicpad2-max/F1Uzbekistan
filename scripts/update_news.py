@@ -1,15 +1,16 @@
 
 #!/usr/bin/env python3
-"""F1 yangiliklarini MyMemory orqali o'zbekchaga tarjima qilish."""
+"""F1 yangiliklari: o'zbekcha tarjima va avtomatik rasmlar."""
 
 import html
 import json
+import re
 import time
 import xml.etree.ElementTree as ET
 from datetime import timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse
 from urllib.request import Request, urlopen
 
 OUTPUT = Path("news.json")
@@ -26,13 +27,12 @@ RSS_URL = (
 )
 
 
-def get_json(url):
-    request = Request(
+def request_url(url, timeout=15):
+    req = Request(
         url,
-        headers={"User-Agent": "F1UzbekistanNews/1.0"}
+        headers={"User-Agent": "Mozilla/5.0"}
     )
-    with urlopen(request, timeout=25) as response:
-        return json.load(response)
+    return urlopen(req, timeout=timeout)
 
 
 def translate(text):
@@ -42,30 +42,114 @@ def translate(text):
     })
 
     url = "https://api.mymemory.translated.net/get?" + params
-    data = get_json(url)
+
+    with request_url(url, 20) as response:
+        data = json.load(response)
 
     if data.get("responseStatus") != 200:
-        raise RuntimeError(
-            str(data.get("responseDetails", "Tarjima xatosi"))
-        )
+        raise RuntimeError("Tarjima xizmati javob bermadi")
 
     if data.get("quotaFinished"):
-        raise RuntimeError("Tarjima limiti tugagan")
+        raise RuntimeError("Tarjima limiti tugadi")
 
-    result = html.unescape(
+    translated = html.unescape(
         str(data.get("responseData", {}).get("translatedText", ""))
     ).strip()
 
-    if not result or result.casefold() == text.casefold():
+    if not translated or translated.casefold() == text.casefold():
         return None
 
-    return result
+    return translated
+
+
+def safe_image(url):
+    url = html.unescape(url or "").strip()
+    parsed = urlparse(url)
+
+    if parsed.scheme != "https" or not parsed.hostname:
+        return ""
+
+    return url
+
+
+def rss_image(entry):
+    """RSS ichidagi rasmni qidirish."""
+
+    for tag in (
+        "{http://search.yahoo.com/mrss/}content",
+        "{http://search.yahoo.com/mrss/}thumbnail",
+        "enclosure"
+    ):
+        for element in entry.findall(tag):
+            url = safe_image(element.get("url", ""))
+            media_type = element.get("type", "")
+
+            if url and (
+                not media_type
+                or media_type.startswith("image/")
+            ):
+                return url
+
+    description = html.unescape(
+        entry.findtext("description") or ""
+    )
+
+    match = re.search(
+        r'<img[^>]+src=["\']([^"\']+)',
+        description,
+        flags=re.IGNORECASE
+    )
+
+    if match:
+        return safe_image(match.group(1))
+
+    return ""
+
+
+def article_image(url):
+    """Maqola sahifasidan og:image ni qidirish."""
+
+    try:
+        with request_url(url, 10) as response:
+            content_type = response.headers.get(
+                "Content-Type", ""
+            )
+
+            if "text/html" not in content_type:
+                return ""
+
+            page = response.read(300000).decode(
+                "utf-8", errors="ignore"
+            )
+
+        patterns = [
+            r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)',
+            r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image["\']',
+            r'<meta[^>]+name=["\']twitter:image["\'][^>]+content=["\']([^"\']+)'
+        ]
+
+        for pattern in patterns:
+            match = re.search(
+                pattern, page, flags=re.IGNORECASE
+            )
+
+            if match:
+                return safe_image(match.group(1))
+
+    except Exception as error:
+        print("Rasmni olish imkoni bo'lmadi:", error)
+
+    return ""
 
 
 try:
-    old = json.loads(OUTPUT.read_text(encoding="utf-8"))
+    old = json.loads(
+        OUTPUT.read_text(encoding="utf-8")
+    )
+
     if not isinstance(old, list):
         old = []
+
 except (OSError, ValueError):
     old = []
 
@@ -78,18 +162,14 @@ cache = {
     and item.get("lang") == "uz"
 }
 
-request = Request(
-    RSS_URL,
-    headers={"User-Agent": "Mozilla/5.0"}
-)
-
-with urlopen(request, timeout=30) as response:
+with request_url(RSS_URL, 25) as response:
     root = ET.fromstring(response.read())
 
 items = []
 seen = set()
 
 for entry in root.findall("./channel/item"):
+
     if len(items) >= MAX_NEWS:
         break
 
@@ -112,8 +192,10 @@ for entry in root.findall("./channel/item"):
     except (ValueError, TypeError, OverflowError):
         date = ""
 
-    if link in cache:
-        translated = cache[link]["title"]
+    previous = cache.get(link, {})
+
+    if previous:
+        translated = previous["title"]
     else:
         try:
             translated = translate(original)
@@ -125,20 +207,35 @@ for entry in root.findall("./channel/item"):
     if not translated:
         continue
 
+    image = (
+        previous.get("image", "")
+        or rss_image(entry)
+        or article_image(link)
+    )
+
     items.append({
         "title": translated,
         "url": link,
         "source": source,
         "date": date,
-        "lang": "uz"
+        "lang": "uz",
+        "image": image
     })
 
-if items:
-    OUTPUT.write_text(
-        json.dumps(items, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8"
-    )
-    print(f"Muvaffaqiyatli: {len(items)} ta o'zbekcha yangilik saqlandi.")
-else:
-    print("Tarjima topilmadi. Avvalgi news.json saqlanadi.")
+if not items:
+    print("Yangi yangilik topilmadi. Eski fayl saqlanadi.")
     raise SystemExit(1)
+
+OUTPUT.write_text(
+    json.dumps(
+        items,
+        ensure_ascii=False,
+        indent=2
+    ) + "\n",
+    encoding="utf-8"
+)
+
+image_count = sum(bool(item["image"]) for item in items)
+
+print(f"{len(items)} ta o'zbekcha yangilik saqlandi.")
+print(f"{image_count} ta rasm manzili topildi.")
