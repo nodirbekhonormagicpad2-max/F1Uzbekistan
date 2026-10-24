@@ -1,17 +1,22 @@
 
 #!/usr/bin/env python3
-"""F1 yangiliklari: o'zbekcha tarjima va avtomatik rasmlar."""
+"""F1 yangiliklari: o'zbekcha tarjima va haqiqiy maqola rasmlari."""
 
 import html
 import json
 import re
 import time
 import xml.etree.ElementTree as ET
+
 from datetime import timezone
 from email.utils import parsedate_to_datetime
+from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode, urlparse, urljoin
 from urllib.request import Request, urlopen
+
+from googlenewsdecoder import gnewsdecoder
+
 
 OUTPUT = Path("news.json")
 MAX_NEWS = 10
@@ -30,7 +35,15 @@ RSS_URL = (
 def request_url(url, timeout=15):
     req = Request(
         url,
-        headers={"User-Agent": "Mozilla/5.0"}
+        headers={
+            "User-Agent": (
+                "Mozilla/5.0 "
+                "(Linux; Android 13) "
+                "AppleWebKit/537.36 "
+                "Chrome/120.0 Safari/537.36"
+            ),
+            "Accept": "text/html,application/xhtml+xml,application/xml",
+        }
     )
     return urlopen(req, timeout=timeout)
 
@@ -53,7 +66,11 @@ def translate(text):
         raise RuntimeError("Tarjima limiti tugadi")
 
     translated = html.unescape(
-        str(data.get("responseData", {}).get("translatedText", ""))
+        str(
+            data.get("responseData", {}).get(
+                "translatedText", ""
+            )
+        )
     ).strip()
 
     if not translated or translated.casefold() == text.casefold():
@@ -73,7 +90,7 @@ def safe_image(url):
 
 
 def rss_image(entry):
-    """RSS ichidagi rasmni qidirish."""
+    """RSS ichidagi haqiqiy maqola rasmini qidirish."""
 
     for tag in (
         "{http://search.yahoo.com/mrss/}content",
@@ -106,11 +123,76 @@ def rss_image(entry):
     return ""
 
 
-def article_image(url):
-    """Maqola sahifasidan og:image ni qidirish."""
+def original_article_url(google_url):
+    """Google News havolasini asl maqola havolasiga aylantirish."""
+
+    if "news.google.com" not in urlparse(google_url).netloc:
+        return google_url
 
     try:
-        with request_url(url, 10) as response:
+        result = gnewsdecoder(
+            google_url,
+            interval=1
+        )
+
+        if (
+            isinstance(result, dict)
+            and result.get("status")
+            and result.get("decoded_url")
+        ):
+            decoded = result["decoded_url"]
+
+            if (
+                decoded.startswith("https://")
+                and "news.google.com" not in urlparse(decoded).netloc
+            ):
+                return decoded
+
+    except Exception as error:
+        print("Google News havolasini ochish xatosi:", error)
+
+    return ""
+
+
+class ImageMetaParser(HTMLParser):
+    """Maqola HTML sahifasidagi og:image tegini topish."""
+
+    def __init__(self):
+        super().__init__()
+        self.images = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() != "meta":
+            return
+
+        attributes = dict(attrs)
+
+        name = (
+            attributes.get("property")
+            or attributes.get("name")
+            or ""
+        ).lower()
+
+        if name in (
+            "og:image",
+            "og:image:secure_url",
+            "twitter:image",
+            "twitter:image:src"
+        ):
+            image_url = attributes.get("content", "")
+
+            if image_url:
+                self.images.append(image_url)
+
+
+def article_image(url):
+    """Asl maqola sahifasidan haqiqiy rasmni olish."""
+
+    if not url or not url.startswith("https://"):
+        return ""
+
+    try:
+        with request_url(url, 15) as response:
             content_type = response.headers.get(
                 "Content-Type", ""
             )
@@ -118,26 +200,25 @@ def article_image(url):
             if "text/html" not in content_type:
                 return ""
 
-            page = response.read(300000).decode(
-                "utf-8", errors="ignore"
+            final_url = response.geturl()
+
+            page = response.read(500000).decode(
+                "utf-8",
+                errors="ignore"
             )
 
-        patterns = [
-            r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)',
-            r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image["\']',
-            r'<meta[^>]+name=["\']twitter:image["\'][^>]+content=["\']([^"\']+)'
-        ]
+        parser = ImageMetaParser()
+        parser.feed(page)
 
-        for pattern in patterns:
-            match = re.search(
-                pattern, page, flags=re.IGNORECASE
-            )
+        for image_url in parser.images:
+            absolute_url = urljoin(final_url, image_url)
+            image = safe_image(absolute_url)
 
-            if match:
-                return safe_image(match.group(1))
+            if image:
+                return image
 
     except Exception as error:
-        print("Rasmni olish imkoni bo'lmadi:", error)
+        print("Maqola rasmi topilmadi:", error)
 
     return ""
 
@@ -153,6 +234,7 @@ try:
 except (OSError, ValueError):
     old = []
 
+
 cache = {
     item["url"]: item
     for item in old
@@ -162,11 +244,14 @@ cache = {
     and item.get("lang") == "uz"
 }
 
+
 with request_url(RSS_URL, 25) as response:
     root = ET.fromstring(response.read())
 
+
 items = []
 seen = set()
+
 
 for entry in root.findall("./channel/item"):
 
@@ -189,6 +274,7 @@ for entry in root.findall("./channel/item"):
         date = parsedate_to_datetime(
             entry.findtext("pubDate") or ""
         ).astimezone(timezone.utc).isoformat()
+
     except (ValueError, TypeError, OverflowError):
         date = ""
 
@@ -196,10 +282,12 @@ for entry in root.findall("./channel/item"):
 
     if previous:
         translated = previous["title"]
+
     else:
         try:
             translated = translate(original)
             time.sleep(1)
+
         except Exception as error:
             print("Tarjima xatosi:", error)
             continue
@@ -207,24 +295,49 @@ for entry in root.findall("./channel/item"):
     if not translated:
         continue
 
-    image = (
-        previous.get("image", "")
-        or rss_image(entry)
-        or article_image(link)
-    )
+    # Avval eski rasmni tekshiramiz.
+    image = safe_image(previous.get("image", ""))
+
+    # Keyin RSS ichidagi rasmni qidiramiz.
+    if not image:
+        image = rss_image(entry)
+
+    # Rasm topilmasa, asl maqola havolasini aniqlaymiz.
+    article_url = previous.get("article_url", "")
+
+    if not image:
+        if not article_url:
+            article_url = original_article_url(link)
+
+        if article_url:
+            image = article_image(article_url)
+
+    # Asl maqola topilmasa, Google News havolasini saqlaymiz.
+    final_url = article_url or link
 
     items.append({
         "title": translated,
-        "url": link,
+        "url": final_url,
         "source": source,
         "date": date,
         "lang": "uz",
-        "image": image
+        "image": image,
+        "article_url": article_url
     })
 
+    if image:
+        print("Rasm topildi:", source)
+    else:
+        print("Rasm topilmadi:", source)
+
+
 if not items:
-    print("Yangi yangilik topilmadi. Eski fayl saqlanadi.")
+    print(
+        "Yangi yangilik topilmadi. "
+        "Eski news.json saqlanadi."
+    )
     raise SystemExit(1)
+
 
 OUTPUT.write_text(
     json.dumps(
@@ -235,7 +348,16 @@ OUTPUT.write_text(
     encoding="utf-8"
 )
 
-image_count = sum(bool(item["image"]) for item in items)
 
-print(f"{len(items)} ta o'zbekcha yangilik saqlandi.")
-print(f"{image_count} ta rasm manzili topildi.")
+image_count = sum(
+    bool(item["image"])
+    for item in items
+)
+
+print(
+    f"{len(items)} ta o'zbekcha yangilik saqlandi."
+)
+
+print(
+    f"{image_count} ta haqiqiy maqola rasmi topildi."
+)
