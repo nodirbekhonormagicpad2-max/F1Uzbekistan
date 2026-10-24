@@ -1,196 +1,51 @@
-
 <!DOCTYPE html>
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090909">
-
 <title>F1 yangiliklari — F1 Uzbekistan</title>
 <meta name="description" content="Formula 1 yangiliklari o‘zbek tilida — F1 Uzbekistan TV.">
-
 <style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: #090909;
-  color: #fff;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-header {
-  padding: 20px 5%;
-  background: #141414;
-  border-bottom: 2px solid #e10600;
-}
-
-header a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: 900;
-}
-
-.wrap {
-  max-width: 850px;
-  margin: 0 auto;
-  padding: 28px 18px 60px;
-}
-
-.back {
-  display: inline-block;
-  color: #ff7772;
-  text-decoration: none;
-  margin-bottom: 24px;
-  font-weight: 700;
-}
-
-.source {
-  color: #ff7772;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
-
-h1 {
-  font-size: clamp(27px, 5vw, 46px);
-  line-height: 1.2;
-  margin: 15px 0;
-  font-weight: 900;
-  overflow-wrap: anywhere;
-}
-
-time {
-  display: block;
-  color: #aaa;
-  font-size: 13px;
-}
-
-.hero {
-  display: block;
-  width: 100%;
-  max-height: 460px;
-  object-fit: cover;
-  border-radius: 14px;
-  margin: 24px 0;
-  background: #171717;
-}
-
-.article-content {
-  margin-top: 25px;
-  color: #e5e5e5;
-  font-size: 17px;
-  line-height: 1.85;
-  overflow-wrap: anywhere;
-}
-
-.article-content p {
-  margin: 0 0 22px;
-}
-
-.article-content h2 {
-  font-size: 23px;
-  line-height: 1.4;
-  color: #fff;
-  margin: 30px 0 15px;
-}
-
-.notice {
-  margin-top: 25px;
-  padding: 20px;
-  background: #171717;
-  border: 1px solid #333;
-  border-radius: 12px;
-  color: #ddd;
-  line-height: 1.7;
-}
-
-.error {
-  color: #ff7772;
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-footer {
-  text-align: center;
-  padding: 25px 15px;
-  border-top: 1px solid #222;
-  color: #888;
-  font-size: 12px;
-}
-
-footer span {
-  color: #e10600;
-  font-weight: 900;
-}
-
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; background: #090909; color: #fff; font-family: Arial, Helvetica, sans-serif; }
+header { padding: 20px 5%; background: #141414; border-bottom: 2px solid #e10600; }
+header a { color: #fff; text-decoration: none; font-weight: 900; }
+.wrap { max-width: 850px; margin: 0 auto; padding: 28px 18px 60px; }
+.back { display: inline-block; color: #ff7772; text-decoration: none; margin-bottom: 24px; font-weight: 700; }
+.source { color: #ff7772; font-size: 13px; font-weight: 800; letter-spacing: 1px; }
+h1 { font-size: clamp(27px, 5vw, 46px); line-height: 1.2; margin: 15px 0; font-weight: 900; overflow-wrap: anywhere; }
+time { display: block; color: #aaa; font-size: 13px; }
+.hero { display: block; width: 100%; max-height: 460px; object-fit: cover; border-radius: 14px; margin: 24px 0; background: #171717; }
+.article-content { margin-top: 25px; color: #e5e5e5; font-size: 17px; line-height: 1.85; overflow-wrap: anywhere; }
+.article-content p { margin: 0 0 22px; }
+.article-content h2 { font-size: 23px; line-height: 1.4; color: #fff; margin: 30px 0 15px; }
+.notice { margin-top: 25px; padding: 20px; background: #171717; border: 1px solid #333; border-radius: 12px; color: #ddd; line-height: 1.7; }
+.error { color: #ff7772; font-size: 16px; line-height: 1.6; }
+footer { text-align: center; padding: 25px 15px; border-top: 1px solid #222; color: #888; font-size: 12px; }
+footer span { color: #e10600; font-weight: 900; }
 @media (max-width: 600px) {
-  header {
-    padding: 17px 15px;
-  }
-
-  .wrap {
-    padding: 25px 15px 45px;
-  }
-
-  h1 {
-    font-size: 29px;
-  }
-
-  .hero {
-    border-radius: 12px;
-    margin: 22px 0;
-  }
-
-  .article-content {
-    font-size: 16px;
-    line-height: 1.8;
-  }
-
-  .notice {
-    padding: 16px;
-  }
+  header { padding: 17px 15px; }
+  .wrap { padding: 25px 15px 45px; }
+  h1 { font-size: 29px; }
+  .hero { border-radius: 12px; margin: 22px 0; }
+  .article-content { font-size: 16px; line-height: 1.8; }
+  .notice { padding: 16px; }
 }
 </style>
 </head>
-
 <body>
-
-<header>
-  <a href="./index.html">
-    🏎️ F1 UZBEKISTAN TV
-  </a>
-</header>
-
+<header><a href="./index.html">🏎️ F1 UZBEKISTAN TV</a></header>
 <main class="wrap">
-
-  <a class="back" href="./index.html">
-    ← Bosh sahifaga qaytish
-  </a>
-
-  <article id="article">
-    <p>Yangilik yuklanmoqda...</p>
-  </article>
-
+  <a class="back" href="./index.html">← Bosh sahifaga qaytish</a>
+  <article id="article"><p>Yangilik yuklanmoqda...</p></article>
 </main>
-
-<footer>
-  <span>F1 UZBEKISTAN TV</span>
-  · FORMULA 1 YANGILIKLARI
-</footer>
-
+<footer><span>F1 UZBEKISTAN TV</span> · FORMULA 1 YANGILIKLARI</footer>
 <script>
 (async () => {
   "use strict";
-
   const root = document.getElementById("article");
-
-  const id = new URLSearchParams(
-    window.location.search
-  ).get("id");
+  const id = new URLSearchParams(window.location.search).get("id");
 
   function addNotice(message) {
     const notice = document.createElement("div");
@@ -200,193 +55,106 @@ footer span {
   }
 
   function cleanArticleText(value) {
-    if (typeof value !== "string") {
-      return "";
+    if (typeof value !== "string") return "";
+    let text = value.replace(/\s+/g, " ").trim();
+
+    // RSS parchalari oxiridagi 'davom eting' yozuvlarini olib tashlash.
+    // Tarjima qilingan matnda bu yozuv bir nechta shaklda uchrashi mumkin.
+    const continuation = /(?:O['‘’`]qishda davom eting|O['‘’`]qishni davom eting|O['‘’`]qishni davom ettiring|Read more|Continue reading|Read the full story)/i;
+    const match = continuation.exec(text);
+    if (match) text = text.slice(0, match.index).trim();
+
+    text = text.replace(/\s*(?:\.{2,}|…)\s*$/, "").trim();
+
+    // Oxirgi jumla chala qolgan bo'lsa, faqat tugallangan jumlalarni ko'rsatish.
+    // Hech qanday tugallangan jumla bo'lmasa, matnni butunlay yo'qotmaymiz.
+    if (text && !/[.!?]["'»”’)]?$/.test(text)) {
+      const matches = [...text.matchAll(/[.!?](?=\s|$)/g)];
+      if (matches.length) {
+        const last = matches[matches.length - 1];
+        text = text.slice(0, last.index + 1).trim();
+      }
     }
-
-    let text = value.trim();
-
-    // RSS oxiridagi davom ettirish yozuvlarini
-    // faqat matnning oxiridan olib tashlash.
-    text = text.replace(
-      /\s*(?:\.{3}|…)?\s*(?:O['‘’`]qishni davom eting|Read more|Continue reading)(?:\s*(?:\.{3}|…|[»→↗]))?\s*$/i,
-      ""
-    );
-
-    return text.trim();
+    return text;
   }
 
   function getParagraphs(value) {
-    if (Array.isArray(value)) {
-      return value
-        .filter(p => typeof p === "string")
-        .flatMap(p => p.split(/\n\s*\n/))
-        .map(cleanArticleText)
-        .filter(Boolean);
-    }
-
-    if (typeof value === "string") {
-      return value
-        .split(/\n\s*\n/)
-        .map(cleanArticleText)
-        .filter(Boolean);
-    }
-
-    return [];
+    const values = Array.isArray(value) ? value : (typeof value === "string" ? [value] : []);
+    return values
+      .filter(p => typeof p === "string")
+      .flatMap(p => p.split(/\n\s*\n/))
+      .map(cleanArticleText)
+      .filter(Boolean);
   }
 
   function renderContent(item) {
-    const candidates = [
-      item.content,
-      item.body,
-      item.summary
-    ];
-
     let paragraphs = [];
-
-    for (const candidate of candidates) {
+    for (const candidate of [item.content, item.body, item.summary]) {
       paragraphs = getParagraphs(candidate);
-
-      if (paragraphs.length) {
-        break;
-      }
+      if (paragraphs.length) break;
     }
-
     if (!paragraphs.length) {
-      addNotice(
-        "Ushbu yangilikning o‘zbekcha matni " +
-        "hozircha tayyor emas."
-      );
+      addNotice("Ushbu yangilikning o‘zbekcha matni hozircha tayyor emas.");
       return;
     }
-
     const content = document.createElement("div");
     content.className = "article-content";
-
     paragraphs.forEach(text => {
       const p = document.createElement("p");
       p.textContent = text;
       content.appendChild(p);
     });
-
     root.appendChild(content);
   }
 
   function renderArticle(item) {
     root.replaceChildren();
-
-    document.title =
-      item.title + " — F1 Uzbekistan";
-
+    document.title = item.title + " — F1 Uzbekistan";
     const source = document.createElement("div");
     source.className = "source";
-    source.textContent =
-      item.source || "Formula 1";
-
+    source.textContent = item.source || "Formula 1";
     const title = document.createElement("h1");
     title.textContent = item.title;
-
     const date = document.createElement("time");
-
     if (item.date) {
       const d = new Date(item.date);
-
       if (!Number.isNaN(d.getTime())) {
         date.dateTime = d.toISOString();
-
-        date.textContent = d.toLocaleDateString(
-          "uz-UZ",
-          {
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-          }
-        );
+        date.textContent = d.toLocaleDateString("uz-UZ", {day: "numeric", month: "long", year: "numeric"});
       }
     }
-
     root.append(source, title, date);
-
-    if (
-      typeof item.image === "string" &&
-      item.image.startsWith("https://")
-    ) {
+    if (typeof item.image === "string" && item.image.startsWith("https://")) {
       const image = document.createElement("img");
-
       image.className = "hero";
       image.alt = item.title;
       image.loading = "eager";
       image.referrerPolicy = "no-referrer";
-
-      image.onerror = () => {
-        image.remove();
-      };
-
+      image.onerror = () => image.remove();
       image.src = item.image;
       root.appendChild(image);
     }
-
-    // O'zbekcha maqola matnini chiqarish.
     renderContent(item);
-
-    // Asl manbaga olib o'tuvchi qizil tugma
-    // ataylab olib tashlangan.
   }
 
   try {
-    if (!id) {
-      throw new Error(
-        "Yangilik manzili ko‘rsatilmagan."
-      );
-    }
-
-    const response = await fetch(
-      "./news.json?t=" + Date.now(),
-      { cache: "no-store" }
-    );
-
-    if (!response.ok) {
-      throw new Error(
-        "Yangiliklarni yuklab bo‘lmadi."
-      );
-    }
-
+    if (!id) throw new Error("Yangilik manzili ko‘rsatilmagan.");
+    const response = await fetch("./news.json?t=" + Date.now(), {cache: "no-store"});
+    if (!response.ok) throw new Error("Yangiliklarni yuklab bo‘lmadi.");
     const items = await response.json();
-
-    if (!Array.isArray(items)) {
-      throw new Error(
-        "Yangiliklar formati noto‘g‘ri."
-      );
-    }
-
-    const item = items.find(x =>
-      x &&
-      x.url === id &&
-      x.lang === "uz"
-    );
-
-    if (!item) {
-      throw new Error(
-        "Yangilik topilmadi yoki yangilangan."
-      );
-    }
-
+    if (!Array.isArray(items)) throw new Error("Yangiliklar formati noto‘g‘ri.");
+    const item = items.find(x => x && x.url === id && x.lang === "uz");
+    if (!item) throw new Error("Yangilik topilmadi yoki yangilangan.");
     renderArticle(item);
-
   } catch (error) {
     console.error("Maqola xatosi:", error);
-
     root.replaceChildren();
-
     const p = document.createElement("p");
     p.className = "error";
     p.textContent = error.message;
-
     root.appendChild(p);
   }
-
 })();
 </script>
-
 </body>
 </html>
