@@ -4,6 +4,10 @@
 
   if (document.getElementById("f1NewsCarousel")) return;
 
+  const AUTO_DELAY = 15000;
+  const REFRESH_DELAY = 300000;
+  const MAX_NEWS = 10;
+
   const style = document.createElement("style");
 
   style.textContent = `
@@ -55,10 +59,7 @@
       height: 170px;
       border-radius: 12px;
       background: linear-gradient(
-        135deg,
-        #e10600,
-        #242633,
-        #101116
+        135deg, #e10600, #242633, #101116
       );
       display: flex;
       align-items: center;
@@ -118,6 +119,16 @@
 
     .f1-arrow:hover {
       background: #e10600;
+    }
+
+    .f1-arrow:focus-visible,
+    .f1-dot:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 3px;
+    }
+
+    .f1-arrow[hidden] {
+      display: none;
     }
 
     .f1-dots {
@@ -180,11 +191,7 @@
 
   section.className = "f1-news";
   section.id = "f1NewsCarousel";
-
-  section.setAttribute(
-    "aria-label",
-    "F1 yangiliklari"
-  );
+  section.setAttribute("aria-label", "F1 yangiliklari");
 
   section.innerHTML = `
     <h2>🏎️ F1 YANGILIKLARI</h2>
@@ -192,6 +199,7 @@
     <div
       class="f1-carousel"
       aria-roledescription="carousel"
+      aria-label="Formula 1 yangiliklari"
     >
       <button
         class="f1-arrow prev"
@@ -199,10 +207,7 @@
         type="button"
       >‹</button>
 
-      <div
-        class="f1-slide"
-        aria-live="off"
-      >
+      <div class="f1-slide" aria-live="off">
         <p class="f1-news-message">
           Yangiliklar yuklanmoqda...
         </p>
@@ -221,10 +226,7 @@
     ></div>
   `;
 
-  const calendar = document.querySelector(
-    ".calendar-section"
-  );
-
+  const calendar = document.querySelector(".calendar-section");
   const main = document.querySelector("main");
 
   if (calendar) {
@@ -245,22 +247,36 @@
   let index = 0;
   let timer = null;
   let touchStartX = null;
+  let loading = false;
+  let pointerInside = false;
+  let focusInside = false;
 
   function stopAuto() {
     if (timer !== null) {
-      clearInterval(timer);
+      clearTimeout(timer);
       timer = null;
     }
+  }
+
+  function canAutoPlay() {
+    return (
+      articles.length > 1 &&
+      !document.hidden &&
+      !pointerInside &&
+      !focusInside
+    );
   }
 
   function startAuto() {
     stopAuto();
 
-    if (articles.length > 1 && !document.hidden) {
-      timer = setInterval(() => {
-        show((index + 1) % articles.length);
-      }, 10000);
-    }
+    if (!canAutoPlay()) return;
+
+    timer = setTimeout(() => {
+      timer = null;
+      show(index + 1);
+      startAuto();
+    }, AUTO_DELAY);
   }
 
   function createPlaceholder() {
@@ -276,7 +292,7 @@
     if (!articles.length) return;
 
     index = (
-      number + articles.length
+      (number % articles.length) + articles.length
     ) % articles.length;
 
     const item = articles[index];
@@ -299,34 +315,28 @@
       };
 
       image.src = item.image;
-
       slide.appendChild(image);
     } else {
       slide.appendChild(createPlaceholder());
     }
 
     const source = document.createElement("div");
-
     source.className = "f1-slide-source";
     source.textContent = item.source || "Formula 1";
 
     const heading = document.createElement("h3");
-
     heading.className = "f1-slide-title";
 
     const link = document.createElement("a");
 
-    // Yangilik sayt ichidagi article.html sahifasida ochiladi
     link.href =
       "./article.html?id=" +
       encodeURIComponent(item.url);
 
     link.textContent = item.title;
-
     heading.appendChild(link);
 
     const date = document.createElement("div");
-
     date.className = "f1-slide-date";
 
     if (item.date) {
@@ -352,8 +362,7 @@
       const dot = document.createElement("button");
 
       dot.className =
-        "f1-dot" +
-        (i === index ? " active" : "");
+        "f1-dot" + (i === index ? " active" : "");
 
       dot.type = "button";
 
@@ -392,8 +401,7 @@
   carousel.addEventListener(
     "touchstart",
     event => {
-      touchStartX =
-        event.changedTouches[0].screenX;
+      touchStartX = event.changedTouches[0].screenX;
     },
     { passive: true }
   );
@@ -404,45 +412,43 @@
       if (touchStartX === null) return;
 
       const difference =
-        event.changedTouches[0].screenX -
-        touchStartX;
+        event.changedTouches[0].screenX - touchStartX;
 
       touchStartX = null;
 
       if (Math.abs(difference) > 45) {
-        show(
-          index + (difference < 0 ? 1 : -1)
-        );
-
+        show(index + (difference < 0 ? 1 : -1));
         startAuto();
       }
     },
     { passive: true }
   );
 
-  carousel.addEventListener(
-    "mouseenter",
-    stopAuto
-  );
+  carousel.addEventListener("touchcancel", () => {
+    touchStartX = null;
+  });
 
-  carousel.addEventListener(
-    "mouseleave",
-    startAuto
-  );
+  carousel.addEventListener("mouseenter", () => {
+    pointerInside = true;
+    stopAuto();
+  });
 
-  carousel.addEventListener(
-    "focusin",
-    stopAuto
-  );
+  carousel.addEventListener("mouseleave", () => {
+    pointerInside = false;
+    startAuto();
+  });
 
-  carousel.addEventListener(
-    "focusout",
-    event => {
-      if (!carousel.contains(event.relatedTarget)) {
-        startAuto();
-      }
+  carousel.addEventListener("focusin", () => {
+    focusInside = true;
+    stopAuto();
+  });
+
+  carousel.addEventListener("focusout", event => {
+    if (!carousel.contains(event.relatedTarget)) {
+      focusInside = false;
+      startAuto();
     }
-  );
+  });
 
   document.addEventListener(
     "visibilitychange",
@@ -456,6 +462,10 @@
   );
 
   async function loadNews() {
+    if (loading) return;
+
+    loading = true;
+
     try {
       const response = await fetch(
         "./news.json?t=" + Date.now(),
@@ -463,17 +473,13 @@
       );
 
       if (!response.ok) {
-        throw new Error(
-          "HTTP " + response.status
-        );
+        throw new Error("HTTP " + response.status);
       }
 
       const data = await response.json();
 
       if (!Array.isArray(data)) {
-        throw new Error(
-          "Yangiliklar formati noto'g'ri"
-        );
+        throw new Error("Yangiliklar formati noto'g'ri");
       }
 
       const valid = data.filter(item =>
@@ -483,15 +489,14 @@
         typeof item.url === "string" &&
         item.url.startsWith("https://") &&
         item.lang === "uz"
-      ).slice(0, 10);
+      ).slice(0, MAX_NEWS);
 
       if (!valid.length) {
-        throw new Error(
-          "O'zbekcha yangiliklar mavjud emas"
-        );
+        throw new Error("O'zbekcha yangiliklar mavjud emas");
       }
 
       const oldUrl = articles[index]?.url;
+      const previousUrls = articles.map(item => item.url);
 
       articles = valid;
 
@@ -499,38 +504,42 @@
         item => item.url === oldUrl
       );
 
-      show(
-        previousIndex >= 0 ? previousIndex : 0
-      );
+      const newUrls = articles.map(item => item.url);
 
-      startAuto();
+      const changed =
+        JSON.stringify(previousUrls) !== JSON.stringify(newUrls);
+
+      if (changed || !slide.querySelector(".f1-slide-title")) {
+        show(previousIndex >= 0 ? previousIndex : 0);
+        startAuto();
+      }
 
     } catch (error) {
-      console.warn(
-        "F1 yangiliklari:",
-        error
-      );
+      console.warn("F1 yangiliklari:", error);
 
       if (!articles.length) {
         slide.replaceChildren();
 
         const message = document.createElement("p");
-
         message.className = "f1-news-message";
 
         message.textContent =
-          "O'zbekcha yangiliklar tayyorlanmoqda. Birozdan so'ng qayta tekshiring.";
+          "O'zbekcha yangiliklar tayyorlanmoqda. " +
+          "Birozdan so'ng qayta tekshiring.";
 
         slide.appendChild(message);
 
         prev.hidden = true;
         next.hidden = true;
+        dots.replaceChildren();
       }
+    } finally {
+      loading = false;
     }
   }
 
   loadNews();
 
-  // Yangiliklar ma'lumotini har 5 daqiqada yangilash
-  setInterval(loadNews, 300000);
+  // Yangiliklarni har 5 daqiqada qayta yuklash.
+  setInterval(loadNews, REFRESH_DELAY);
 })();
