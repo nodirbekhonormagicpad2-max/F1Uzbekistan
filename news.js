@@ -5,6 +5,7 @@
   if (document.getElementById("f1NewsCarousel")) return;
 
   const style = document.createElement("style");
+
   style.textContent = `
     .f1-news {
       margin-top: 20px;
@@ -15,11 +16,13 @@
       border-radius: 16px;
       color: #fff;
     }
+
     .f1-news h2 {
       margin: 0 0 18px;
       font-size: clamp(21px, 4vw, 28px);
       font-weight: 900;
     }
+
     .f1-carousel {
       position: relative;
       overflow: hidden;
@@ -28,37 +31,72 @@
       background: linear-gradient(145deg, #202431, #090b11);
       touch-action: pan-y;
     }
+
     .f1-slide {
-      min-height: 245px;
-      padding: 30px 58px;
+      min-height: 290px;
+      padding: 20px 55px 28px;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       gap: 13px;
       box-sizing: border-box;
     }
+
+    .f1-slide-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
+      background: linear-gradient(
+        135deg,
+        #e10600,
+        #151821
+      );
+    }
+
+    .f1-slide-placeholder {
+      height: 170px;
+      border-radius: 12px;
+      background: linear-gradient(
+        135deg,
+        #e10600 0%,
+        #242633 55%,
+        #101116 100%
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 55px;
+    }
+
     .f1-slide-source {
       color: #ff6864;
       font-size: 12px;
       font-weight: 800;
     }
+
     .f1-slide-title {
       font-size: clamp(20px, 4vw, 30px);
       font-weight: 850;
       line-height: 1.35;
       margin: 0;
     }
+
     .f1-slide-title a {
       color: #fff;
       text-decoration: none;
     }
+
     .f1-slide-title a:hover {
       color: #ff6864;
     }
+
     .f1-slide-date {
       color: #aeb1bd;
       font-size: 12px;
     }
+
     .f1-arrow {
       position: absolute;
       top: 50%;
@@ -73,9 +111,19 @@
       font-size: 27px;
       cursor: pointer;
     }
-    .f1-arrow.prev { left: 8px; }
-    .f1-arrow.next { right: 8px; }
-    .f1-arrow:hover { background: #e10600; }
+
+    .f1-arrow.prev {
+      left: 8px;
+    }
+
+    .f1-arrow.next {
+      right: 8px;
+    }
+
+    .f1-arrow:hover {
+      background: #e10600;
+    }
+
     .f1-dots {
       display: flex;
       justify-content: center;
@@ -83,6 +131,7 @@
       gap: 8px;
       margin-top: 16px;
     }
+
     .f1-dot {
       width: 9px;
       height: 9px;
@@ -92,49 +141,92 @@
       background: #505563;
       cursor: pointer;
     }
+
     .f1-dot.active {
       width: 28px;
       background: #e10600;
     }
+
     .f1-news-message {
       color: #aaa;
       font-size: 14px;
       padding: 20px;
     }
+
     @media (max-width: 600px) {
-      .f1-news { padding: 15px; }
-      .f1-slide {
-        min-height: 290px;
-        padding: 25px 51px;
+      .f1-news {
+        padding: 15px;
       }
-      .f1-slide-title { font-size: 21px; }
-      .f1-arrow { width: 37px; height: 44px; }
+
+      .f1-slide {
+        min-height: 300px;
+        padding: 20px 48px 25px;
+      }
+
+      .f1-slide-image {
+        height: 170px;
+      }
+
+      .f1-slide-title {
+        font-size: 21px;
+      }
+
+      .f1-arrow {
+        width: 37px;
+        height: 44px;
+      }
     }
   `;
+
   document.head.appendChild(style);
 
   const section = document.createElement("section");
+
   section.className = "f1-news";
   section.id = "f1NewsCarousel";
-  section.setAttribute("aria-label", "F1 yangiliklari");
+
+  section.setAttribute(
+    "aria-label",
+    "F1 yangiliklari"
+  );
 
   section.innerHTML = `
     <h2>🏎️ F1 YANGILIKLARI</h2>
-    <div class="f1-carousel" aria-roledescription="carousel">
-      <button class="f1-arrow prev"
-        aria-label="Oldingi yangilik">‹</button>
-      <div class="f1-slide" aria-live="off">
+
+    <div
+      class="f1-carousel"
+      aria-roledescription="carousel"
+    >
+      <button
+        class="f1-arrow prev"
+        aria-label="Oldingi yangilik"
+      >‹</button>
+
+      <div
+        class="f1-slide"
+        aria-live="off"
+      >
         <p class="f1-news-message">
           Yangiliklar yuklanmoqda...
         </p>
       </div>
-      <button class="f1-arrow next"
-        aria-label="Keyingi yangilik">›</button>
+
+      <button
+        class="f1-arrow next"
+        aria-label="Keyingi yangilik"
+      >›</button>
     </div>
-    <div class="f1-dots" aria-label="Yangiliklar tanlovi"></div>
+
+    <div
+      class="f1-dots"
+      aria-label="Yangiliklar tanlovi"
+    ></div>
   `;
 
-  const calendar = document.querySelector(".calendar-section");
+  const calendar = document.querySelector(
+    ".calendar-section"
+  );
+
   const main = document.querySelector("main");
 
   if (calendar) {
@@ -165,6 +257,7 @@
 
   function startAuto() {
     stopAuto();
+
     if (articles.length > 1) {
       timer = setInterval(() => {
         show((index + 1) % articles.length);
@@ -172,22 +265,61 @@
     }
   }
 
+  function createPlaceholder() {
+    const placeholder = document.createElement("div");
+
+    placeholder.className = "f1-slide-placeholder";
+    placeholder.textContent = "🏎️";
+
+    return placeholder;
+  }
+
   function show(number) {
     if (!articles.length) return;
 
-    index = (number + articles.length) % articles.length;
+    index = (
+      number + articles.length
+    ) % articles.length;
+
     const item = articles[index];
 
     slide.replaceChildren();
 
+    const placeholder = createPlaceholder();
+
+    if (
+      typeof item.image === "string" &&
+      /^https:\/\//i.test(item.image)
+    ) {
+      const image = document.createElement("img");
+
+      image.className = "f1-slide-image";
+      image.alt = item.title;
+      image.loading = "lazy";
+      image.referrerPolicy = "no-referrer";
+
+      image.onerror = () => {
+        image.replaceWith(createPlaceholder());
+      };
+
+      image.src = item.image;
+
+      slide.appendChild(image);
+    } else {
+      slide.appendChild(placeholder);
+    }
+
     const source = document.createElement("div");
+
     source.className = "f1-slide-source";
     source.textContent = item.source || "Formula 1";
 
     const heading = document.createElement("h3");
+
     heading.className = "f1-slide-title";
 
     const link = document.createElement("a");
+
     link.href = item.url;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
@@ -196,16 +328,21 @@
     heading.appendChild(link);
 
     const date = document.createElement("div");
+
     date.className = "f1-slide-date";
 
     if (item.date) {
       const d = new Date(item.date);
+
       if (!Number.isNaN(d.getTime())) {
-        date.textContent = d.toLocaleDateString("uz-UZ", {
-          day: "numeric",
-          month: "long",
-          year: "numeric"
-        });
+        date.textContent = d.toLocaleDateString(
+          "uz-UZ",
+          {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+          }
+        );
       }
     }
 
@@ -215,14 +352,29 @@
 
     articles.forEach((_, i) => {
       const dot = document.createElement("button");
-      dot.className = "f1-dot" + (i === index ? " active" : "");
+
+      dot.className = (
+        "f1-dot" +
+        (i === index ? " active" : "")
+      );
+
       dot.type = "button";
-      dot.setAttribute("aria-label", `${i + 1}-yangilik`);
-      dot.setAttribute("aria-current", i === index ? "true" : "false");
+
+      dot.setAttribute(
+        "aria-label",
+        `${i + 1}-yangilik`
+      );
+
+      dot.setAttribute(
+        "aria-current",
+        i === index ? "true" : "false"
+      );
+
       dot.addEventListener("click", () => {
         show(i);
         startAuto();
       });
+
       dots.appendChild(dot);
     });
 
@@ -240,34 +392,71 @@
     startAuto();
   });
 
-  carousel.addEventListener("touchstart", (event) => {
-    touchStartX = event.changedTouches[0].screenX;
-  }, { passive: true });
+  carousel.addEventListener(
+    "touchstart",
+    (event) => {
+      touchStartX =
+        event.changedTouches[0].screenX;
+    },
+    { passive: true }
+  );
 
-  carousel.addEventListener("touchend", (event) => {
-    if (touchStartX === null) return;
-    const difference =
-      event.changedTouches[0].screenX - touchStartX;
+  carousel.addEventListener(
+    "touchend",
+    (event) => {
+      if (touchStartX === null) return;
 
-    touchStartX = null;
+      const difference =
+        event.changedTouches[0].screenX -
+        touchStartX;
 
-    if (Math.abs(difference) > 45) {
-      show(index + (difference < 0 ? 1 : -1));
-      startAuto();
+      touchStartX = null;
+
+      if (Math.abs(difference) > 45) {
+        show(
+          index + (difference < 0 ? 1 : -1)
+        );
+
+        startAuto();
+      }
+    },
+    { passive: true }
+  );
+
+  carousel.addEventListener(
+    "mouseenter",
+    stopAuto
+  );
+
+  carousel.addEventListener(
+    "mouseleave",
+    startAuto
+  );
+
+  carousel.addEventListener(
+    "focusin",
+    stopAuto
+  );
+
+  carousel.addEventListener(
+    "focusout",
+    (event) => {
+      if (!carousel.contains(event.relatedTarget)) {
+        startAuto();
+      }
     }
-  }, { passive: true });
+  );
 
-  carousel.addEventListener("mouseenter", stopAuto);
-  carousel.addEventListener("mouseleave", startAuto);
-  carousel.addEventListener("focusin", stopAuto);
-  carousel.addEventListener("focusout", (event) => {
-    if (!carousel.contains(event.relatedTarget)) startAuto();
-  });
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) stopAuto();
-    else startAuto();
-  });
+  document.addEventListener(
+    "visibilitychange",
+    () => {
+      if (document.hidden) {
+        stopAuto();
+      } else {
+        startAuto();
+      }
+    }
+  );
 
   async function loadNews() {
     try {
@@ -277,13 +466,17 @@
       );
 
       if (!response.ok) {
-        throw new Error("HTTP " + response.status);
+        throw new Error(
+          "HTTP " + response.status
+        );
       }
 
       const data = await response.json();
 
       if (!Array.isArray(data)) {
-        throw new Error("Yangiliklar formati noto‘g‘ri");
+        throw new Error(
+          "Yangiliklar formati noto'g'ri"
+        );
       }
 
       const valid = data.filter(item =>
@@ -296,31 +489,43 @@
       ).slice(0, 10);
 
       if (!valid.length) {
-        throw new Error("O‘zbekcha yangiliklar mavjud emas");
+        throw new Error(
+          "O'zbekcha yangiliklar mavjud emas"
+        );
       }
 
       const oldUrl = articles[index]?.url;
+
       articles = valid;
 
       const previousIndex = articles.findIndex(
         item => item.url === oldUrl
       );
 
-      show(previousIndex >= 0 ? previousIndex : 0);
+      show(
+        previousIndex >= 0 ? previousIndex : 0
+      );
+
       startAuto();
 
     } catch (error) {
-      console.warn("F1 yangiliklari:", error);
+      console.warn(
+        "F1 yangiliklari:",
+        error
+      );
 
       if (!articles.length) {
         slide.replaceChildren();
 
         const message = document.createElement("p");
+
         message.className = "f1-news-message";
+
         message.textContent =
-          "O‘zbekcha yangiliklar tayyorlanmoqda. Birozdan so‘ng qayta tekshiring.";
+          "O'zbekcha yangiliklar tayyorlanmoqda. Birozdan so'ng qayta tekshiring.";
 
         slide.appendChild(message);
+
         prev.hidden = true;
         next.hidden = true;
       }
@@ -328,5 +533,6 @@
   }
 
   loadNews();
+
   setInterval(loadNews, 300000);
 })();
