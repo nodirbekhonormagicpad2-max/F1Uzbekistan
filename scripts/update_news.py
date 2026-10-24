@@ -1,38 +1,164 @@
 
-name: Update F1 news
+#!/usr/bin/env python3
+"""F1 yangiliklarini olish va o'zbekchaga tarjima qilish."""
 
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: '17 * * * *'
+import json
+import time
+import xml.etree.ElementTree as ET
+from datetime import timezone
+from email.utils import parsedate_to_datetime
+from pathlib import Path
+from urllib.parse import quote
+from urllib.request import Request, urlopen
 
-permissions:
-  contents: write
+from deep_translator import GoogleTranslator
 
-jobs:
-  update:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
+OUTPUT = Path("news.json")
+QUERY = "Formula 1 F1 racing when:7d"
 
-    steps:
-      - uses: actions/checkout@v4
+URL = (
+    "https://news.google.com/rss/search?q="
+    + quote(QUERY)
+    + "&hl=en-US&gl=US&ceid=US:en"
+)
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+MAX_NEWS = 10
+MAX_TRANSLATIONS = 10
 
-      - name: Install translator
-        run: python -m pip install deep-translator==1.11.4
+# Eski o'zbekcha tarjimalarni saqlash
+try:
+    old_news = json.loads(
+        OUTPUT.read_text(encoding="utf-8")
+    )
+    if not isinstance(old_news, list):
+        old_news = []
+except (FileNotFoundError, ValueError, OSError):
+    old_news = []
 
-      - name: Fetch latest F1 headlines
-        run: python scripts/update_news.py
+cache = {
+    item["url"]: item
+    for item in old_news
+    if isinstance(item, dict)
+    and item.get("url")
+    and item.get("title")
+    and item.get("lang") == "uz"
+}
 
-      - name: Commit updates
-        run: |
-          if ! git diff --quiet -- news.json; then
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add news.json
-            git commit -m 'Update F1 news'
-            git push
-          fi
+# Google News RSS
+request = Request(
+    URL,
+    headers={"User-Agent": "Mozilla/5.0"}
+)
+
+with urlopen(request, timeout=20) as response:
+    root = ET.fromstring(response.read())
+
+translator = GoogleTranslator(
+    source="en",
+    target="uz"
+)
+
+items = []
+seen = set()
+translation_count = 0
+
+for entry in root.findall("./channel/item"):
+
+    if len(items) >= MAX_NEWS:
+        break
+
+    original = (
+        entry.findtext("title") or ""
+    ).strip()
+
+    link = (
+        entry.findtext("link") or ""
+    ).strip()
+
+    source = (
+        entry.findtext("source") or "Google News"
+    ).strip()
+
+    if (
+        not original
+        or not link.startswith("https://")
+        or link in seen
+    ):
+        continue
+
+    seen.add(link)
+
+    try:
+        date = parsedate_to_datetime(
+            entry.findtext("pubDate") or ""
+        ).astimezone(timezone.utc).isoformat()
+    except (ValueError, TypeError, OverflowError):
+        date = ""
+
+    if link in cache:
+        translated = cache[link]["title"]
+
+    else:
+        if translation_count >= MAX_TRANSLATIONS:
+            break
+
+        translation_count += 1
+        translated = None
+
+        try:
+            print(
+                f"Tarjima qilinmoqda: "
+                f"{translation_count}/{MAX_TRANSLATIONS}",
+                flush=True
+            )
+
+            candidate = translator.translate(original)
+
+            if (
+                candidate
+                and candidate.strip().casefold()
+                != original.casefold()
+            ):
+                translated = candidate.strip()
+
+            time.sleep(2)
+
+        except Exception as error:
+            print(
+                f"Tarjima xatosi: {error}",
+                flush=True
+            )
+            continue
+
+        if not translated:
+            continue
+
+    items.append({
+        "title": translated,
+        "url": link,
+        "source": source,
+        "date": date,
+        "lang": "uz"
+    })
+
+# Yangi ma'lumot bo'lmasa eskisini saqlash
+if not items:
+    print(
+        "Yangi o'zbekcha yangilik topilmadi. "
+        "Eski news.json saqlanadi."
+    )
+    raise SystemExit(0)
+
+OUTPUT.write_text(
+    json.dumps(
+        items,
+        ensure_ascii=False,
+        indent=2
+    ) + "\n",
+    encoding="utf-8"
+)
+
+print(
+    f"{len(items)} ta o'zbekcha yangilik saqlandi.",
+    flush=True
+)
