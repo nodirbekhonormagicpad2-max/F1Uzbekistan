@@ -1,6 +1,6 @@
 
 #!/usr/bin/env python3
-"""F1 yangiliklari: rasm, o'zbekcha sarlavha va qisqacha mazmun."""
+"""F1 Uzbekistan: RSS yangiliklarini o'zbekchaga tayyorlash."""
 
 import html
 import json
@@ -19,64 +19,73 @@ OUTPUT = Path("news.json")
 MAX_NEWS = 10
 
 FEEDS = [
-    (
-        "Autosport",
-        "https://www.autosport.com/rss/f1/news/"
-    ),
-    (
-        "Motorsport.com",
-        "https://www.motorsport.com/rss/f1/news/"
-    ),
-    (
-        "BBC Sport",
-        "https://feeds.bbci.co.uk/sport/formula1/rss.xml"
-    ),
+    ("Autosport", "https://www.autosport.com/rss/f1/news/"),
+    ("Motorsport.com", "https://www.motorsport.com/rss/f1/news/"),
+    ("BBC Sport", "https://feeds.bbci.co.uk/sport/formula1/rss.xml"),
 ]
 
 MEDIA = "{http://search.yahoo.com/mrss/}"
 CONTENT = "{http://purl.org/rss/1.0/modules/content/}"
 
+# Faqat qayta nashr qilish huquqi tekshirilgan
+# manbalarni shu ro'yxatga qo'shing.
+FULL_TEXT_ALLOWED = set()
 
-def fetch(url, timeout=15):
+TRANSLATE_CHUNK = 400
+
+
+def fetch(url, timeout=20):
     request = Request(
         url,
         headers={
-            "User-Agent": "Mozilla/5.0",
-            "Accept": "text/html,application/rss+xml,application/xml"
-        }
+            "User-Agent": "Mozilla/5.0 (F1Uzbekistan News)",
+            "Accept": "application/rss+xml,application/xml,text/html,application/json",
+        },
     )
     return urlopen(request, timeout=timeout)
 
 
-def safe_url(url):
-    url = html.unescape(url or "").strip()
+def safe_url(value):
+    value = html.unescape(str(value or "")).strip()
 
-    if url.startswith("//"):
-        url = "https:" + url
+    if value.startswith("//"):
+        value = "https:" + value
 
-    parsed = urlparse(url)
+    parsed = urlparse(value)
 
     if parsed.scheme != "https" or not parsed.hostname:
         return ""
 
-    return url
+    return value
 
 
 class TextParser(HTMLParser):
-    """HTML teglardan oddiy matnni ajratib olish."""
-
     def __init__(self):
-        super().__init__()
+        super().__init__(convert_charrefs=True)
         self.parts = []
         self.ignored = 0
 
     def handle_starttag(self, tag, attrs):
-        if tag.lower() in ("script", "style"):
+        tag = tag.lower()
+
+        if tag in ("script", "style"):
             self.ignored += 1
 
+        if not self.ignored and tag in (
+            "p", "div", "br", "li", "h2", "h3"
+        ):
+            self.parts.append("\n\n")
+
     def handle_endtag(self, tag):
-        if tag.lower() in ("script", "style"):
+        tag = tag.lower()
+
+        if tag in ("script", "style"):
             self.ignored = max(0, self.ignored - 1)
+
+        if not self.ignored and tag in (
+            "p", "div", "li", "h2", "h3"
+        ):
+            self.parts.append("\n\n")
 
     def handle_data(self, data):
         if not self.ignored:
@@ -84,42 +93,66 @@ class TextParser(HTMLParser):
 
 
 def clean_text(value):
-    value = html.unescape(value or "")
-
     parser = TextParser()
-    parser.feed(value)
+    parser.feed(html.unescape(value or ""))
 
-    text = " ".join(parser.parts)
-    text = html.unescape(text)
-    text = re.sub(r"\s+", " ", text).strip()
+    text = html.unescape("".join(parser.parts))
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\n\s*\n+", "\n\n", text)
 
-    return text
+    return text.strip()
 
 
-def translate(text):
-    """Inglizchadan o'zbekchaga tarjima."""
+def clean_ending(text):
+    text = re.sub(
+        r"\s*(?:Read more|Continue reading|"
+        r"O['‘’]qishni davom eting)"
+        r"(?:\s*[.→↗»…]*)$",
+        "",
+        text,
+        flags=re.IGNORECASE,
+    )
+    return text.strip()
 
-    text = (text or "").strip()
 
-    if not text:
-        return ""
+def split_chunks(text, limit=TRANSLATE_CHUNK):
+    """Matnni so'zlarni kesmasdan bo'laklash."""
+    words = text.split()
+    chunks = []
+    current = []
 
-    # MyMemory API so'rov hajmini cheklash.
-    text = text[:450]
+    for word in words:
+        candidate = " ".join(current + [word])
 
+        if len(candidate) > limit and current:
+            chunks.append(" ".join(current))
+            current = [word]
+        else:
+            current.append(word)
+
+    if current:
+        chunks.append(" ".join(current))
+
+    return chunks
+
+
+def translate_chunk(text):
     url = (
         "https://api.mymemory.translated.net/get?"
         + urlencode({
             "q": text,
-            "langpair": "en|uz"
+            "langpair": "en|uz",
         })
     )
 
-    with fetch(url, 20) as response:
+    with fetch(url, 25) as response:
         data = json.load(response)
 
-    if data.get("responseStatus") != 200:
-        raise RuntimeError("Tarjima xizmati xatosi")
+    if str(data.get("responseStatus")) != "200":
+        raise RuntimeError(
+            "Tarjima API xatosi: "
+            + str(data.get("responseStatus"))
+        )
 
     if data.get("quotaFinished"):
         raise RuntimeError("Tarjima limiti tugagan")
@@ -133,14 +166,41 @@ def translate(text):
     ).strip()
 
     if not result or result.casefold() == text.casefold():
-        return ""
+        raise RuntimeError("Tarjima qaytmadi")
 
     return result
 
 
-class MetaImageParser(HTMLParser):
-    """Maqola sahifasidan rasm manzilini olish."""
+def translate(text):
+    """Matnni qisqartirmasdan bo'laklab tarjima qilish."""
+    text = (text or "").strip()
 
+    if not text:
+        return ""
+
+    paragraphs = [
+        p.strip()
+        for p in text.split("\n\n")
+        if p.strip()
+    ]
+
+    translated = []
+
+    for paragraph in paragraphs:
+        chunks = split_chunks(paragraph)
+        results = []
+
+        for chunk in chunks:
+            result = translate_chunk(chunk)
+            results.append(result)
+            time.sleep(1)
+
+        translated.append(" ".join(results))
+
+    return "\n\n".join(translated)
+
+
+class MetaImageParser(HTMLParser):
     def __init__(self):
         super().__init__()
         self.images = []
@@ -150,7 +210,6 @@ class MetaImageParser(HTMLParser):
             return
 
         data = dict(attrs)
-
         name = (
             data.get("property")
             or data.get("name")
@@ -161,17 +220,13 @@ class MetaImageParser(HTMLParser):
             "og:image",
             "og:image:secure_url",
             "twitter:image",
-            "twitter:image:src"
+            "twitter:image:src",
         ):
-            value = data.get("content", "")
-
-            if value:
-                self.images.append(value)
+            if data.get("content"):
+                self.images.append(data["content"])
 
 
 def article_image(url):
-    """Asl maqolaning og:image rasmini topish."""
-
     try:
         with fetch(url, 12) as response:
             content_type = response.headers.get(
@@ -184,8 +239,7 @@ def article_image(url):
             final_url = response.geturl()
 
             page = response.read(600000).decode(
-                "utf-8",
-                errors="ignore"
+                "utf-8", errors="ignore"
             )
 
         parser = MetaImageParser()
@@ -195,23 +249,20 @@ def article_image(url):
             image = safe_url(
                 urljoin(final_url, candidate)
             )
-
             if image:
                 return image
 
     except Exception as error:
-        print("Maqola rasmi xatosi:", error)
+        print("Rasm xatosi:", error)
 
     return ""
 
 
 def rss_image(entry, article_url):
-    """RSS'dan aynan shu maqolaga tegishli rasmni olish."""
-
     for tag in (
         MEDIA + "content",
         MEDIA + "thumbnail",
-        "enclosure"
+        "enclosure",
     ):
         for element in entry.findall(tag):
             media_type = element.get("type", "")
@@ -222,255 +273,272 @@ def rss_image(entry, article_url):
             image = safe_url(
                 urljoin(
                     article_url,
-                    element.get("url", "")
+                    element.get("url", ""),
                 )
             )
 
             if image:
                 return image
 
-    for field in (
-        "description",
-        CONTENT + "encoded"
-    ):
-        description = html.unescape(
-            entry.findtext(field) or ""
-        )
+    for field in ("description", CONTENT + "encoded"):
+        raw = entry.findtext(field) or ""
 
         match = re.search(
             r'<img[^>]+src=["\']([^"\']+)',
-            description,
-            flags=re.IGNORECASE
+            html.unescape(raw),
+            flags=re.IGNORECASE,
         )
 
         if match:
             image = safe_url(
                 urljoin(article_url, match.group(1))
             )
-
             if image:
                 return image
 
     return ""
 
 
-def rss_summary(entry):
-    """RSS tavsifidan qisqacha mazmun olish."""
+def rss_text(entry, source):
+    """RSS tavsifi yoki ruxsat etilgan to'liq matn."""
+    description = clean_text(
+        entry.findtext("description") or ""
+    )
 
-    description = entry.findtext("description") or ""
-    summary = clean_text(description)
+    encoded = clean_text(
+        entry.findtext(CONTENT + "encoded") or ""
+    )
 
-    original_title = clean_text(
+    title = clean_text(
         entry.findtext("title") or ""
     )
 
-    if not summary:
-        return ""
+    if source in FULL_TEXT_ALLOWED and encoded:
+        text = encoded
+        kind = "full"
+    else:
+        text = description
+        kind = "summary"
 
-    if summary.casefold() == original_title.casefold():
-        return ""
+    text = clean_ending(text)
 
-    # Takrorlangan yoki juda uzun matnni cheklash.
-    summary = summary[:450].strip()
+    if not text or text.casefold() == title.casefold():
+        return "", kind
 
-    return summary
-
-
-# Oldingi yangiliklarni o'qish.
-try:
-    previous_news = json.loads(
-        OUTPUT.read_text(encoding="utf-8")
-    )
-
-    if not isinstance(previous_news, list):
-        previous_news = []
-
-except (OSError, ValueError):
-    previous_news = []
+    return text, kind
 
 
-# Oldingi o'zbekcha sarlavha, mazmun va rasmlarni saqlash.
-cache = {
-    item["url"]: item
-    for item in previous_news
-    if isinstance(item, dict)
-    and item.get("url")
-    and item.get("title")
-    and item.get("lang") == "uz"
-}
-
-
-candidates = []
-
-# RSS manbalardan yangiliklarni olish.
-for source, feed_url in FEEDS:
+def read_previous():
     try:
-        with fetch(feed_url, 20) as response:
-            root = ET.fromstring(response.read())
-
-        entries = root.findall("./channel/item")
-
-        print(
-            f"{source}: {len(entries)} ta maqola topildi."
+        data = json.loads(
+            OUTPUT.read_text(encoding="utf-8")
         )
-
-        for entry in entries[:20]:
-            title = clean_text(
-                entry.findtext("title") or ""
-            )
-
-            link = safe_url(
-                (entry.findtext("link") or "").strip()
-            )
-
-            if not title or not link:
-                continue
-
-            try:
-                published = parsedate_to_datetime(
-                    entry.findtext("pubDate") or ""
-                ).astimezone(timezone.utc)
-
-                date = published.isoformat()
-                timestamp = published.timestamp()
-
-            except (ValueError, TypeError, OverflowError):
-                date = ""
-                timestamp = 0
-
-            candidates.append({
-                "original_title": title,
-                "url": link,
-                "source": source,
-                "date": date,
-                "timestamp": timestamp,
-                "entry": entry
-            })
-
-    except Exception as error:
-        print(f"{source} RSS xatosi: {error}")
+        return data if isinstance(data, list) else []
+    except (OSError, ValueError):
+        return []
 
 
-# Eng yangi maqolalarni birinchi chiqarish.
-candidates.sort(
-    key=lambda item: item["timestamp"],
-    reverse=True
-)
+def main():
+    previous_news = read_previous()
 
+    cache = {
+        item["url"]: item
+        for item in previous_news
+        if isinstance(item, dict)
+        and item.get("url")
+        and item.get("lang") == "uz"
+    }
 
-items = []
-seen = set()
+    candidates = []
 
-for candidate in candidates:
-    if len(items) >= MAX_NEWS:
-        break
-
-    link = candidate["url"]
-
-    if link in seen:
-        continue
-
-    seen.add(link)
-
-    previous = cache.get(link, {})
-
-    # 1. O'zbekcha sarlavha
-    translated_title = previous.get("title", "")
-
-    if not translated_title:
+    for source, feed_url in FEEDS:
         try:
-            translated_title = translate(
-                candidate["original_title"]
+            with fetch(feed_url) as response:
+                root = ET.fromstring(response.read())
+
+            entries = root.findall("./channel/item")
+
+            print(
+                f"{source}: {len(entries)} ta maqola."
             )
 
-            time.sleep(1)
+            for entry in entries[:20]:
+                title = clean_text(
+                    entry.findtext("title") or ""
+                )
+
+                link = safe_url(
+                    entry.findtext("link") or ""
+                )
+
+                if not title or not link:
+                    continue
+
+                try:
+                    published = parsedate_to_datetime(
+                        entry.findtext("pubDate") or ""
+                    ).astimezone(timezone.utc)
+
+                    date = published.isoformat()
+                    timestamp = published.timestamp()
+                except (ValueError, TypeError, OverflowError):
+                    date = ""
+                    timestamp = 0
+
+                candidates.append({
+                    "original_title": title,
+                    "url": link,
+                    "source": source,
+                    "date": date,
+                    "timestamp": timestamp,
+                    "entry": entry,
+                })
 
         except Exception as error:
-            print("Sarlavha tarjimasi xatosi:", error)
+            print(source, "RSS xatosi:", error)
+
+    candidates.sort(
+        key=lambda x: x["timestamp"],
+        reverse=True,
+    )
+
+    items = []
+    seen = set()
+
+    for candidate in candidates:
+        if len(items) >= MAX_NEWS:
+            break
+
+        link = candidate["url"]
+
+        if link in seen:
             continue
 
-    if not translated_title:
-        continue
+        seen.add(link)
 
-    # 2. O'zbekcha qisqacha mazmun
-    summary = previous.get("summary", "")
+        previous = cache.get(link, {})
 
-    if not summary:
-        original_summary = rss_summary(
-            candidate["entry"]
+        title = previous.get("title", "")
+
+        if not title:
+            try:
+                title = translate(
+                    candidate["original_title"]
+                )
+            except Exception as error:
+                print("Sarlavha xatosi:", error)
+                continue
+
+        if not title:
+            continue
+
+        original_text, content_type = rss_text(
+            candidate["entry"],
+            candidate["source"],
         )
 
-        if original_summary:
-            try:
-                summary = translate(original_summary)
+        old_content = previous.get("content")
+        old_summary = previous.get("summary", "")
 
-                time.sleep(1)
+        content = []
+        summary = ""
+
+        # Eski, ishonchli to'liq matnni saqlash.
+        if (
+            previous.get("content_type") == "full"
+            and isinstance(old_content, list)
+            and old_content
+        ):
+            content = old_content
+            content_type = "full"
+
+        elif original_text:
+            try:
+                translated = translate(original_text)
+
+                if translated:
+                    content = [
+                        p.strip()
+                        for p in translated.split("\n\n")
+                        if p.strip()
+                    ]
+
+                    if content_type == "summary":
+                        summary = "\n\n".join(content)
 
             except Exception as error:
-                print("Mazmun tarjimasi xatosi:", error)
-                summary = ""
+                print("Matn tarjimasi xatosi:", error)
 
-    # 3. Asl maqola rasmi
-    image = safe_url(
-        previous.get("image", "")
-    )
+        # Tarjima ishlamasa eski mazmunni saqlash.
+        if not content:
+            if isinstance(old_content, list) and old_content:
+                content = old_content
+                content_type = previous.get(
+                    "content_type", "summary"
+                )
+            elif isinstance(old_content, str) and old_content.strip():
+                content = [old_content.strip()]
+                content_type = "summary"
+            elif isinstance(old_summary, str) and old_summary.strip():
+                content = [old_summary.strip()]
+                content_type = "summary"
 
-    if not image:
-        image = rss_image(
-            candidate["entry"],
-            link
+        if not summary and content_type == "summary":
+            summary = "\n\n".join(content)
+
+        image = safe_url(
+            previous.get("image", "")
         )
 
-    if not image:
-        image = article_image(link)
+        if not image:
+            image = rss_image(
+                candidate["entry"], link
+            )
 
-    # 4. Yangilikni news.json ga qo'shish
-    items.append({
-        "title": translated_title,
-        "url": link,
-        "source": candidate["source"],
-        "date": candidate["date"],
-        "lang": "uz",
-        "image": image,
-        "summary": summary
-    })
+        if not image:
+            image = article_image(link)
+
+        item = {
+            "title": title,
+            "url": link,
+            "source": candidate["source"],
+            "date": candidate["date"],
+            "lang": "uz",
+            "image": image,
+            "content": content,
+            "summary": summary,
+            "content_type": content_type,
+        }
+
+        items.append(item)
+
+        print(
+            candidate["source"],
+            "| Rasm:", bool(image),
+            "| Matn:", bool(content),
+            "| Turi:", content_type,
+        )
+
+    if not items:
+        print(
+            "Yangi yangilik topilmadi. "
+            "Avvalgi news.json saqlanadi."
+        )
+        raise SystemExit(1)
+
+    OUTPUT.write_text(
+        json.dumps(
+            items,
+            ensure_ascii=False,
+            indent=2,
+        ) + "\n",
+        encoding="utf-8",
+    )
 
     print(
-        candidate["source"],
-        "| Rasm:", bool(image),
-        "| Mazmun:", bool(summary)
+        f"{len(items)} ta o'zbekcha yangilik saqlandi."
     )
 
 
-if not items:
-    print(
-        "Yangilik topilmadi. "
-        "Avvalgi news.json saqlanadi."
-    )
-    raise SystemExit(1)
-
-
-# Yangilangan yangiliklarni saqlash.
-OUTPUT.write_text(
-    json.dumps(
-        items,
-        ensure_ascii=False,
-        indent=2
-    ) + "\n",
-    encoding="utf-8"
-)
-
-
-image_count = sum(
-    bool(item["image"])
-    for item in items
-)
-
-summary_count = sum(
-    bool(item["summary"])
-    for item in items
-)
-
-print(f"{len(items)} ta o'zbekcha yangilik saqlandi.")
-print(f"{image_count} ta maqola rasmi topildi.")
-print(f"{summary_count} ta o'zbekcha mazmun saqlandi.")
+if __name__ == "__main__":
+    main()
