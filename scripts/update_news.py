@@ -1,89 +1,106 @@
 
 #!/usr/bin/env python3
-"""F1 yangiliklarini olish va o'zbekchaga tarjima qilish."""
+"""F1 yangiliklarini MyMemory orqali o'zbekchaga tarjima qilish."""
 
+import html
 import json
 import time
 import xml.etree.ElementTree as ET
 from datetime import timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-from deep_translator import GoogleTranslator
-
 OUTPUT = Path("news.json")
-QUERY = "Formula 1 F1 racing when:7d"
+MAX_NEWS = 10
 
-URL = (
-    "https://news.google.com/rss/search?q="
-    + quote(QUERY)
-    + "&hl=en-US&gl=US&ceid=US:en"
+RSS_URL = (
+    "https://news.google.com/rss/search?"
+    + urlencode({
+        "q": "Formula 1 F1 racing when:7d",
+        "hl": "en-US",
+        "gl": "US",
+        "ceid": "US:en"
+    })
 )
 
-MAX_NEWS = 10
-MAX_TRANSLATIONS = 10
 
-# Eski o'zbekcha tarjimalarni saqlash
-try:
-    old_news = json.loads(
-        OUTPUT.read_text(encoding="utf-8")
+def get_json(url):
+    request = Request(
+        url,
+        headers={"User-Agent": "F1UzbekistanNews/1.0"}
     )
-    if not isinstance(old_news, list):
-        old_news = []
-except (FileNotFoundError, ValueError, OSError):
-    old_news = []
+    with urlopen(request, timeout=25) as response:
+        return json.load(response)
+
+
+def translate(text):
+    params = urlencode({
+        "q": text,
+        "langpair": "en|uz"
+    })
+
+    url = "https://api.mymemory.translated.net/get?" + params
+    data = get_json(url)
+
+    if data.get("responseStatus") != 200:
+        raise RuntimeError(
+            str(data.get("responseDetails", "Tarjima xatosi"))
+        )
+
+    if data.get("quotaFinished"):
+        raise RuntimeError("Tarjima limiti tugagan")
+
+    result = html.unescape(
+        str(data.get("responseData", {}).get("translatedText", ""))
+    ).strip()
+
+    if not result or result.casefold() == text.casefold():
+        return None
+
+    return result
+
+
+try:
+    old = json.loads(OUTPUT.read_text(encoding="utf-8"))
+    if not isinstance(old, list):
+        old = []
+except (OSError, ValueError):
+    old = []
 
 cache = {
     item["url"]: item
-    for item in old_news
+    for item in old
     if isinstance(item, dict)
     and item.get("url")
     and item.get("title")
     and item.get("lang") == "uz"
 }
 
-# Google News RSS
 request = Request(
-    URL,
+    RSS_URL,
     headers={"User-Agent": "Mozilla/5.0"}
 )
 
-with urlopen(request, timeout=20) as response:
+with urlopen(request, timeout=30) as response:
     root = ET.fromstring(response.read())
-
-translator = GoogleTranslator(
-    source="en",
-    target="uz"
-)
 
 items = []
 seen = set()
-translation_count = 0
 
 for entry in root.findall("./channel/item"):
-
     if len(items) >= MAX_NEWS:
         break
 
-    original = (
-        entry.findtext("title") or ""
-    ).strip()
+    original = (entry.findtext("title") or "").strip()
+    link = (entry.findtext("link") or "").strip()
+    source = (entry.findtext("source") or "Google News").strip()
 
-    link = (
-        entry.findtext("link") or ""
-    ).strip()
+    if not original or not link.startswith("https://"):
+        continue
 
-    source = (
-        entry.findtext("source") or "Google News"
-    ).strip()
-
-    if (
-        not original
-        or not link.startswith("https://")
-        or link in seen
-    ):
+    if link in seen:
         continue
 
     seen.add(link)
@@ -97,41 +114,16 @@ for entry in root.findall("./channel/item"):
 
     if link in cache:
         translated = cache[link]["title"]
-
     else:
-        if translation_count >= MAX_TRANSLATIONS:
-            break
-
-        translation_count += 1
-        translated = None
-
         try:
-            print(
-                f"Tarjima qilinmoqda: "
-                f"{translation_count}/{MAX_TRANSLATIONS}",
-                flush=True
-            )
-
-            candidate = translator.translate(original)
-
-            if (
-                candidate
-                and candidate.strip().casefold()
-                != original.casefold()
-            ):
-                translated = candidate.strip()
-
-            time.sleep(2)
-
+            translated = translate(original)
+            time.sleep(1)
         except Exception as error:
-            print(
-                f"Tarjima xatosi: {error}",
-                flush=True
-            )
+            print("Tarjima xatosi:", error)
             continue
 
-        if not translated:
-            continue
+    if not translated:
+        continue
 
     items.append({
         "title": translated,
@@ -141,24 +133,12 @@ for entry in root.findall("./channel/item"):
         "lang": "uz"
     })
 
-# Yangi ma'lumot bo'lmasa eskisini saqlash
-if not items:
-    print(
-        "Yangi o'zbekcha yangilik topilmadi. "
-        "Eski news.json saqlanadi."
+if items:
+    OUTPUT.write_text(
+        json.dumps(items, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8"
     )
-    raise SystemExit(0)
-
-OUTPUT.write_text(
-    json.dumps(
-        items,
-        ensure_ascii=False,
-        indent=2
-    ) + "\n",
-    encoding="utf-8"
-)
-
-print(
-    f"{len(items)} ta o'zbekcha yangilik saqlandi.",
-    flush=True
-)
+    print(f"Muvaffaqiyatli: {len(items)} ta o'zbekcha yangilik saqlandi.")
+else:
+    print("Tarjima topilmadi. Avvalgi news.json saqlanadi.")
+    raise SystemExit(1)
