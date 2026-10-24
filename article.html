@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#090909">
 
 <title>F1 yangiliklari — F1 Uzbekistan</title>
-<meta name="description" content="Formula 1 yangiliklari o‘zbek tilida. F1 Uzbekistan TV.">
+<meta name="description" content="Formula 1 yangiliklari o‘zbek tilida — F1 Uzbekistan TV.">
 
 <style>
 * {
@@ -16,10 +16,10 @@
 
 body {
   margin: 0;
+  min-height: 100vh;
   background: #090909;
   color: #fff;
   font-family: Arial, Helvetica, sans-serif;
-  min-height: 100vh;
 }
 
 header {
@@ -29,7 +29,7 @@ header {
 }
 
 header a {
-  color: white;
+  color: #fff;
   text-decoration: none;
   font-weight: 900;
 }
@@ -52,7 +52,6 @@ header a {
   color: #ff7772;
   font-size: 13px;
   font-weight: 800;
-  text-transform: uppercase;
   letter-spacing: 1px;
 }
 
@@ -61,9 +60,11 @@ h1 {
   line-height: 1.2;
   margin: 15px 0;
   font-weight: 900;
+  overflow-wrap: anywhere;
 }
 
 time {
+  display: block;
   color: #aaa;
   font-size: 13px;
 }
@@ -87,42 +88,24 @@ time {
 }
 
 .article-content p {
-  margin: 0 0 20px;
+  margin: 0 0 22px;
 }
 
 .article-content h2 {
   font-size: 23px;
+  line-height: 1.4;
   color: #fff;
   margin: 30px 0 15px;
 }
 
-.article-content a {
-  color: #ff7772;
-}
-
 .notice {
+  margin-top: 25px;
   padding: 20px;
   background: #171717;
   border: 1px solid #333;
   border-radius: 12px;
   color: #ddd;
   line-height: 1.7;
-  margin-top: 25px;
-}
-
-.origin {
-  display: inline-block;
-  margin-top: 22px;
-  padding: 14px 22px;
-  background: #e10600;
-  color: #fff;
-  font-weight: 900;
-  text-decoration: none;
-  border-radius: 8px;
-}
-
-.origin:hover {
-  background: #b90500;
 }
 
 .error {
@@ -144,7 +127,7 @@ footer span {
   font-weight: 900;
 }
 
-@media(max-width:600px) {
+@media (max-width: 600px) {
   header {
     padding: 17px 15px;
   }
@@ -169,11 +152,6 @@ footer span {
 
   .notice {
     padding: 16px;
-  }
-
-  .origin {
-    width: 100%;
-    text-align: center;
   }
 }
 </style>
@@ -221,33 +199,63 @@ footer span {
     root.appendChild(notice);
   }
 
+  function cleanArticleText(value) {
+    if (typeof value !== "string") {
+      return "";
+    }
+
+    let text = value.trim();
+
+    // RSS oxiridagi davom ettirish yozuvlarini
+    // faqat matnning oxiridan olib tashlash.
+    text = text.replace(
+      /\s*(?:\.{3}|…)?\s*(?:O['‘’`]qishni davom eting|Read more|Continue reading)(?:\s*(?:\.{3}|…|[»→↗]))?\s*$/i,
+      ""
+    );
+
+    return text.trim();
+  }
+
   function getParagraphs(value) {
     if (Array.isArray(value)) {
-      return value.filter(
-        p => typeof p === "string" && p.trim()
-      );
+      return value
+        .filter(p => typeof p === "string")
+        .flatMap(p => p.split(/\n\s*\n/))
+        .map(cleanArticleText)
+        .filter(Boolean);
     }
 
     if (typeof value === "string") {
       return value
         .split(/\n\s*\n/)
-        .filter(p => p.trim());
+        .map(cleanArticleText)
+        .filter(Boolean);
     }
 
     return [];
   }
 
   function renderContent(item) {
-    const paragraphs = getParagraphs(
-      item.content || item.body || item.summary
-    );
+    const candidates = [
+      item.content,
+      item.body,
+      item.summary
+    ];
+
+    let paragraphs = [];
+
+    for (const candidate of candidates) {
+      paragraphs = getParagraphs(candidate);
+
+      if (paragraphs.length) {
+        break;
+      }
+    }
 
     if (!paragraphs.length) {
       addNotice(
         "Ushbu yangilikning o‘zbekcha matni " +
-        "hozircha mavjud emas. " +
-        "Batafsil ma’lumotni asl manbada " +
-        "o‘qishingiz mumkin."
+        "hozircha tayyor emas."
       );
       return;
     }
@@ -257,7 +265,7 @@ footer span {
 
     paragraphs.forEach(text => {
       const p = document.createElement("p");
-      p.textContent = text.trim();
+      p.textContent = text;
       content.appendChild(p);
     });
 
@@ -272,7 +280,8 @@ footer span {
 
     const source = document.createElement("div");
     source.className = "source";
-    source.textContent = item.source || "Formula 1";
+    source.textContent =
+      item.source || "Formula 1";
 
     const title = document.createElement("h1");
     title.textContent = item.title;
@@ -309,30 +318,19 @@ footer span {
       image.loading = "eager";
       image.referrerPolicy = "no-referrer";
 
-      image.onerror = () => image.remove();
+      image.onerror = () => {
+        image.remove();
+      };
 
       image.src = item.image;
-
       root.appendChild(image);
     }
 
+    // O'zbekcha maqola matnini chiqarish.
     renderContent(item);
 
-    if (
-      typeof item.url === "string" &&
-      item.url.startsWith("https://")
-    ) {
-      const link = document.createElement("a");
-
-      link.className = "origin";
-      link.href = item.url;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-
-      link.textContent = "Asl manbada o‘qish ↗";
-
-      root.appendChild(link);
-    }
+    // Asl manbaga olib o'tuvchi qizil tugma
+    // ataylab olib tashlangan.
   }
 
   try {
