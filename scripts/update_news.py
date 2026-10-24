@@ -1,6 +1,6 @@
 
 #!/usr/bin/env python3
-"""F1 yangiliklari: asl maqola rasmi va o'zbekcha sarlavha."""
+"""F1 yangiliklari: rasm, o'zbekcha sarlavha va qisqacha mazmun."""
 
 import html
 import json
@@ -62,7 +62,51 @@ def safe_url(url):
     return url
 
 
+class TextParser(HTMLParser):
+    """HTML teglardan oddiy matnni ajratib olish."""
+
+    def __init__(self):
+        super().__init__()
+        self.parts = []
+        self.ignored = 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() in ("script", "style"):
+            self.ignored += 1
+
+    def handle_endtag(self, tag):
+        if tag.lower() in ("script", "style"):
+            self.ignored = max(0, self.ignored - 1)
+
+    def handle_data(self, data):
+        if not self.ignored:
+            self.parts.append(data)
+
+
+def clean_text(value):
+    value = html.unescape(value or "")
+
+    parser = TextParser()
+    parser.feed(value)
+
+    text = " ".join(parser.parts)
+    text = html.unescape(text)
+    text = re.sub(r"\s+", " ", text).strip()
+
+    return text
+
+
 def translate(text):
+    """Inglizchadan o'zbekchaga tarjima."""
+
+    text = (text or "").strip()
+
+    if not text:
+        return ""
+
+    # MyMemory API so'rov hajmini cheklash.
+    text = text[:450]
+
     url = (
         "https://api.mymemory.translated.net/get?"
         + urlencode({
@@ -89,12 +133,14 @@ def translate(text):
     ).strip()
 
     if not result or result.casefold() == text.casefold():
-        return None
+        return ""
 
     return result
 
 
 class MetaImageParser(HTMLParser):
+    """Maqola sahifasidan rasm manzilini olish."""
+
     def __init__(self):
         super().__init__()
         self.images = []
@@ -136,6 +182,7 @@ def article_image(url):
                 return ""
 
             final_url = response.geturl()
+
             page = response.read(600000).decode(
                 "utf-8",
                 errors="ignore"
@@ -159,7 +206,7 @@ def article_image(url):
 
 
 def rss_image(entry, article_url):
-    """RSS'da aynan shu maqolaga biriktirilgan rasm."""
+    """RSS'dan aynan shu maqolaga tegishli rasmni olish."""
 
     for tag in (
         MEDIA + "content",
@@ -207,6 +254,29 @@ def rss_image(entry, article_url):
     return ""
 
 
+def rss_summary(entry):
+    """RSS tavsifidan qisqacha mazmun olish."""
+
+    description = entry.findtext("description") or ""
+    summary = clean_text(description)
+
+    original_title = clean_text(
+        entry.findtext("title") or ""
+    )
+
+    if not summary:
+        return ""
+
+    if summary.casefold() == original_title.casefold():
+        return ""
+
+    # Takrorlangan yoki juda uzun matnni cheklash.
+    summary = summary[:450].strip()
+
+    return summary
+
+
+# Oldingi yangiliklarni o'qish.
 try:
     previous_news = json.loads(
         OUTPUT.read_text(encoding="utf-8")
@@ -219,6 +289,7 @@ except (OSError, ValueError):
     previous_news = []
 
 
+# Oldingi o'zbekcha sarlavha, mazmun va rasmlarni saqlash.
 cache = {
     item["url"]: item
     for item in previous_news
@@ -231,6 +302,7 @@ cache = {
 
 candidates = []
 
+# RSS manbalardan yangiliklarni olish.
 for source, feed_url in FEEDS:
     try:
         with fetch(feed_url, 20) as response:
@@ -243,8 +315,8 @@ for source, feed_url in FEEDS:
         )
 
         for entry in entries[:20]:
-            title = html.unescape(
-                (entry.findtext("title") or "").strip()
+            title = clean_text(
+                entry.findtext("title") or ""
             )
 
             link = safe_url(
@@ -279,6 +351,7 @@ for source, feed_url in FEEDS:
         print(f"{source} RSS xatosi: {error}")
 
 
+# Eng yangi maqolalarni birinchi chiqarish.
 candidates.sort(
     key=lambda item: item["timestamp"],
     reverse=True
@@ -301,23 +374,43 @@ for candidate in candidates:
 
     previous = cache.get(link, {})
 
-    if previous:
-        translated = previous["title"]
+    # 1. O'zbekcha sarlavha
+    translated_title = previous.get("title", "")
 
-    else:
+    if not translated_title:
         try:
-            translated = translate(
+            translated_title = translate(
                 candidate["original_title"]
             )
+
             time.sleep(1)
 
         except Exception as error:
-            print("Tarjima xatosi:", error)
+            print("Sarlavha tarjimasi xatosi:", error)
             continue
 
-    if not translated:
+    if not translated_title:
         continue
 
+    # 2. O'zbekcha qisqacha mazmun
+    summary = previous.get("summary", "")
+
+    if not summary:
+        original_summary = rss_summary(
+            candidate["entry"]
+        )
+
+        if original_summary:
+            try:
+                summary = translate(original_summary)
+
+                time.sleep(1)
+
+            except Exception as error:
+                print("Mazmun tarjimasi xatosi:", error)
+                summary = ""
+
+    # 3. Asl maqola rasmi
     image = safe_url(
         previous.get("image", "")
     )
@@ -331,19 +424,22 @@ for candidate in candidates:
     if not image:
         image = article_image(link)
 
+    # 4. Yangilikni news.json ga qo'shish
     items.append({
-        "title": translated,
+        "title": translated_title,
         "url": link,
         "source": candidate["source"],
         "date": candidate["date"],
         "lang": "uz",
-        "image": image
+        "image": image,
+        "summary": summary
     })
 
-    if image:
-        print("Haqiqiy rasm topildi:", candidate["source"])
-    else:
-        print("Rasm topilmadi:", candidate["source"])
+    print(
+        candidate["source"],
+        "| Rasm:", bool(image),
+        "| Mazmun:", bool(summary)
+    )
 
 
 if not items:
@@ -354,6 +450,7 @@ if not items:
     raise SystemExit(1)
 
 
+# Yangilangan yangiliklarni saqlash.
 OUTPUT.write_text(
     json.dumps(
         items,
@@ -369,5 +466,11 @@ image_count = sum(
     for item in items
 )
 
+summary_count = sum(
+    bool(item["summary"])
+    for item in items
+)
+
 print(f"{len(items)} ta o'zbekcha yangilik saqlandi.")
 print(f"{image_count} ta maqola rasmi topildi.")
+print(f"{summary_count} ta o'zbekcha mazmun saqlandi.")
