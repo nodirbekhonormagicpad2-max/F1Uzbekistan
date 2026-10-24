@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090909">
 <title>F1 Uzbekistan TV — Jonli efir</title>
-<meta name="description" content="F1 Uzbekistan TV — jonli efir va so‘nggi sessiya natijalari.">
+<meta name="description" content="F1 Uzbekistan TV — jonli efir, o‘zbekcha F1 yangiliklari va so‘nggi sessiya natijalari.">
 
 <style>
 *{box-sizing:border-box}
@@ -190,6 +190,8 @@ header{padding:0 8px}
   <div class="results-note" id="resultsExtra" hidden></div>
 </section>
 
+<!-- F1 YANGILIKLARI KARUSELI news.js ORQALI SHU YERGA JOYLASHADI -->
+
 <section class="calendar-section">
   <a class="calendar-btn" href="f1_calendar_fixed.html">📅 F1 TAQVIMI 2026–2027</a>
   <a class="calendar-btn" href="f1_championship.html">🏆 CHEMPIONAT JADVALI</a>
@@ -199,6 +201,7 @@ header{padding:0 8px}
 
 <footer><span>F1 UZBEKISTAN TV</span> · JONLI EFIR</footer>
 
+<!-- KEYINGI SESSIYA TAYMERI -->
 <script>
 (()=>{
   const sessions=[
@@ -236,6 +239,7 @@ header{padding:0 8px}
 })();
 </script>
 
+<!-- OXIRGI SESSIYA NATIJALARI -->
 <script>
 (()=>{
   const title=document.getElementById('resultsTitle');
@@ -397,6 +401,7 @@ header{padding:0 8px}
 })();
 </script>
 
+<!-- FIREBASE JONLI CHAT -->
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js';
 import {getAnalytics} from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-analytics.js';
@@ -579,6 +584,9 @@ chatForm.addEventListener('submit',async event=>{
   }
 });
 </script>
+
+<!-- O‘ZBEKCHA F1 YANGILIKLARI KARUSELI -->
+<script src="./news.js" defer></script>
 
 </body>
 </html>
