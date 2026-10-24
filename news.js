@@ -48,11 +48,7 @@
       object-fit: cover;
       border-radius: 12px;
       display: block;
-      background: linear-gradient(
-        135deg,
-        #e10600,
-        #151821
-      );
+      background: #151821;
     }
 
     .f1-slide-placeholder {
@@ -60,9 +56,9 @@
       border-radius: 12px;
       background: linear-gradient(
         135deg,
-        #e10600 0%,
-        #242633 55%,
-        #101116 100%
+        #e10600,
+        #242633,
+        #101116
       );
       display: flex;
       align-items: center;
@@ -200,6 +196,7 @@
       <button
         class="f1-arrow prev"
         aria-label="Oldingi yangilik"
+        type="button"
       >‹</button>
 
       <div
@@ -214,6 +211,7 @@
       <button
         class="f1-arrow next"
         aria-label="Keyingi yangilik"
+        type="button"
       >›</button>
     </div>
 
@@ -285,11 +283,9 @@
 
     slide.replaceChildren();
 
-    const placeholder = createPlaceholder();
-
     if (
       typeof item.image === "string" &&
-      /^https:\/\//i.test(item.image)
+      item.image.startsWith("https://")
     ) {
       const image = document.createElement("img");
 
@@ -306,7 +302,7 @@
 
       slide.appendChild(image);
     } else {
-      slide.appendChild(placeholder);
+      slide.appendChild(createPlaceholder());
     }
 
     const source = document.createElement("div");
@@ -320,9 +316,12 @@
 
     const link = document.createElement("a");
 
-    link.href = item.url;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
+    // Yangilik boshqa saytga emas,
+    // F1 Uzbekistan ichidagi maqola sahifasiga o'tadi.
+    link.href =
+      "./article.html?id=" +
+      encodeURIComponent(item.url);
+
     link.textContent = item.title;
 
     heading.appendChild(link);
@@ -353,10 +352,9 @@
     articles.forEach((_, i) => {
       const dot = document.createElement("button");
 
-      dot.className = (
+      dot.className =
         "f1-dot" +
-        (i === index ? " active" : "")
-      );
+        (i === index ? " active" : "");
 
       dot.type = "button";
 
@@ -394,7 +392,7 @@
 
   carousel.addEventListener(
     "touchstart",
-    (event) => {
+    event => {
       touchStartX =
         event.changedTouches[0].screenX;
     },
@@ -403,7 +401,7 @@
 
   carousel.addEventListener(
     "touchend",
-    (event) => {
+    event => {
       if (touchStartX === null) return;
 
       const difference =
@@ -440,7 +438,7 @@
 
   carousel.addEventListener(
     "focusout",
-    (event) => {
+    event => {
       if (!carousel.contains(event.relatedTarget)) {
         startAuto();
       }
@@ -484,7 +482,7 @@
         typeof item.title === "string" &&
         item.title.trim() &&
         typeof item.url === "string" &&
-        /^https:\/\//i.test(item.url) &&
+        item.url.startsWith("https://") &&
         item.lang === "uz"
       ).slice(0, 10);
 
