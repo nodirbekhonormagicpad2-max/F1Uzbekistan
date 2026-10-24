@@ -256,10 +256,10 @@
   function startAuto() {
     stopAuto();
 
-    if (articles.length > 1) {
+    if (articles.length > 1 && !document.hidden) {
       timer = setInterval(() => {
         show((index + 1) % articles.length);
-      }, 5000);
+      }, 10000);
     }
   }
 
@@ -316,8 +316,7 @@
 
     const link = document.createElement("a");
 
-    // Yangilik boshqa saytga emas,
-    // F1 Uzbekistan ichidagi maqola sahifasiga o'tadi.
+    // Yangilik sayt ichidagi article.html sahifasida ochiladi
     link.href =
       "./article.html?id=" +
       encodeURIComponent(item.url);
@@ -532,5 +531,6 @@
 
   loadNews();
 
+  // Yangiliklar ma'lumotini har 5 daqiqada yangilash
   setInterval(loadNews, 300000);
 })();
