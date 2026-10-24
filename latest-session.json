@@ -1,140 +1,140 @@
 {
-  "session": "Amaliyot 2 natijalari",
+  "session": "Amaliyot 3 natijalari",
   "meeting": "United States",
-  "date": "2026-10-23T22:00:00+00:00",
-  "updated": "2026-10-23T22:58:24.653361+00:00",
+  "date": "2026-10-24T18:30:00+00:00",
+  "updated": "2026-10-24T19:09:35.291809+00:00",
   "results": [
     {
       "position": 1,
-      "name": "C LECLERC",
+      "name": "L HAMILTON",
       "team": "Ferrari",
-      "time": "95.291"
+      "time": "94.893"
     },
     {
       "position": 2,
-      "name": "K ANTONELLI",
-      "team": "Mercedes",
-      "time": "95.333"
+      "name": "M VERSTAPPEN",
+      "team": "Red Bull Racing",
+      "time": "95.061"
     },
     {
       "position": 3,
-      "name": "M VERSTAPPEN",
-      "team": "Red Bull Racing",
-      "time": "95.48"
+      "name": "C LECLERC",
+      "team": "Ferrari",
+      "time": "95.127"
     },
     {
       "position": 4,
-      "name": "L HAMILTON",
-      "team": "Ferrari",
-      "time": "95.906"
+      "name": "K ANTONELLI",
+      "team": "Mercedes",
+      "time": "95.196"
     },
     {
       "position": 5,
       "name": "G RUSSELL",
       "team": "Mercedes",
-      "time": "96.035"
+      "time": "95.381"
     },
     {
       "position": 6,
-      "name": "L LAWSON",
-      "team": "Racing Bulls",
-      "time": "96.331"
+      "name": "O PIASTRI",
+      "team": "McLaren",
+      "time": "95.531"
     },
     {
       "position": 7,
-      "name": "L NORRIS",
-      "team": "McLaren",
-      "time": "96.373"
+      "name": "N HULKENBERG",
+      "team": "Audi",
+      "time": "95.591"
     },
     {
       "position": 8,
-      "name": "O PIASTRI",
+      "name": "L NORRIS",
       "team": "McLaren",
-      "time": "96.387"
+      "time": "95.706"
     },
     {
       "position": 9,
-      "name": "I HADJAR",
-      "team": "Red Bull Racing",
-      "time": "96.411"
+      "name": "P GASLY",
+      "team": "Alpine",
+      "time": "95.904"
     },
     {
       "position": 10,
-      "name": "O BEARMAN",
-      "team": "Haas F1 Team",
-      "time": "96.536"
+      "name": "I HADJAR",
+      "team": "Red Bull Racing",
+      "time": "95.93"
     },
     {
       "position": 11,
-      "name": "G BORTOLETO",
-      "team": "Audi",
-      "time": "96.832"
+      "name": "L LAWSON",
+      "team": "Racing Bulls",
+      "time": "95.931"
     },
     {
       "position": 12,
-      "name": "P GASLY",
-      "team": "Alpine",
-      "time": "96.84"
+      "name": "A LINDBLAD",
+      "team": "Racing Bulls",
+      "time": "96.081"
     },
     {
       "position": 13,
-      "name": "A LINDBLAD",
-      "team": "Racing Bulls",
-      "time": "96.959"
+      "name": "G BORTOLETO",
+      "team": "Audi",
+      "time": "96.176"
     },
     {
       "position": 14,
-      "name": "E OCON",
+      "name": "O BEARMAN",
       "team": "Haas F1 Team",
-      "time": "97.111"
+      "time": "96.235"
     },
     {
       "position": 15,
       "name": "F COLAPINTO",
       "team": "Alpine",
-      "time": "97.201"
+      "time": "96.251"
     },
     {
       "position": 16,
       "name": "F ALONSO",
       "team": "Aston Martin",
-      "time": "97.235"
+      "time": "96.455"
     },
     {
       "position": 17,
-      "name": "L STROLL",
-      "team": "Aston Martin",
-      "time": "97.269"
+      "name": "E OCON",
+      "team": "Haas F1 Team",
+      "time": "96.742"
     },
     {
       "position": 18,
-      "name": "N HULKENBERG",
-      "team": "Audi",
-      "time": "97.43"
+      "name": "L STROLL",
+      "team": "Aston Martin",
+      "time": "97.131"
     },
     {
       "position": 19,
-      "name": "V BOTTAS",
-      "team": "Cadillac",
-      "time": "98.422"
+      "name": "A ALBON",
+      "team": "Williams",
+      "time": "97.668"
     },
     {
       "position": 20,
       "name": "C SAINZ",
       "team": "Williams",
-      "time": "98.446"
+      "time": "97.711"
     },
     {
       "position": 21,
       "name": "S PEREZ",
       "team": "Cadillac",
-      "time": "99.036"
+      "time": "97.884"
     },
     {
       "position": 22,
-      "name": "A ALBON",
-      "team": "Williams",
-      "time": "103.426"
+      "name": "V BOTTAS",
+      "team": "Cadillac",
+      "time": "98.765"
     }
   ]
 }
