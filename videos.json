@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-25T13:08:43.839988+00:00",
+  "updated_at": "2026-10-25T13:57:14.423452+00:00",
   "videos": [
     {
       "id": "4YTuyqiSrHg",
@@ -122,14 +122,6 @@
       "url": "https://www.youtube.com/watch?v=HJZMc4qRRl0"
     },
     {
-      "id": "1vSf1l18INc",
-      "title": "🔴 F1 LIVE: US Grand Prix 2026 Qualifying Watchalong | F1 Live Timing &amp; Telemetry (COTA)",
-      "channel": "Racing Statistics",
-      "published": "2026-10-24T22:47:14Z",
-      "thumbnail": "https://i.ytimg.com/vi/1vSf1l18INc/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=1vSf1l18INc"
-    },
-    {
       "id": "2fQx8d2LEgU",
       "title": "The most satisfying overtake you’ll see today 💨🏎️ #f1 #motorsport #racing",
       "channel": "FalcMusics",
@@ -192,6 +184,14 @@
       "published": "2026-10-19T17:42:20Z",
       "thumbnail": "https://i.ytimg.com/vi/PQhXbKv2ES0/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=PQhXbKv2ES0"
+    },
+    {
+      "id": "FMoq76t2gNo",
+      "title": "🏁 F1 2026 MONACO GRAND PRIX | FULL RACE REPLAY | DLSS 5",
+      "channel": "SDG Racing Network",
+      "published": "2026-10-18T22:41:08Z",
+      "thumbnail": "https://i.ytimg.com/vi/FMoq76t2gNo/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=FMoq76t2gNo"
     }
   ]
 }
