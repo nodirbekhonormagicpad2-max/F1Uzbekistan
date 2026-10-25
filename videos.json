@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-25T10:26:00.925079+00:00",
+  "updated_at": "2026-10-25T10:57:00.982474+00:00",
   "videos": [
     {
       "id": "6cMEEqclPcA",
@@ -154,6 +154,14 @@
       "url": "https://www.youtube.com/watch?v=l5WlCWvB_MM"
     },
     {
+      "id": "r-7-8PrYDqQ",
+      "title": "#5 vs #1: the F1 crash you didn&#39;t see coming 💥 #F1Crashes #Shorts",
+      "channel": "Parga Garage ",
+      "published": "2026-10-24T01:32:40Z",
+      "thumbnail": "https://i.ytimg.com/vi/r-7-8PrYDqQ/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=r-7-8PrYDqQ"
+    },
+    {
       "id": "UG3Kg0_xRKE",
       "title": "Hamilton vs Verstappen at COTA | Racing-Game Simulation",
       "channel": "Conqueror Motorsports",
@@ -184,14 +192,6 @@
       "published": "2026-10-20T02:10:47Z",
       "thumbnail": "https://i.ytimg.com/vi/w_VVXJVyxXw/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=w_VVXJVyxXw"
-    },
-    {
-      "id": "PQhXbKv2ES0",
-      "title": "Every 2026 F1 Drivers Worst Crash of their career (Part 3) #f1 #formula1",
-      "channel": "F1Fanatic",
-      "published": "2026-10-19T17:42:20Z",
-      "thumbnail": "https://i.ytimg.com/vi/PQhXbKv2ES0/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=PQhXbKv2ES0"
     }
   ]
 }
