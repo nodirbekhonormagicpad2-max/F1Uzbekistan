@@ -7,19 +7,6 @@ const ROTATE_MS=15*60*1000;
 const REFRESH_MS=5*60*1000;
 const PAGE_SIZE=4;
 
-// X postlari bepul va rasmiy embed orqali ko'rsatiladi.
-const X_VIDEOS=[
-  {
-    platform:'x',
-    id:'2114036757406601436',
-    url:'https://x.com/verstoppen3/status/2114036757406601436',
-    title_uz:'🏎️ Maks Verstappen — qiziqarli lavha',
-    channel:'kai · @verstoppen3',
-    published:'2026-10-24T00:00:00Z',
-    thumbnail:'./verstappen-x.jpg'
-  }
-];
-
 const style=document.createElement('style');
 
 style.textContent=`
@@ -597,7 +584,6 @@ function title(v){
 function image(v){
   const u=v.thumbnail||v.thumbnail_url||v.thumbnailUrl;
 
-  // HTTPS rasmlar va sayt ichidagi ./rasm.jpg fayllari.
   if(
     typeof u==='string'&&
     (/^https:\/\//i.test(u)||/^\.\//.test(u))
@@ -753,8 +739,6 @@ async function renderX(v,sequence){
 
     frame.replaceChildren(host);
 
-    // Rasmiy X vidjeti.
-    // X avtomatik ijroni cheklashi mumkin.
     const result=await twttr.widgets.createTweet(
       id,
       host,
@@ -1055,37 +1039,55 @@ function normalize(items){
   });
 }
 
+// YouTube va X videolarini alohida JSON fayllardan olish.
 async function load(){
-  try{
-    const res=await fetch(
-      './videos.json?t='+Date.now(),
-      {cache:'no-store'}
-    );
 
-    if(!res.ok){
-      throw Error('HTTP '+res.status);
-    }
+  async function readVideos(file){
+    try{
+      const res=await fetch(
+        './'+file+'?t='+Date.now(),
+        {cache:'no-store'}
+      );
 
-    const data=await res.json();
+      if(!res.ok){
+        throw Error(file+' HTTP '+res.status);
+      }
 
-    const items=Array.isArray(data)
-      ?data
-      :Array.isArray(data.videos)
-        ?data.videos
-        :[];
+      const data=await res.json();
 
-    allVideos=normalize([
-      ...X_VIDEOS,
-      ...items
-    ]);
+      return Array.isArray(data)
+        ?data
+        :Array.isArray(data.videos)
+          ?data.videos
+          :[];
 
-    renderPage();
-  }catch(err){
-    if(!allVideos.length){
-      allVideos=normalize(X_VIDEOS);
-      renderPage();
+    }catch(err){
+      console.warn('F1 CINEMA:',file,err);
+      return null;
     }
   }
+
+  const [youtubeVideos,xVideos]=await Promise.all([
+    readVideos('videos.json'),
+    readVideos('x-videos.json')
+  ]);
+
+  // Bir fayl vaqtincha ishlamasa,
+  // avvalgi videolar saqlanib qoladi.
+  const oldYouTube=allVideos.filter(
+    v=>platform(v)==='youtube'
+  );
+
+  const oldX=allVideos.filter(
+    v=>platform(v)==='x'
+  );
+
+  allVideos=normalize([
+    ...(xVideos!==null?xVideos:oldX),
+    ...(youtubeVideos!==null?youtubeVideos:oldYouTube)
+  ]);
+
+  renderPage();
 }
 
 load();
