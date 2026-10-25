@@ -1,11 +1,637 @@
-<!doctype html><html lang="uz"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>F1 Video Highlights | F1 Uzbekistan TV</title><style>
-:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#08090d;color:#f4f4f6;font:15px system-ui,Arial,sans-serif}header{background:#111218;border-bottom:2px solid #e10600;padding:18px max(18px,calc((100% - 1180px)/2))}header a{color:#fff;text-decoration:none;font-weight:800}main{max-width:1180px;margin:auto;padding:28px 18px}h1{font-size:clamp(27px,5vw,42px);margin:0 0 8px}h1 span{color:#ff2929}.sub{color:#a8abb6;margin-bottom:26px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px}.filters button{background:#1c1e27;color:#fff;border:1px solid #363946;border-radius:999px;padding:10px 17px;cursor:pointer}.filters button.active{background:#e10600;border-color:#e10600}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}.card{background:#14161d;border:1px solid #292b36;border-radius:13px;overflow:hidden}.thumb{position:relative;display:block;aspect-ratio:16/9;background:#222;overflow:hidden}.thumb img{width:100%;height:100%;object-fit:cover}.play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#e10600;border-radius:12px;padding:11px 17px;font-size:23px;color:#fff}.info{padding:15px}.info h2{font-size:16px;line-height:1.45;margin:0 0 10px}.meta{font-size:12px;color:#aaa}.watch{display:inline-block;color:#fff;background:#a80c0c;text-decoration:none;border-radius:7px;padding:8px 12px;margin-top:12px}.status{color:#a8abb6;padding:25px 0}.viewer{position:fixed;inset:0;background:#000e;display:none;place-items:center;padding:18px;z-index:5}.viewer.open{display:grid}.modal{width:min(900px,100%)}.close{background:#e10600;border:0;color:white;padding:9px 15px;border-radius:6px;cursor:pointer;float:right;margin-bottom:10px}.frame{clear:both;aspect-ratio:16/9;background:#000}.frame iframe{width:100%;height:100%;border:0}.hint{font-size:12px;color:#9da0ab;margin-top:20px}
-</style></head><body><header><a href="./index.html">🏎️ F1 UZBEKISTAN TV</a></header><main><h1>VIDEO <span>HIGHLIGHTS</span></h1><p class="sub">Saralash, poyga, avariya va eng qiziqarli lahzalar. Videolar YouTube mualliflari tomonidan e’lon qilingach chiqadi.</p><nav class="filters" aria-label="Video turlari"><button class="active" data-filter="all">Barchasi</button><button data-filter="crash">💥 Crash / Hodisalar</button><button data-filter="qualifying">⏱ Saralash</button><button data-filter="race">🏁 Poyga</button></nav><p id="status" class="status">Videolar yuklanmoqda…</p><section id="grid" class="grid"></section><p class="hint">Videolar asl YouTube kanallariga tegishli. Ba’zi videolar mintaqa yoki muallif cheklovi tufayli ochilmasligi mumkin.</p></main><div id="viewer" class="viewer" role="dialog" aria-modal="true" aria-label="Video pleer"><div class="modal"><button id="close" class="close">✕ Yopish</button><div id="frame" class="frame"></div></div></div><script>
-const grid=document.querySelector('#grid'),status=document.querySelector('#status');let videos=[],filter='all';
-const match=(v)=>{const s=v.title.toLowerCase();if(filter==='crash')return /crash|collision|fire|flame|incident|spin|accident|alonso/.test(s);if(filter==='qualifying')return /qualifying|pole|q1|q2|q3/.test(s);if(filter==='race')return /race|highlight|overtak|battle|grand prix/.test(s);return true};
-function render(){grid.replaceChildren();const list=videos.filter(match);status.textContent=list.length?'':(videos.length?'Bu turdagi video hozircha yo‘q.':'Hozircha videolar yo‘q. GitHub Actions va API kalitini tekshiring.');for(const v of list){const card=document.createElement('article');card.className='card';const thumb=document.createElement('a');thumb.href=v.url;thumb.className='thumb';thumb.target='_blank';thumb.rel='noopener noreferrer';const img=document.createElement('img');img.loading='lazy';img.alt='';img.src=v.thumbnail;const play=document.createElement('span');play.className='play';play.textContent='▶';thumb.append(img,play);thumb.addEventListener('click',e=>{e.preventDefault();openVideo(v.id)});const info=document.createElement('div');info.className='info';const h=document.createElement('h2');h.textContent=v.title;const meta=document.createElement('div');meta.className='meta';const date=new Date(v.published);meta.textContent=v.channel+' · '+(isNaN(date)?'':date.toLocaleString('uz-UZ'));const link=document.createElement('a');link.href=v.url;link.target='_blank';link.rel='noopener noreferrer';link.className='watch';link.textContent='YouTube’da ko‘rish ↗';info.append(h,meta,link);card.append(thumb,info);grid.append(card)}}
-function openVideo(id){if(!/^[\w-]{11}$/.test(id))return;const frame=document.createElement('iframe');frame.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1';frame.title='YouTube video';frame.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';frame.allowFullscreen=true;document.querySelector('#frame').replaceChildren(frame);document.querySelector('#viewer').classList.add('open')}
-function closeVideo(){document.querySelector('#viewer').classList.remove('open');document.querySelector('#frame').replaceChildren()}
-document.querySelector('#close').onclick=closeVideo;document.querySelector('#viewer').addEventListener('click',e=>{if(e.target.id==='viewer')closeVideo()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeVideo()});document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));render()});
-async function load(){try{const r=await fetch('./videos.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const d=await r.json();videos=Array.isArray(d.videos)?d.videos:[];render()}catch(e){status.textContent='Videolarni yuklab bo‘lmadi: '+e.message}}load();setInterval(load,300000);
-</script></body></html>
+
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>F1 Videolar | F1 Uzbekistan TV</title>
+
+<style>
+:root{
+  color-scheme:dark;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:#08090d;
+  color:#f4f4f6;
+  font:15px system-ui,Arial,sans-serif;
+}
+
+header{
+  background:#111218;
+  border-bottom:2px solid #e10600;
+  padding:18px max(18px,calc((100% - 1180px)/2));
+}
+
+header a{
+  color:#fff;
+  text-decoration:none;
+  font-weight:800;
+}
+
+main{
+  max-width:1180px;
+  margin:auto;
+  padding:28px 18px;
+}
+
+h1{
+  font-size:clamp(27px,5vw,42px);
+  margin:0 0 8px;
+}
+
+h1 span{
+  color:#ff2929;
+}
+
+.sub{
+  color:#a8abb6;
+  margin-bottom:26px;
+  line-height:1.6;
+}
+
+.filters{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:0 0 24px;
+}
+
+.filters button{
+  background:#1c1e27;
+  color:#fff;
+  border:1px solid #363946;
+  border-radius:999px;
+  padding:10px 17px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.filters button.active{
+  background:#e10600;
+  border-color:#e10600;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+  gap:18px;
+}
+
+.card{
+  background:#14161d;
+  border:1px solid #292b36;
+  border-radius:13px;
+  overflow:hidden;
+}
+
+.thumb{
+  position:relative;
+  display:block;
+  aspect-ratio:16/9;
+  background:#222;
+  overflow:hidden;
+}
+
+.thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.play{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  background:#e10600;
+  border-radius:12px;
+  padding:11px 17px;
+  font-size:23px;
+  color:#fff;
+}
+
+.info{
+  padding:15px;
+}
+
+.info h2{
+  font-size:16px;
+  line-height:1.45;
+  margin:0 0 10px;
+}
+
+.meta{
+  font-size:12px;
+  color:#aaa;
+}
+
+.watch{
+  display:inline-block;
+  color:#fff;
+  background:#a80c0c;
+  text-decoration:none;
+  border-radius:7px;
+  padding:9px 13px;
+  margin-top:12px;
+}
+
+.watch:hover{
+  background:#e10600;
+}
+
+.status{
+  color:#a8abb6;
+  padding:25px 0;
+}
+
+.status:empty{
+  display:none;
+}
+
+.viewer{
+  position:fixed;
+  inset:0;
+  background:#000e;
+  display:none;
+  place-items:center;
+  padding:18px;
+  z-index:9999;
+}
+
+.viewer.open{
+  display:grid;
+}
+
+.modal{
+  width:min(900px,100%);
+}
+
+.close{
+  background:#e10600;
+  border:0;
+  color:white;
+  padding:9px 15px;
+  border-radius:6px;
+  cursor:pointer;
+  float:right;
+  margin-bottom:10px;
+}
+
+.frame{
+  clear:both;
+  aspect-ratio:16/9;
+  background:#000;
+}
+
+.frame iframe{
+  width:100%;
+  height:100%;
+  border:0;
+}
+
+.hint{
+  font-size:12px;
+  color:#9da0ab;
+  margin-top:20px;
+  line-height:1.6;
+}
+
+@media(max-width:700px){
+  main{
+    padding:23px 15px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+    gap:15px;
+  }
+
+  .info{
+    padding:13px;
+  }
+
+  .info h2{
+    font-size:15px;
+  }
+
+  .filters button{
+    padding:9px 13px;
+    font-size:12px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <a href="./index.html">🏎️ F1 UZBEKISTAN TV</a>
+</header>
+
+<main>
+
+  <h1>🎬 F1 <span>VIDEOLAR</span></h1>
+
+  <p class="sub">
+    Formula 1 olamidagi saralashlar, poygalar,
+    avariyalar va eng qiziqarli lahzalar.
+    Video sarlavhalari o‘zbek tilida taqdim etiladi.
+  </p>
+
+  <nav class="filters" aria-label="Video turlari">
+    <button class="active" data-filter="all">
+      Barchasi
+    </button>
+
+    <button data-filter="crash">
+      💥 Avariyalar
+    </button>
+
+    <button data-filter="qualifying">
+      ⏱ Saralash
+    </button>
+
+    <button data-filter="race">
+      🏁 Poyga
+    </button>
+  </nav>
+
+  <p id="status" class="status">
+    Videolar yuklanmoqda…
+  </p>
+
+  <section id="grid" class="grid"></section>
+
+  <p class="hint">
+    Videolar asl YouTube kanallariga tegishli.
+    Ba’zi videolar muallif yoki hududiy cheklovlar
+    tufayli ochilmasligi mumkin.
+  </p>
+
+</main>
+
+<div
+  id="viewer"
+  class="viewer"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Video pleer"
+>
+  <div class="modal">
+
+    <button id="close" class="close">
+      ✕ Yopish
+    </button>
+
+    <div id="frame" class="frame"></div>
+
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const grid=document.querySelector('#grid');
+const status=document.querySelector('#status');
+const viewer=document.querySelector('#viewer');
+const frame=document.querySelector('#frame');
+
+let videos=[];
+let filter='all';
+
+function decodeHTML(text){
+  const el=document.createElement('textarea');
+  el.innerHTML=String(text||'');
+  return el.value;
+}
+
+function videoTitle(v){
+  if(v.title_uz){
+    return decodeHTML(v.title_uz);
+  }
+
+  const raw=decodeHTML(v.title||'F1 videosi');
+  const s=raw.toLowerCase();
+
+  let gp='';
+
+  const races=[
+    [/united states|usa gp|austin|us grand prix/,'🇺🇸 AQSH'],
+    [/mexico|mexican/,'🇲🇽 Meksika'],
+    [/brazil|brazilian|sao paulo|são paulo/,'🇧🇷 Braziliya'],
+    [/las vegas/,'🇺🇸 Las-Vegas'],
+    [/qatar/,'🇶🇦 Qatar'],
+    [/abu dhabi/,'🇦🇪 Abu-Dabi'],
+    [/singapore/,'🇸🇬 Singapur'],
+    [/japan|japanese|suzuka/,'🇯🇵 Yaponiya'],
+    [/china|chinese|shanghai/,'🇨🇳 Xitoy'],
+    [/monaco/,'🇲🇨 Monako'],
+    [/british|silverstone|great britain/,'🇬🇧 Britaniya'],
+    [/italian|monza|italy/,'🇮🇹 Italiya'],
+    [/belgian|spa.francorchamps|belgium/,'🇧🇪 Belgiya'],
+    [/hungarian|hungary|hungaroring/,'🇭🇺 Vengriya'],
+    [/austrian|austria|spielberg/,'🇦🇹 Avstriya'],
+    [/spanish|spain|barcelona/,'🇪🇸 Ispaniya'],
+    [/canadian|canada|montreal/,'🇨🇦 Kanada'],
+    [/dutch|netherlands|zandvoort/,'🇳🇱 Niderlandiya'],
+    [/azerbaijan|baku/,'🇦🇿 Ozarbayjon'],
+    [/saudi arabia|jeddah/,'🇸🇦 Saudiya Arabistoni'],
+    [/bahrain/,'🇧🇭 Bahrayn'],
+    [/australian|australia|melbourne/,'🇦🇺 Avstraliya'],
+    [/miami/,'🇺🇸 Mayami']
+  ];
+
+  for(const [pattern,name] of races){
+    if(pattern.test(s)){
+      gp=name+' Gran-prisi — ';
+      break;
+    }
+  }
+
+  if(/crash|collision|accident|big incident/.test(s)){
+    return gp+'💥 Poygadagi avariya lavhalari';
+  }
+
+  if(/fire|flames/.test(s)){
+    return gp+'🔥 Boliddagi yong‘in';
+  }
+
+  if(/spin|spins/.test(s)){
+    return gp+'🔄 Pilotning trassada aylanib ketishi';
+  }
+
+  if(/qualifying/.test(s)&&/highlight|best|fastest lap/.test(s)){
+    return gp+'🏁 Saralashning eng qiziqarli lahzalari va tezkor aylanishlar';
+  }
+
+  if(/qualifying/.test(s)){
+    return gp+'⏱ Saralash natijalari va asosiy lahzalar';
+  }
+
+  if(/sprint/.test(s)&&/highlight/.test(s)){
+    return gp+'⚡ Sprint poygasining eng qiziqarli lahzalari';
+  }
+
+  if(/race/.test(s)&&/highlight/.test(s)){
+    return gp+'🏎️ Poyganing eng qiziqarli lahzalari';
+  }
+
+  if(/race/.test(s)&&/start/.test(s)){
+    return gp+'🚦 Poyga startidagi eng qiziqarli lahzalar';
+  }
+
+  if(/overtak|passing/.test(s)){
+    return gp+'⚡ Eng yaxshi quvib o‘tishlar';
+  }
+
+  if(/interview|drivers react|driver reactions/.test(s)){
+    return gp+'🎤 Pilotlar intervyusi va fikrlari';
+  }
+
+  if(/team radio|radio messages/.test(s)){
+    return gp+'🎧 Pilotlarning radio suhbatlari';
+  }
+
+  if(/practice|free practice|fp1|fp2|fp3/.test(s)){
+    return gp+'🔧 Erkin mashg‘ulotning asosiy lahzalari';
+  }
+
+  if(/pole position/.test(s)){
+    return gp+'🥇 Poygada birinchi start o‘rni uchun kurash';
+  }
+
+  if(/best moments|top moments|top 10/.test(s)){
+    return gp+'⭐ Eng yaxshi 10 ta lahza';
+  }
+
+  if(/grand prix|formula 1|formula one|f1/.test(s)){
+    return gp+'🏎️ Formula 1 olamidagi eng qiziqarli voqealar';
+  }
+
+  return raw;
+}
+
+function category(v){
+  const s=decodeHTML(
+    (v.title||'')+' '+(v.title_uz||'')
+  ).toLowerCase();
+
+  if(/crash|collision|fire|flame|incident|spin|accident|avariya|hodisa|yong.in/.test(s)){
+    return 'crash';
+  }
+
+  if(/qualifying|pole|q1|q2|q3|saralash/.test(s)){
+    return 'qualifying';
+  }
+
+  if(/race|highlight|overtak|battle|grand prix|poyga|sprint/.test(s)){
+    return 'race';
+  }
+
+  return 'other';
+}
+
+function match(v){
+  if(filter==='all')return true;
+  return category(v)===filter;
+}
+
+function validId(id){
+  return /^[A-Za-z0-9_-]{11}$/.test(String(id||''));
+}
+
+function image(v){
+  const url=v.thumbnail||v.thumbnail_url||v.thumbnailUrl;
+
+  if(typeof url==='string'&&/^https:\/\//i.test(url)){
+    return url;
+  }
+
+  return 'https://i.ytimg.com/vi/'
+    +encodeURIComponent(v.id)
+    +'/hqdefault.jpg';
+}
+
+function videoURL(v){
+  return 'https://www.youtube.com/watch?v='
+    +encodeURIComponent(v.id);
+}
+
+function render(){
+  grid.replaceChildren();
+
+  const list=videos.filter(match);
+
+  status.textContent=list.length
+    ?''
+    :(videos.length
+      ?'Bu turdagi video hozircha yo‘q.'
+      :'Hozircha videolar mavjud emas.');
+
+  for(const v of list){
+
+    const card=document.createElement('article');
+    card.className='card';
+
+    const thumb=document.createElement('a');
+    thumb.href=videoURL(v);
+    thumb.className='thumb';
+    thumb.target='_blank';
+    thumb.rel='noopener noreferrer';
+
+    const img=document.createElement('img');
+    img.loading='lazy';
+    img.alt='';
+    img.src=image(v);
+
+    const play=document.createElement('span');
+    play.className='play';
+    play.textContent='▶';
+
+    thumb.append(img,play);
+
+    thumb.addEventListener('click',e=>{
+      e.preventDefault();
+      openVideo(v.id);
+    });
+
+    const info=document.createElement('div');
+    info.className='info';
+
+    const h=document.createElement('h2');
+    h.textContent=videoTitle(v);
+
+    const meta=document.createElement('div');
+    meta.className='meta';
+
+    const date=new Date(v.published||v.publishedAt||'');
+
+    const dateText=Number.isNaN(date.getTime())
+      ?''
+      :date.toLocaleDateString('uz-UZ');
+
+    meta.textContent=[
+      v.channel||'',
+      dateText
+    ].filter(Boolean).join(' · ');
+
+    const link=document.createElement('a');
+    link.href=videoURL(v);
+    link.target='_blank';
+    link.rel='noopener noreferrer';
+    link.className='watch';
+    link.textContent='YouTube’da ko‘rish ↗';
+
+    info.append(h,meta,link);
+    card.append(thumb,info);
+    grid.append(card);
+  }
+}
+
+function openVideo(id){
+  if(!validId(id))return;
+
+  const iframe=document.createElement('iframe');
+
+  iframe.src=
+    'https://www.youtube-nocookie.com/embed/'
+    +encodeURIComponent(id)
+    +'?autoplay=1&playsinline=1';
+
+  iframe.title='F1 video';
+  iframe.allow=
+    'autoplay; encrypted-media; picture-in-picture; fullscreen';
+
+  iframe.allowFullscreen=true;
+
+  frame.replaceChildren(iframe);
+  viewer.classList.add('open');
+
+  document.body.style.overflow='hidden';
+  document.querySelector('#close').focus();
+}
+
+function closeVideo(){
+  viewer.classList.remove('open');
+  frame.replaceChildren();
+  document.body.style.overflow='';
+}
+
+document.querySelector('#close').onclick=closeVideo;
+
+viewer.addEventListener('click',e=>{
+  if(e.target===viewer){
+    closeVideo();
+  }
+});
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&viewer.classList.contains('open')){
+    closeVideo();
+  }
+});
+
+document.querySelectorAll('[data-filter]').forEach(button=>{
+  button.onclick=()=>{
+    filter=button.dataset.filter;
+
+    document.querySelectorAll('[data-filter]').forEach(x=>{
+      x.classList.toggle('active',x===button);
+    });
+
+    render();
+  };
+});
+
+async function load(){
+  try{
+    const response=await fetch(
+      './videos.json?t='+Date.now(),
+      {cache:'no-store'}
+    );
+
+    if(!response.ok){
+      throw Error('HTTP '+response.status);
+    }
+
+    const data=await response.json();
+
+    const items=Array.isArray(data)
+      ?data
+      :Array.isArray(data.videos)
+        ?data.videos
+        :[];
+
+    const seen=new Set();
+
+    videos=items.filter(v=>{
+      if(!v||!validId(v.id)||seen.has(v.id)){
+        return false;
+      }
+
+      seen.add(v.id);
+      return true;
+    });
+
+    render();
+
+  }catch(error){
+    status.textContent=
+      'Videolarni yuklab bo‘lmadi: '+error.message;
+  }
+}
+
+load();
+
+setInterval(load,300000);
+</script>
+
+</body>
+</html>
