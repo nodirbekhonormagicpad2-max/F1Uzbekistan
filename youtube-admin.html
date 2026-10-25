@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>F1 CINEMA — YouTube boshqaruvi</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #0b0b0f;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 25px 16px;
+    }
+
+    h1 {
+      color: #ff3030;
+    }
+
+    .box {
+      background: #17171d;
+      padding: 20px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #101014;
+      color: white;
+      font-size: 15px;
+    }
+
+    button {
+      padding: 12px 18px;
+      border: 0;
+      border-radius: 8px;
+      background: #e10600;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 5px 5px 5px 0;
+    }
+
+    button.secondary {
+      background: #333;
+    }
+
+    button.green {
+      background: #16803c;
+    }
+
+    .video-card {
+      background: #1b1b22;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+    }
+
+    .video-card img {
+      width: 100%;
+      max-width: 320px;
+      border-radius: 8px;
+    }
+
+    .video-card h3 {
+      overflow-wrap: anywhere;
+    }
+
+    .status {
+      color: #ffb020;
+      font-size: 14px;
+    }
+
+    .preview {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 0;
+      border-radius: 10px;
+      background: #000;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 230px;
+      padding: 12px;
+      background: #09090c;
+      color: #b7ffbd;
+      border: 1px solid #444;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    .notice {
+      color: #ccc;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>🏎️ F1 CINEMA — YouTube Admin</h1>
+
+  <div class="box">
+    <h2>➕ YouTube video qo‘shish</h2>
+
+    <input
+      id="youtubeUrl"
+      placeholder="YouTube havolasini kiriting"
+    >
+
+    <input
+      id="videoTitle"
+      placeholder="Video nomi"
+    >
+
+    <input
+      id="videoChannel"
+      placeholder="Kanal nomi"
+    >
+
+    <button onclick="addVideo()">
+      Videoni qo‘shish
+    </button>
+
+    <p class="notice">
+      Video dastlab tasdiqlanmagan holatda saqlanadi.
+      Uni tekshirgandan keyin tasdiqlang.
+    </p>
+  </div>
+
+  <div class="box">
+    <h2>📋 Videolar ro‘yxati</h2>
+    <div id="videoList"></div>
+  </div>
+
+  <div class="box">
+    <h2>💾 videos.json</h2>
+
+    <button onclick="exportJSON()">
+      JSON tayyorlash
+    </button>
+
+    <button class="secondary" onclick="copyJSON()">
+      JSON nusxalash
+    </button>
+
+    <textarea id="jsonOutput" readonly></textarea>
+
+    <p class="notice">
+      Tayyor JSON’ni GitHub’dagi videos.json
+      fayliga joylashtiring.
+    </p>
+  </div>
+
+</div>
+
+<script>
+  const STORAGE_KEY = "f1_cinema_youtube_admin";
+
+  let videos = [];
+
+  function escapeHTML(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function getYouTubeId(url) {
+    try {
+      const parsed = new URL(url);
+
+      const hostname = parsed.hostname
+        .toLowerCase()
+        .replace(/^www\./, "")
+        .replace(/^m\./, "");
+
+      if (hostname === "youtu.be") {
+        return parsed.pathname.split("/")[1] || null;
+      }
+
+      if (
+        hostname === "youtube.com" ||
+        hostname === "youtube-nocookie.com"
+      ) {
+        if (parsed.pathname === "/watch") {
+          return parsed.searchParams.get("v");
+        }
+
+        const parts = parsed.pathname.split("/").filter(Boolean);
+
+        if (
+          ["shorts", "embed", "live"].includes(parts[0])
+        ) {
+          return parts[1] || null;
+        }
+      }
+
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  function save() {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(videos)
+    );
+
+    render();
+  }
+
+  function load() {
+    try {
+      const saved = JSON.parse(
+        localStorage.getItem(STORAGE_KEY) || "[]"
+      );
+
+      videos = Array.isArray(saved) ? saved : [];
+    } catch {
+      videos = [];
+    }
+
+    render();
+  }
+
+  function addVideo() {
+    const url = document
+      .getElementById("youtubeUrl")
+      .value.trim();
+
+    const title = document
+      .getElementById("videoTitle")
+      .value.trim();
+
+    const channel = document
+      .getElementById("videoChannel")
+      .value.trim();
+
+    const id = getYouTubeId(url);
+
+    if (!id || !/^[A-Za-z0-9_-]{11}$/.test(id)) {
+      alert("YouTube havolasi noto‘g‘ri!");
+      return;
+    }
+
+    if (!title) {
+      alert("Video nomini kiriting!");
+      return;
+    }
+
+    if (videos.some(video => video.id === id)) {
+      alert("Bu video ro‘yxatda mavjud!");
+      return;
+    }
+
+    videos.unshift({
+      id,
+      title,
+      channel: channel || "YouTube",
+      published: new Date().toISOString(),
+      thumbnail:
+        "https://i.ytimg.com/vi/" + id + "/hqdefault.jpg",
+      url:
+        "https://www.youtube.com/watch?v=" + id,
+      approved: false
+    });
+
+    document.getElementById("youtubeUrl").value = "";
+    document.getElementById("videoTitle").value = "";
+    document.getElementById("videoChannel").value = "";
+
+    save();
+  }
+
+  function approveVideo(index) {
+    videos[index].approved = true;
+    save();
+  }
+
+  function rejectVideo(index) {
+    videos[index].approved = false;
+    save();
+  }
+
+  function deleteVideo(index) {
+    if (!confirm("Videoni ro‘yxatdan o‘chirasizmi?")) {
+      return;
+    }
+
+    videos.splice(index, 1);
+    save();
+  }
+
+  function previewVideo(index) {
+    const video = videos[index];
+
+    const preview = document.getElementById(
+      "preview-" + index
+    );
+
+    preview.innerHTML = "";
+
+    const iframe = document.createElement("iframe");
+
+    iframe.className = "preview";
+    iframe.src =
+      "https://www.youtube-nocookie.com/embed/" +
+      encodeURIComponent(video.id) +
+      "?rel=0";
+
+    iframe.allow =
+      "accelerometer; autoplay; clipboard-write; " +
+      "encrypted-media; gyroscope; picture-in-picture; " +
+      "web-share";
+
+    iframe.allowFullscreen = true;
+    iframe.referrerPolicy =
+      "strict-origin-when-cross-origin";
+
+    preview.appendChild(iframe);
+  }
+
+  function render() {
+    const list = document.getElementById("videoList");
+
+    if (!videos.length) {
+      list.innerHTML =
+        "<p>Hozircha video qo‘shilmagan.</p>";
+
+      return;
+    }
+
+    list.innerHTML = videos.map((video, index) => `
+      <div class="video-card">
+
+        <img
+          src="${escapeHTML(video.thumbnail)}"
+          alt="${escapeHTML(video.title)}"
+          loading="lazy"
+        >
+
+        <h3>${escapeHTML(video.title)}</h3>
+
+        <p>${escapeHTML(video.channel)}</p>
+
+        <p class="status">
+          ${video.approved
+            ? "✅ Tasdiqlangan"
+            : "⏳ Tasdiqlanmagan"}
+        </p>
+
+        <button onclick="previewVideo(${index})">
+          ▶️ Tekshirish
+        </button>
+
+        <button
+          class="green"
+          onclick="approveVideo(${index})"
+        >
+          ✅ Tasdiqlash
+        </button>
+
+        <button
+          class="secondary"
+          onclick="rejectVideo(${index})"
+        >
+          ❌ Rad etish
+        </button>
+
+        <button
+          class="secondary"
+          onclick="deleteVideo(${index})"
+        >
+          🗑️ O‘chirish
+        </button>
+
+        <div id="preview-${index}"></div>
+
+      </div>
+    `).join("");
+  }
+
+  function exportJSON() {
+    const output = {
+      updated_at: new Date().toISOString(),
+      videos
+    };
+
+    document.getElementById("jsonOutput").value =
+      JSON.stringify(output, null, 2);
+  }
+
+  async function copyJSON() {
+    exportJSON();
+
+    const text = document.getElementById(
+      "jsonOutput"
+    ).value;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      alert("JSON nusxalandi!");
+    } catch {
+      alert(
+        "Avtomatik nusxalash ishlamadi. " +
+        "Pastdagi JSON’ni qo‘lda nusxalang."
+      );
+    }
+  }
+
+  load();
+</script>
+
+</body>
+</html>
