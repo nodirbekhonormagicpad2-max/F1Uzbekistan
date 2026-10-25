@@ -293,15 +293,11 @@
       margin: 0 auto;
     }
 
-    #f1-cinema-modal iframe,
     #f1-cinema-modal video {
       display: block;
       width: 100%;
       height: 100%;
       border: 0;
-    }
-
-    #f1-cinema-modal video {
       object-fit: contain;
       background: #000;
     }
@@ -317,21 +313,6 @@
     #f1-cinema-modal .plyr__video-wrapper {
       height: 100%;
       background: #000;
-    }
-
-    #f1-cinema-modal .cp-facebook-link {
-      display: block;
-      margin: 12px auto 0;
-      padding: 11px 14px;
-      width: fit-content;
-      max-width: 100%;
-      background: #1877f2;
-      color: #fff;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 800;
-      text-align: center;
-      text-decoration: none;
     }
 
     #f1-cinema-modal .cp-nexttitle {
@@ -468,18 +449,15 @@
 
   root.innerHTML = `
     <div class="cp-shell">
-
       <div class="cp-top">
         <div>
           <h2 class="cp-logo">
             🎬 F1 <span>CINEMA</span>
           </h2>
-
           <div class="cp-sub">
             F1 Uzbekistan TV · Premium video markazi
           </div>
         </div>
-
         <a class="cp-all" href="./videos.html">
           Barcha videolar →
         </a>
@@ -489,7 +467,6 @@
         <h3 class="cp-rowtitle">
           🔥 Eng qiziqarli videolar
         </h3>
-
         <div class="cp-timer">
           Har 15 daqiqada almashadi
         </div>
@@ -500,7 +477,6 @@
       <div class="cp-status" role="status">
         Videolar yuklanmoqda…
       </div>
-
     </div>
   `;
 
@@ -529,10 +505,8 @@
 
   modal.innerHTML = `
     <div class="cp-dialog">
-
       <div class="cp-modalhead">
         <h3 class="cp-modaltitle"></h3>
-
         <button type="button" class="cp-close">
           ✕ Yopish
         </button>
@@ -540,14 +514,11 @@
 
       <div class="cp-frame"></div>
 
-      <div class="cp-facebook-action"></div>
-
       <h4 class="cp-nexttitle">
         ▶ Keyingi videolar
       </h4>
 
       <div class="cp-nextlist"></div>
-
     </div>
   `;
 
@@ -558,10 +529,6 @@
 
   const frame = modal.querySelector(".cp-frame");
   const closeButton = modal.querySelector(".cp-close");
-
-  const facebookAction = modal.querySelector(
-    ".cp-facebook-action"
-  );
 
   const nextList = modal.querySelector(
     ".cp-nextlist"
@@ -586,7 +553,6 @@
 
         link.id = "f1-plyr-css";
         link.rel = "stylesheet";
-
         link.href =
           "https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css";
 
@@ -601,14 +567,10 @@
       script.async = true;
 
       script.onload = () => {
-        resolve(
-          typeof window.Plyr === "function"
-        );
+        resolve(typeof window.Plyr === "function");
       };
 
-      script.onerror = () => {
-        resolve(false);
-      };
+      script.onerror = () => resolve(false);
 
       document.head.append(script);
     });
@@ -619,37 +581,6 @@
   // ==============================
   // VIDEO MA'LUMOTLARI
   // ==============================
-
-  function platform(video) {
-    const value = String(
-      video.platform ||
-      video.source ||
-      "youtube"
-    ).toLowerCase();
-
-    if (
-      value === "facebook" ||
-      value === "fb"
-    ) {
-      return "facebook";
-    }
-
-    if (
-      value === "upload" ||
-      value === "local"
-    ) {
-      return "upload";
-    }
-
-    if (
-      value === "x" ||
-      value === "twitter"
-    ) {
-      return "x";
-    }
-
-    return "youtube";
-  }
 
   function title(video) {
     return String(
@@ -665,12 +596,6 @@
       video.videoUrl ||
       video.url ||
       ""
-    );
-  }
-
-  function validYouTubeId(id) {
-    return /^[A-Za-z0-9_-]{11}$/.test(
-      String(id || "")
     );
   }
 
@@ -701,92 +626,12 @@
     }
   }
 
-  // ==============================
-  // FACEBOOK HAVOLALARI
-  // ==============================
-
-  function facebookURL(video) {
-    try {
-      const url = new URL(
-        String(video.url || "").trim()
-      );
-
-      const hosts = [
-        "facebook.com",
-        "www.facebook.com",
-        "m.facebook.com",
-        "web.facebook.com"
-      ];
-
-      if (
-        url.protocol !== "https:" ||
-        !hosts.includes(url.hostname.toLowerCase())
-      ) {
-        return "";
-      }
-
-      const path = url.pathname;
-
-      const valid =
-        /^\/(?:reel|reels)\/[A-Za-z0-9_-]+\/?$/i.test(path) ||
-        /^\/share\/(?:r|v)\/[A-Za-z0-9_-]+\/?$/i.test(path) ||
-        /^\/(?:[^/]+\/)?videos\/[0-9]+\/?$/i.test(path) ||
-        (
-          /^\/watch\/?$/i.test(path) &&
-          /^[0-9]+$/.test(
-            url.searchParams.get("v") || ""
-          )
-        );
-
-      if (!valid) return "";
-
-      return url.href;
-
-    } catch {
-      return "";
-    }
-  }
-
-  function embedURL(video) {
-    const type = platform(video);
-
-    if (type === "youtube") {
-      if (!validYouTubeId(video.id)) {
-        return "";
-      }
-
-      return (
-        "https://www.youtube-nocookie.com/embed/" +
-        encodeURIComponent(video.id) +
-        "?autoplay=1&playsinline=1&rel=0"
-      );
-    }
-
-    if (type === "facebook") {
-      const url = facebookURL(video);
-
-      if (!url) return "";
-
-      return (
-        "https://www.facebook.com/plugins/video.php?href=" +
-        encodeURIComponent(url) +
-        "&show_text=false&autoplay=true"
-      );
-    }
-
-    return "";
-  }
-
   function videoKey(video) {
-    return (
-      platform(video) +
-      ":" +
-      String(
-        video.id ||
-        video.url ||
-        video.video_url ||
-        ""
-      )
+    return String(
+      video.id ||
+      video.url ||
+      video.video_url ||
+      ""
     );
   }
 
@@ -811,25 +656,10 @@
       return value;
     }
 
-    if (
-      platform(video) === "youtube" &&
-      validYouTubeId(video.id)
-    ) {
-      return (
-        "https://i.ytimg.com/vi/" +
-        encodeURIComponent(video.id) +
-        "/hqdefault.jpg"
-      );
-    }
-
-    if (platform(video) === "upload") {
-      return thumbnails.get(videoURL(video)) || "";
-    }
-
-    return "";
+    return thumbnails.get(videoURL(video)) || "";
   }
 
-  // MP4/WebM videodan 1-soniyadagi kadrni olish
+  // MP4/WebM videodan muqova yaratish
 
   function generateThumbnail(video) {
     const url = videoURL(video);
@@ -992,7 +822,7 @@
   }
 
   // ==============================
-  // VIDEO FILTRLASH
+  // FAQAT YUKLANGAN VIDEOLAR
   // ==============================
 
   function normalize(items) {
@@ -1003,28 +833,7 @@
         return false;
       }
 
-      const type = platform(video);
-
-      if (type === "x") return false;
-
-      if (
-        type === "youtube" &&
-        !validYouTubeId(video.id)
-      ) {
-        return false;
-      }
-
-      if (
-        type === "facebook" &&
-        !facebookURL(video)
-      ) {
-        return false;
-      }
-
-      if (
-        type === "upload" &&
-        !validUploadURL(video)
-      ) {
+      if (!validUploadURL(video)) {
         return false;
       }
 
@@ -1115,17 +924,8 @@
     } else {
       const cover = document.createElement("div");
 
-      cover.className = "cp-cover";
-
-      if (platform(video) === "upload") {
-        cover.classList.add("cp-loading");
-        cover.textContent = "Muqova tayyorlanmoqda…";
-      } else {
-        cover.textContent =
-          platform(video) === "facebook"
-            ? "f"
-            : "🎬";
-      }
+      cover.className = "cp-cover cp-loading";
+      cover.textContent = "Muqova tayyorlanmoqda…";
 
       button.append(cover);
     }
@@ -1149,12 +949,7 @@
     const source = document.createElement("div");
 
     source.className = "cp-platform";
-
-    source.textContent = {
-      upload: "F1 Uzbekistan TV",
-      facebook: "Facebook",
-      youtube: "YouTube"
-    }[platform(video)] || "Video";
+    source.textContent = "F1 Uzbekistan TV";
 
     const heading = document.createElement("p");
 
@@ -1170,10 +965,7 @@
 
     article.append(button, body);
 
-    if (
-      platform(video) === "upload" &&
-      !thumb
-    ) {
+    if (!thumb) {
       generateThumbnail(video).then(result => {
         if (result) {
           setThumbnail(button, result);
@@ -1236,8 +1028,6 @@
 
     destroyPlayer();
 
-    facebookAction.replaceChildren();
-
     frame.classList.remove("cp-vertical");
 
     document.body.style.overflow =
@@ -1267,16 +1057,9 @@
     ).textContent = title(video);
 
     destroyPlayer();
-    facebookAction.replaceChildren();
-
-    const type = platform(video);
 
     const isVertical =
-      video.aspect_ratio === "9:16" ||
-      (
-        type === "facebook" &&
-        video.type === "reel"
-      );
+      video.aspect_ratio === "9:16";
 
     frame.classList.toggle(
       "cp-vertical",
@@ -1287,165 +1070,97 @@
 
     document.body.style.overflow = "hidden";
 
-    // MP4 / WEBM: PLYR.JS
+    const player = document.createElement("video");
+
+    player.controls = true;
+    player.playsInline = true;
+    player.preload = "metadata";
+    player.autoplay = true;
+
+    const source = document.createElement("source");
+
+    source.src = videoURL(video);
+
+    source.type =
+      /\.webm(?:\?|$)/i.test(source.src)
+        ? "video/webm"
+        : "video/mp4";
+
+    player.append(source);
+
+    frame.append(player);
+
+    const available = await loadPlyr();
 
     if (
-      type === "upload" &&
-      validUploadURL(video)
+      token !== playToken ||
+      !modal.classList.contains("cp-open") ||
+      !player.isConnected
     ) {
-      const player = document.createElement("video");
+      return;
+    }
 
-      player.controls = true;
-      player.playsInline = true;
-      player.preload = "metadata";
-      player.autoplay = true;
+    if (available) {
+      try {
+        activePlayer = new window.Plyr(player, {
+          autoplay: true,
+          clickToPlay: true,
 
-      const source = document.createElement("source");
+          ratio: isVertical
+            ? "9:16"
+            : "16:9",
 
-      source.src = videoURL(video);
+          controls: [
+            "play-large",
+            "play",
+            "progress",
+            "current-time",
+            "mute",
+            "volume",
+            "settings",
+            "pip",
+            "fullscreen"
+          ],
 
-      source.type =
-        /\.webm(?:\?|$)/i.test(source.src)
-          ? "video/webm"
-          : "video/mp4";
+          settings: [
+            "speed",
+            "loop"
+          ],
 
-      player.append(source);
+          fullscreen: {
+            enabled: true,
+            fallback: true,
+            iosNative: true
+          },
 
-      frame.append(player);
-
-      // Plyr yuklanmasa, oddiy HTML5 pleyer ishlaydi.
-
-      const available = await loadPlyr();
-
-      if (
-        token !== playToken ||
-        !modal.classList.contains("cp-open") ||
-        !player.isConnected
-      ) {
-        return;
-      }
-
-      if (available) {
-        try {
-          activePlayer = new window.Plyr(player, {
-            autoplay: true,
-            clickToPlay: true,
-
-            ratio: isVertical
-              ? "9:16"
-              : "16:9",
-
-            controls: [
-              "play-large",
-              "play",
-              "progress",
-              "current-time",
-              "mute",
-              "volume",
-              "settings",
-              "pip",
-              "fullscreen"
-            ],
-
-            settings: [
-              "speed",
-              "loop"
-            ],
-
-            fullscreen: {
-              enabled: true,
-              fallback: true,
-              iosNative: true
-            },
-
-            storage: {
-              enabled: false
-            }
-          });
-
-          const result = activePlayer.play();
-
-          if (
-            result &&
-            typeof result.catch === "function"
-          ) {
-            result.catch(() => {});
+          storage: {
+            enabled: false
           }
+        });
 
-        } catch (error) {
-          console.warn(
-            "Plyr ishga tushmadi:",
-            error
-          );
+        const result = activePlayer.play();
 
-          activePlayer = null;
-
-          player.controls = true;
-          player.play().catch(() => {});
+        if (
+          result &&
+          typeof result.catch === "function"
+        ) {
+          result.catch(() => {});
         }
 
-      } else {
+      } catch (error) {
+        console.warn(
+          "Plyr ishga tushmadi:",
+          error
+        );
+
+        activePlayer = null;
+
+        player.controls = true;
         player.play().catch(() => {});
       }
 
     } else {
-      // FACEBOOK / YOUTUBE
-
-      const url = embedURL(video);
-
-      if (url) {
-        const iframe = document.createElement("iframe");
-
-        iframe.title = title(video);
-        iframe.src = url;
-
-        iframe.allow =
-          "autoplay; encrypted-media; picture-in-picture; fullscreen";
-
-        iframe.allowFullscreen = true;
-
-        iframe.referrerPolicy =
-          "strict-origin-when-cross-origin";
-
-        frame.append(iframe);
-
-      } else {
-        const notice = document.createElement("div");
-
-        notice.style.cssText = `
-          display: grid;
-          place-items: center;
-          height: 100%;
-          padding: 20px;
-          text-align: center;
-          color: #ddd;
-        `;
-
-        notice.textContent =
-          "Bu video hozircha sayt ichida mavjud emas.";
-
-        frame.append(notice);
-      }
-    }
-
-    // FACEBOOK UCHUN TASHQI HAVOLA
-
-    if (type === "facebook") {
-      const originalURL = facebookURL(video);
-
-      if (originalURL) {
-        const link = document.createElement("a");
-
-        link.className = "cp-facebook-link";
-        link.href = originalURL;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-
-        link.textContent =
-          "🔵 Video ochilmasa, Facebook’da ko‘rish ↗";
-
-        facebookAction.append(link);
-      }
+      player.play().catch(() => {});
     }
 
     // KEYINGI VIDEOLAR
@@ -1479,27 +1194,21 @@
         const icon = document.createElement("div");
 
         icon.className = "cp-next-icon";
-
-        icon.textContent =
-          platform(item) === "facebook"
-            ? "f"
-            : "▶";
+        icon.textContent = "▶";
 
         button.append(icon);
 
-        if (platform(item) === "upload") {
-          generateThumbnail(item).then(result => {
-            if (result && button.isConnected) {
-              const img = document.createElement("img");
+        generateThumbnail(item).then(result => {
+          if (result && button.isConnected) {
+            const img = document.createElement("img");
 
-              img.src = result;
-              img.alt = "";
-              img.loading = "lazy";
+            img.src = result;
+            img.alt = "";
+            img.loading = "lazy";
 
-              icon.replaceWith(img);
-            }
-          });
-        }
+            icon.replaceWith(img);
+          }
+        });
       }
 
       const label = document.createElement("span");
@@ -1552,7 +1261,7 @@
 
     if (!videos.length) {
       status.textContent =
-        "Hozircha videolar mavjud emas.";
+        "Hozircha yuklangan videolar mavjud emas.";
 
       return;
     }
@@ -1594,7 +1303,7 @@
   }
 
   // ==============================
-  // JSON FAYLLARNI O'QISH
+  // JSON FAYLNI O'QISH
   // ==============================
 
   async function readVideos(filename) {
@@ -1639,30 +1348,12 @@
   }
 
   // ==============================
-  // VIDEOLARNI YUKLASH
+  // FAQAT MP4 / WEBM YUKLASH
   // ==============================
 
   async function load() {
-    const [
-      youtubeVideos,
-      facebookVideos,
-      uploadedVideos
-    ] = await Promise.all([
-      readVideos("videos.json"),
-      readVideos("facebook-videos.json"),
-      readVideos("uploaded-videos.json")
-    ]);
-
-    const oldYouTube = videos.filter(
-      video => platform(video) === "youtube"
-    );
-
-    const oldFacebook = videos.filter(
-      video => platform(video) === "facebook"
-    );
-
-    const oldUploads = videos.filter(
-      video => platform(video) === "upload"
+    const uploadedVideos = await readVideos(
+      "uploaded-videos.json"
     );
 
     const previousFirst =
@@ -1670,38 +1361,9 @@
         ? videoKey(videos[0])
         : "";
 
-    // MP4/WebM avtomatik ko'rsatiladi.
-
-    const uploads =
-      uploadedVideos !== null
-        ? uploadedVideos
-        : oldUploads;
-
-    // Facebook faqat tasdiqlangan bo'lsa.
-
-    const facebook = (
-      facebookVideos !== null
-        ? facebookVideos
-        : oldFacebook
-    ).filter(
-      video => video.approved === true
-    );
-
-    // YouTube faqat tasdiqlangan bo'lsa.
-
-    const youtube = (
-      youtubeVideos !== null
-        ? youtubeVideos
-        : oldYouTube
-    ).filter(
-      video => video.approved === true
-    );
-
-    videos = normalize([
-      ...uploads,
-      ...facebook,
-      ...youtube
-    ]);
+    if (uploadedVideos !== null) {
+      videos = normalize(uploadedVideos);
+    }
 
     const newFirst =
       videos[0]
@@ -1722,14 +1384,10 @@
 
   load();
 
-  // Har 5 daqiqada ma'lumotlarni yangilash.
-
   setInterval(
     load,
     REFRESH_MS
   );
-
-  // Har 15 daqiqada kartalarni almashtirish.
 
   setInterval(() => {
     if (
