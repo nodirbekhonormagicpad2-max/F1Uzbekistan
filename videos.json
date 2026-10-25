@@ -1,6 +1,14 @@
 {
-  "updated_at": "2026-10-25T12:26:00.032065+00:00",
+  "updated_at": "2026-10-25T13:08:43.839988+00:00",
   "videos": [
+    {
+      "id": "4YTuyqiSrHg",
+      "title": "Every Tenth Counts! 🏎️ | Austin GP 2026 Q2 Highlights",
+      "channel": "Racing Corner F1",
+      "published": "2026-10-25T12:37:09Z",
+      "thumbnail": "https://i.ytimg.com/vi/4YTuyqiSrHg/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=4YTuyqiSrHg"
+    },
     {
       "id": "tGFj_7e4eyQ",
       "title": "LIVE: F1 Qualifying Press Conference - United States Grand Prix | Antonelli, Max Verstappen, Hadjar",
@@ -122,14 +130,6 @@
       "url": "https://www.youtube.com/watch?v=1vSf1l18INc"
     },
     {
-      "id": "o0-vpjGDppA",
-      "title": "🔴LIVE QUALIFICA F1🔴 FERRARI PUNTA ALLA POLE!! SI FA SUL SERIO ADESSO!",
-      "channel": "TRIBUNA MOTORI Live",
-      "published": "2026-10-24T22:38:41Z",
-      "thumbnail": "https://i.ytimg.com/vi/o0-vpjGDppA/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=o0-vpjGDppA"
-    },
-    {
       "id": "2fQx8d2LEgU",
       "title": "The most satisfying overtake you’ll see today 💨🏎️ #f1 #motorsport #racing",
       "channel": "FalcMusics",
@@ -162,14 +162,6 @@
       "url": "https://www.youtube.com/watch?v=UG3Kg0_xRKE"
     },
     {
-      "id": "Z1PUiOsSXAI",
-      "title": "F1 2005 All Crashes",
-      "channel": "Racing Crashes",
-      "published": "2026-10-22T17:59:06Z",
-      "thumbnail": "https://i.ytimg.com/vi/Z1PUiOsSXAI/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=Z1PUiOsSXAI"
-    },
-    {
       "id": "SqvOgFEAv38",
       "title": "Monaco GP 1996: A Classic Race Moment",
       "channel": "Grid Push",
@@ -192,6 +184,14 @@
       "published": "2026-10-20T02:10:47Z",
       "thumbnail": "https://i.ytimg.com/vi/w_VVXJVyxXw/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=w_VVXJVyxXw"
+    },
+    {
+      "id": "PQhXbKv2ES0",
+      "title": "Every 2026 F1 Drivers Worst Crash of their career (Part 3) #f1 #formula1",
+      "channel": "F1Fanatic",
+      "published": "2026-10-19T17:42:20Z",
+      "thumbnail": "https://i.ytimg.com/vi/PQhXbKv2ES0/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=PQhXbKv2ES0"
     }
   ]
 }
