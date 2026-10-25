@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>F1 CINEMA | Admin</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #080a0e;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 24px 16px;
+    }
+    .box {
+      max-width: 540px;
+      margin: 30px auto;
+      background: #141820;
+      border: 1px solid #303540;
+      border-radius: 20px;
+      padding: 24px;
+    }
+    h1 { margin: 0 0 8px; font-size: 26px; }
+    .red { color: #ff303e; }
+    p { color: #aeb5c1; line-height: 1.5; }
+    label {
+      display: block;
+      margin: 20px 0 8px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 15px;
+      background: #090c11;
+      border: 1px solid #414753;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+    }
+    input:focus {
+      outline: none;
+      border-color: #ff303e;
+    }
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 16px;
+      background: #e7192b;
+      border: 0;
+      border-radius: 11px;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:disabled { opacity: .55; }
+    #message {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    .success { color: #56e7a0; }
+    .error { color: #ff737d; }
+    a { color: #ff737d; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>🏎️ <span class="red">F1 CINEMA</span> ADMIN</h1>
+    <p>X videolarini F1 Uzbekistan TV saytiga qo‘shish.</p>
+
+    <form id="videoForm">
+      <label for="password">🔐 Admin paroli</label>
+      <input
+        id="password"
+        type="password"
+        autocomplete="current-password"
+        required
+        placeholder="Admin parolingiz"
+      >
+
+      <label for="url">🔗 X video havolasi</label>
+      <input
+        id="url"
+        type="url"
+        required
+        placeholder="https://x.com/user/status/123..."
+      >
+
+      <label for="title">📝 Video nomi</label>
+      <input
+        id="title"
+        type="text"
+        maxlength="160"
+        required
+        placeholder="Maks Verstappen — qiziqarli lavha"
+      >
+
+      <label for="thumbnail">🖼️ Muqova rasmi (ixtiyoriy)</label>
+      <input
+        id="thumbnail"
+        type="text"
+        placeholder="./verstappen-x.jpg"
+      >
+
+      <button id="submitBtn" type="submit">
+        ➕ VIDEO QO‘SHISH
+      </button>
+    </form>
+
+    <div id="message" role="status"></div>
+
+    <p>
+      <a href="/">← Bosh sahifaga qaytish</a>
+    </p>
+  </div>
+
+  <script>
+    const form = document.getElementById("videoForm");
+    const button = document.getElementById("submitBtn");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      button.disabled = true;
+      button.textContent = "⏳ Saqlanmoqda...";
+      message.className = "";
+      message.textContent = "";
+
+      try {
+        const response = await fetch("/api/videos", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-store"
+          },
+          body: JSON.stringify({
+            password: document.getElementById("password").value,
+            url: document.getElementById("url").value.trim(),
+            title_uz: document.getElementById("title").value.trim(),
+            thumbnail: document.getElementById("thumbnail").value.trim()
+          })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || "Xatolik yuz berdi");
+        }
+
+        message.className = "success";
+        message.textContent =
+          "✅ Video GitHub’ga saqlandi!\n" +
+          "Cloudflare yangilangach F1 CINEMA’da chiqadi.";
+
+        document.getElementById("url").value = "";
+        document.getElementById("title").value = "";
+        document.getElementById("thumbnail").value = "";
+
+      } catch (error) {
+        message.className = "error";
+        message.textContent = "❌ " + error.message;
+      } finally {
+        button.disabled = false;
+        button.textContent = "➕ VIDEO QO‘SHISH";
+      }
+    });
+  </script>
+</body>
+</html>
