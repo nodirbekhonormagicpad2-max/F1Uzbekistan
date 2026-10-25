@@ -1,9 +1,10 @@
+
 name: Update F1 news
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '17 * * * *'
+    - cron: '7,37 * * * *'
 
 permissions:
   contents: write
@@ -16,16 +17,19 @@ jobs:
   update:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Update Uzbek RSS news (free)
+      - name: Update Uzbek RSS news
         run: python scripts/update_news.py
 
       - name: Commit news.json
@@ -33,7 +37,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add news.json
+
           if ! git diff --cached --quiet; then
-            git commit -m "Update free Uzbek F1 news"
+            git commit -m "Update Uzbek F1 news"
             git push
+          else
+            echo "Yangi yangiliklar mavjud emas."
           fi
