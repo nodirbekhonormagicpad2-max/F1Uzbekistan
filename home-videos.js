@@ -274,6 +274,11 @@
       border: 0;
     }
 
+    #f1-cinema-modal video {
+      object-fit: contain;
+      background: #000;
+    }
+
     #f1-cinema-modal .cp-nexttitle {
       margin: 15px 0 9px;
       font-size: 13px;
@@ -534,11 +539,23 @@
 
   function validUploadURL(video) {
     try {
-      const url = new URL(videoURL(video));
+      const raw = videoURL(video);
+
+      if (!raw) return false;
+
+      // Cloudflare R2 videolari uchun ichki manzil
+      if (
+        /^\/api\/media\/videos\/[a-f0-9-]{36}\.(mp4|webm)$/i.test(raw)
+      ) {
+        return true;
+      }
+
+      // Tashqi HTTPS video manzili
+      const url = new URL(raw, window.location.origin);
 
       return (
         url.protocol === "https:" &&
-        /\.(mp4|webm)(?:$|\?)/i.test(url.href)
+        /\.(mp4|webm)$/i.test(url.pathname)
       );
     } catch {
       return false;
@@ -622,7 +639,7 @@
 
       const type = platform(video);
 
-      // X videolarini butunlay yashiramiz.
+      // X videolarini yashiramiz.
       if (type === "x") return false;
 
       if (
@@ -682,6 +699,7 @@
     const button = document.createElement("button");
     button.className = "cp-thumb";
     button.type = "button";
+
     button.setAttribute(
       "aria-label",
       title(video) + " — tomosha qilish"
@@ -714,6 +732,7 @@
     playIcon.textContent = "▶";
 
     button.append(playIcon);
+
     button.addEventListener("click", () => play(video));
 
     const body = document.createElement("div");
@@ -748,6 +767,7 @@
     modal.classList.remove("cp-open");
     frame.replaceChildren();
     frame.classList.remove("cp-vertical");
+
     document.body.style.overflow = previousOverflow;
 
     if (lastFocus && lastFocus.isConnected) {
@@ -785,8 +805,10 @@
       player.playsInline = true;
       player.preload = "metadata";
       player.autoplay = true;
+      player.style.objectFit = "contain";
 
       frame.append(player);
+
       player.play().catch(() => {});
     } else {
       const url = embedURL(video);
@@ -796,8 +818,10 @@
 
         iframe.title = title(video);
         iframe.src = url;
+
         iframe.allow =
           "autoplay; encrypted-media; picture-in-picture; fullscreen";
+
         iframe.allowFullscreen = true;
         iframe.referrerPolicy = "strict-origin-when-cross-origin";
 
@@ -838,8 +862,10 @@
       } else {
         const icon = document.createElement("div");
         icon.className = "cp-next-icon";
+
         icon.textContent =
           platform(item) === "facebook" ? "f" : "▶";
+
         button.append(icon);
       }
 
@@ -907,6 +933,7 @@
 
     pageIndex = (pageIndex + 1) % totalPages;
     lastRotation = Date.now();
+
     renderPage();
   }
 
@@ -960,14 +987,17 @@
     );
 
     allVideos = normalize([
-      ...(facebookVideos !== null
-        ? facebookVideos
-        : oldFacebook),
-
+      // 1. O'zingiz yuklagan videolar
       ...(uploadedVideos !== null
         ? uploadedVideos
         : oldUploads),
 
+      // 2. Facebook Reels
+      ...(facebookVideos !== null
+        ? facebookVideos
+        : oldFacebook),
+
+      // 3. YouTube videolari
       ...(youtubeVideos !== null
         ? youtubeVideos
         : oldYouTube)
