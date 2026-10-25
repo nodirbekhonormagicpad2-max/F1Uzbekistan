@@ -175,7 +175,7 @@ style.textContent=`
 #f1-cinema-premium .cp-status:empty{
   display:none;
 }
-#f1-cinema-premium .cp-x-cover{
+#f1-cinema-premium .cp-video-cover{
   width:100%;
   height:100%;
   display:flex;
@@ -190,12 +190,12 @@ style.textContent=`
   );
   color:#fff;
 }
-#f1-cinema-premium .cp-x-logo{
+#f1-cinema-premium .cp-video-logo{
   font-size:44px;
   font-weight:900;
   line-height:1;
 }
-#f1-cinema-premium .cp-x-label{
+#f1-cinema-premium .cp-video-label{
   font-size:12px;
   font-weight:900;
   letter-spacing:2px;
@@ -253,34 +253,18 @@ style.textContent=`
   border-radius:9px;
   overflow:hidden;
 }
-#f1-cinema-modal .cp-frame.cp-x-frame{
-  aspect-ratio:auto;
-  min-height:300px;
+#f1-cinema-modal .cp-frame.cp-vertical{
+  width:min(420px,100%);
+  aspect-ratio:9/16;
   max-height:75vh;
-  overflow-y:auto;
-  background:#111116;
+  margin:0 auto;
 }
-#f1-cinema-modal .cp-x-host{
-  width:100%;
-  min-height:280px;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  padding:10px;
-}
-#f1-cinema-modal .cp-x-loading{
-  color:#ccc;
-  font-size:13px;
-  text-align:center;
-  padding:35px 12px;
-}
-#f1-cinema-modal iframe{
+#f1-cinema-modal iframe,
+#f1-cinema-modal video{
   width:100%;
   height:100%;
   border:0;
-}
-#f1-cinema-modal .cp-x-host iframe{
-  height:auto;
+  display:block;
 }
 #f1-cinema-modal .cp-nexttitle{
   font-size:13px;
@@ -312,7 +296,7 @@ style.textContent=`
   border-radius:5px;
   flex-shrink:0;
 }
-#f1-cinema-modal .cp-next-x{
+#f1-cinema-modal .cp-next-icon{
   width:90px;
   aspect-ratio:16/9;
   flex-shrink:0;
@@ -380,7 +364,7 @@ style.textContent=`
   #f1-cinema-premium .cp-timer{
     font-size:10px;
   }
-  #f1-cinema-premium .cp-x-logo{
+  #f1-cinema-premium .cp-video-logo{
     font-size:32px;
   }
   #f1-cinema-modal{
@@ -393,7 +377,7 @@ style.textContent=`
     grid-template-columns:1fr;
   }
   #f1-cinema-modal .cp-next img,
-  #f1-cinema-modal .cp-next-x{
+  #f1-cinema-modal .cp-next-icon{
     width:100px;
   }
 }
@@ -496,8 +480,6 @@ let lastFocus=null;
 let previousOverflow='';
 let pageIndex=0;
 let lastRotation=Date.now();
-let playSequence=0;
-let xScriptPromise=null;
 
 function decodeHTML(text){
   const el=document.createElement('textarea');
@@ -514,8 +496,10 @@ function platform(v){
     v.platform||v.source||'youtube'
   ).toLowerCase();
 
-  if(p==='x'||p==='twitter')return 'x';
   if(p==='facebook'||p==='fb')return 'facebook';
+  if(p==='upload'||p==='local')return 'upload';
+  if(p==='x'||p==='twitter')return 'x';
+
   return 'youtube';
 }
 
@@ -620,29 +604,6 @@ function videoKey(v){
   return platform(v)+':'+String(v.id||v.url||'');
 }
 
-function xPostId(v){
-  try{
-    const u=new URL(String(v.url||''));
-
-    if(![
-      'x.com',
-      'www.x.com',
-      'twitter.com',
-      'www.twitter.com'
-    ].includes(u.hostname)){
-      return '';
-    }
-
-    const match=u.pathname.match(
-      /^\/[^/]+\/status\/(\d+)(?:\/|$)/
-    );
-
-    return match?match[1]:'';
-  }catch(e){
-    return '';
-  }
-}
-
 function embedURL(v){
   const p=platform(v);
 
@@ -651,7 +612,7 @@ function embedURL(v){
 
     return 'https://www.youtube-nocookie.com/embed/'
       +encodeURIComponent(v.id)
-      +'?autoplay=1&playsinline=1&rel=0&enablejsapi=1';
+      +'?autoplay=1&playsinline=1&rel=0';
   }
 
   if(p==='facebook'){
@@ -662,7 +623,7 @@ function embedURL(v){
         'facebook.com',
         'www.facebook.com',
         'm.facebook.com',
-        'fb.watch'
+        'web.facebook.com'
       ].includes(u.hostname)){
         return '';
       }
@@ -678,108 +639,29 @@ function embedURL(v){
   return '';
 }
 
-function loadXScript(){
-  if(window.twttr&&window.twttr.widgets){
-    return Promise.resolve(window.twttr);
-  }
-
-  if(xScriptPromise)return xScriptPromise;
-
-  xScriptPromise=new Promise((resolve,reject)=>{
-    const script=document.createElement('script');
-
-    script.src='https://platform.x.com/widgets.js';
-    script.async=true;
-    script.charset='utf-8';
-
-    script.onload=()=>{
-      if(window.twttr&&window.twttr.widgets){
-        resolve(window.twttr);
-      }else{
-        reject(Error('X vidjeti mavjud emas'));
-      }
-    };
-
-    script.onerror=()=>{
-      reject(Error('X vidjeti yuklanmadi'));
-    };
-
-    document.head.appendChild(script);
-  }).catch(err=>{
-    xScriptPromise=null;
-    throw err;
-  });
-
-  return xScriptPromise;
-}
-
-async function renderX(v,sequence){
-  const id=xPostId(v);
-
-  const loading=document.createElement('div');
-  loading.className='cp-x-loading';
-  loading.textContent='X videosi yuklanmoqda…';
-  frame.append(loading);
-
-  if(!id){
-    loading.textContent='X post havolasi noto‘g‘ri.';
-    return;
-  }
+function validUploadURL(v){
+  const url=String(
+    v.video_url||v.videoUrl||v.url||''
+  );
 
   try{
-    const twttr=await loadXScript();
+    const parsed=new URL(url);
 
-    if(
-      sequence!==playSequence||
-      !modal.classList.contains('cp-open')
-    )return;
-
-    const host=document.createElement('div');
-    host.className='cp-x-host';
-
-    frame.replaceChildren(host);
-
-    const result=await twttr.widgets.createTweet(
-      id,
-      host,
-      {
-        theme:'dark',
-        align:'center',
-        dnt:true,
-        conversation:'none',
-        cards:'visible'
-      }
+    return (
+      parsed.protocol==='https:' &&
+      /\.(mp4|webm)(?:$|\?)/i.test(parsed.href)
     );
-
-    if(
-      sequence!==playSequence||
-      !modal.classList.contains('cp-open')
-    )return;
-
-    if(!result){
-      host.textContent=
-        'Bu X videosi hozir sayt ichida ko‘rsatilmayapti.';
-    }
-  }catch(err){
-    if(sequence!==playSequence)return;
-
-    const message=document.createElement('div');
-    message.className='cp-x-loading';
-    message.textContent=
-      'X videosini yuklab bo‘lmadi. '+
-      'Post cheklangan yoki brauzer bloklagan bo‘lishi mumkin.';
-
-    frame.replaceChildren(message);
+  }catch(e){
+    return false;
   }
 }
 
 function closeModal(){
   if(!modal.classList.contains('cp-open'))return;
 
-  playSequence++;
   modal.classList.remove('cp-open');
   frame.replaceChildren();
-  frame.classList.remove('cp-x-frame');
+  frame.classList.remove('cp-vertical');
   document.body.style.overflow=previousOverflow;
 
   if(lastFocus&&lastFocus.isConnected){
@@ -808,21 +690,34 @@ function play(v){
     previousOverflow=document.body.style.overflow;
   }
 
-  const sequence=++playSequence;
-
   modal.querySelector('.cp-modaltitle').textContent=title(v);
 
   frame.replaceChildren();
+
+  const p=platform(v);
+
   frame.classList.toggle(
-    'cp-x-frame',
-    platform(v)==='x'
+    'cp-vertical',
+    p==='facebook'||(
+      p==='upload'&&v.aspect_ratio==='9:16'
+    )
   );
 
   modal.classList.add('cp-open');
   document.body.style.overflow='hidden';
 
-  if(platform(v)==='x'){
-    renderX(v,sequence);
+  if(p==='upload'&&validUploadURL(v)){
+    const video=document.createElement('video');
+
+    video.src=v.video_url||v.videoUrl||v.url;
+    video.controls=true;
+    video.playsInline=true;
+    video.preload='metadata';
+    video.autoplay=true;
+
+    frame.append(video);
+
+    video.play().catch(()=>{});
   }else{
     const url=embedURL(v);
 
@@ -833,272 +728,4 @@ function play(v){
       iframe.src=url;
       iframe.allow=
         'autoplay; encrypted-media; picture-in-picture; fullscreen';
-      iframe.allowFullscreen=true;
-      iframe.setAttribute(
-        'referrerpolicy',
-        'strict-origin-when-cross-origin'
-      );
-
-      frame.append(iframe);
-    }else{
-      const message=document.createElement('div');
-
-      message.style.cssText=
-        'display:grid;place-items:center;height:100%;'+
-        'padding:20px;text-align:center;color:#ddd;font-size:13px;';
-
-      message.textContent=
-        'Bu video hozircha sayt ichida mavjud emas.';
-
-      frame.append(message);
-    }
-  }
-
-  const next=modal.querySelector('.cp-nextlist');
-  next.replaceChildren();
-
-  const others=allVideos
-    .filter(x=>videoKey(x)!==videoKey(v))
-    .slice(0,6);
-
-  for(const item of others){
-    const b=document.createElement('button');
-    b.type='button';
-    b.className='cp-next';
-
-    const thumb=image(item);
-
-    if(thumb){
-      const img=document.createElement('img');
-      img.src=thumb;
-      img.alt='';
-      img.loading='lazy';
-      b.append(img);
-    }else{
-      const xIcon=document.createElement('div');
-      xIcon.className='cp-next-x';
-      xIcon.textContent='𝕏';
-      b.append(xIcon);
-    }
-
-    const label=document.createElement('span');
-    label.textContent=title(item);
-
-    b.append(label);
-    b.addEventListener('click',()=>play(item));
-    next.append(b);
-  }
-
-  close.focus();
-}
-
-function card(v){
-  const el=document.createElement('article');
-  el.className='cp-card';
-
-  const thumb=document.createElement('button');
-  thumb.className='cp-thumb';
-  thumb.type='button';
-
-  thumb.setAttribute(
-    'aria-label',
-    title(v)+' — tomosha qilish'
-  );
-
-  const thumbURL=image(v);
-
-  if(thumbURL){
-    const img=document.createElement('img');
-    img.src=thumbURL;
-    img.alt='';
-    img.loading='lazy';
-    thumb.append(img);
-  }else{
-    const cover=document.createElement('div');
-    cover.className='cp-x-cover';
-
-    const logo=document.createElement('span');
-    logo.className='cp-x-logo';
-    logo.textContent='𝕏';
-
-    const label=document.createElement('span');
-    label.className='cp-x-label';
-    label.textContent='F1 VIDEO';
-
-    cover.append(logo,label);
-    thumb.append(cover);
-  }
-
-  const icon=document.createElement('span');
-  icon.className='cp-play';
-  icon.textContent='▶';
-
-  thumb.append(icon);
-  thumb.addEventListener('click',()=>play(v));
-
-  const body=document.createElement('div');
-  body.className='cp-cardbody';
-
-  const source=document.createElement('div');
-  source.className='cp-platform';
-
-  const dot=document.createElement('span');
-  dot.className='cp-platformdot';
-
-  const name=document.createElement('span');
-
-  name.textContent={
-    youtube:'YouTube',
-    x:'X · F1 lavhalari',
-    facebook:'Facebook · F1'
-  }[platform(v)];
-
-  source.append(dot,name);
-
-  const heading=document.createElement('p');
-  heading.className='cp-cardtitle';
-  heading.textContent=title(v);
-
-  const small=document.createElement('div');
-  small.className='cp-cardmeta';
-  small.textContent=meta(v)||'F1 Uzbekistan TV';
-
-  body.append(source,heading,small);
-  el.append(thumb,body);
-
-  return el;
-}
-
-function renderPage(){
-  grid.replaceChildren();
-
-  if(!allVideos.length){
-    status.textContent='Hozircha videolar mavjud emas.';
-    return;
-  }
-
-  status.textContent='';
-
-  const totalPages=Math.ceil(
-    allVideos.length/PAGE_SIZE
-  );
-
-  if(pageIndex>=totalPages){
-    pageIndex=0;
-  }
-
-  const start=pageIndex*PAGE_SIZE;
-  const selected=allVideos.slice(
-    start,
-    start+PAGE_SIZE
-  );
-
-  for(const v of selected){
-    grid.append(card(v));
-  }
-}
-
-function rotate(){
-  if(!allVideos.length)return;
-
-  const totalPages=Math.ceil(
-    allVideos.length/PAGE_SIZE
-  );
-
-  if(totalPages<=1)return;
-
-  pageIndex=(pageIndex+1)%totalPages;
-  lastRotation=Date.now();
-  renderPage();
-}
-
-function normalize(items){
-  const seen=new Set();
-
-  return items.filter(v=>{
-    if(!v||typeof v!=='object')return false;
-
-    const p=platform(v);
-
-    if(p==='youtube'&&!validId(v.id)){
-      return false;
-    }
-    if(p==='x'&&!xPostId(v)){
-      return false;
-    }
-    if(p==='facebook'&&!v.url){
-      return false;
-    }
-
-    const key=videoKey(v);
-
-    if(seen.has(key))return false;
-
-    seen.add(key);
-    return true;
-  });
-}
-
-// YouTube va X videolarini alohida JSON fayllardan olish.
-async function load(){
-
-  async function readVideos(file){
-    try{
-      const res=await fetch(
-        './'+file+'?t='+Date.now(),
-        {cache:'no-store'}
-      );
-
-      if(!res.ok){
-        throw Error(file+' HTTP '+res.status);
-      }
-
-      const data=await res.json();
-
-      return Array.isArray(data)
-        ?data
-        :Array.isArray(data.videos)
-          ?data.videos
-          :[];
-
-    }catch(err){
-      console.warn('F1 CINEMA:',file,err);
-      return null;
-    }
-  }
-
-  const [youtubeVideos,xVideos]=await Promise.all([
-    readVideos('videos.json'),
-    readVideos('x-videos.json')
-  ]);
-
-  // Bir fayl vaqtincha ishlamasa,
-  // avvalgi videolar saqlanib qoladi.
-  const oldYouTube=allVideos.filter(
-    v=>platform(v)==='youtube'
-  );
-
-  const oldX=allVideos.filter(
-    v=>platform(v)==='x'
-  );
-
-  allVideos=normalize([
-    ...(xVideos!==null?xVideos:oldX),
-    ...(youtubeVideos!==null?youtubeVideos:oldYouTube)
-  ]);
-
-  renderPage();
-}
-
-load();
-
-setInterval(load,REFRESH_MS);
-
-setInterval(()=>{
-  if(Date.now()-lastRotation>=ROTATE_MS){
-    rotate();
-    lastRotation=Date.now();
-  }
-},30000);
-
-})();
+      iframe
