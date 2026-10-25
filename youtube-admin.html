@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>F1 CINEMA — YouTube boshqaruvi</title>
+  <title>F1 CINEMA — YouTube Admin</title>
 
   <style>
     * {
@@ -64,6 +64,11 @@
       background: #16803c;
     }
 
+    button:disabled {
+      opacity: 0.55;
+      cursor: wait;
+    }
+
     .video-card {
       background: #1b1b22;
       padding: 15px;
@@ -92,6 +97,7 @@
       border: 0;
       border-radius: 10px;
       background: #000;
+      margin-top: 12px;
     }
 
     textarea {
@@ -111,6 +117,12 @@
       font-size: 14px;
       line-height: 1.6;
     }
+
+    .message {
+      min-height: 20px;
+      font-size: 14px;
+      color: #ffca62;
+    }
   </style>
 </head>
 
@@ -125,26 +137,20 @@
 
     <input
       id="youtubeUrl"
+      type="url"
       placeholder="YouTube havolasini kiriting"
+      autocomplete="off"
     >
 
-    <input
-      id="videoTitle"
-      placeholder="Video nomi"
-    >
-
-    <input
-      id="videoChannel"
-      placeholder="Kanal nomi"
-    >
-
-    <button onclick="addVideo()">
+    <button id="addButton" type="button">
       Videoni qo‘shish
     </button>
 
+    <p id="message" class="message"></p>
+
     <p class="notice">
+      Video nomi va kanal nomi avtomatik olinadi.
       Video dastlab tasdiqlanmagan holatda saqlanadi.
-      Uni tekshirgandan keyin tasdiqlang.
     </p>
   </div>
 
@@ -156,131 +162,170 @@
   <div class="box">
     <h2>💾 videos.json</h2>
 
-    <button onclick="exportJSON()">
+    <button type="button" id="exportButton">
       JSON tayyorlash
     </button>
 
-    <button class="secondary" onclick="copyJSON()">
+    <button type="button" class="secondary" id="copyButton">
       JSON nusxalash
     </button>
 
     <textarea id="jsonOutput" readonly></textarea>
 
     <p class="notice">
-      Tayyor JSON’ni GitHub’dagi videos.json
-      fayliga joylashtiring.
+      Tayyor JSON’ni GitHub’dagi videos.json fayliga
+      joylashtirishdan oldin eski videolarni saqlab qo‘ying.
+      Bu sahifa GitHub’ni avtomatik yangilamaydi.
     </p>
   </div>
 
 </div>
 
 <script>
-  const STORAGE_KEY = "f1_cinema_youtube_admin";
+"use strict";
 
-  let videos = [];
+const STORAGE_KEY = "f1_cinema_youtube_admin";
 
-  function escapeHTML(value) {
-    return String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
-  }
+let videos = [];
 
-  function getYouTubeId(url) {
-    try {
-      const parsed = new URL(url);
+const $ = id => document.getElementById(id);
 
-      const hostname = parsed.hostname
-        .toLowerCase()
-        .replace(/^www\./, "")
-        .replace(/^m\./, "");
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 
-      if (hostname === "youtu.be") {
-        return parsed.pathname.split("/")[1] || null;
-      }
+function getYouTubeId(input) {
+  try {
+    const url = new URL(input.trim());
 
-      if (
-        hostname === "youtube.com" ||
-        hostname === "youtube-nocookie.com"
-      ) {
-        if (parsed.pathname === "/watch") {
-          return parsed.searchParams.get("v");
-        }
-
-        const parts = parsed.pathname.split("/").filter(Boolean);
-
-        if (
-          ["shorts", "embed", "live"].includes(parts[0])
-        ) {
-          return parts[1] || null;
-        }
-      }
-
-      return null;
-    } catch {
+    if (!["https:", "http:"].includes(url.protocol)) {
       return null;
     }
-  }
 
-  function save() {
+    const host = url.hostname
+      .toLowerCase()
+      .replace(/^www\./, "")
+      .replace(/^m\./, "");
+
+    let id = null;
+
+    if (host === "youtu.be") {
+      id = url.pathname.split("/").filter(Boolean)[0];
+    }
+
+    if (
+      host === "youtube.com" ||
+      host === "youtube-nocookie.com"
+    ) {
+      const parts = url.pathname.split("/").filter(Boolean);
+
+      if (parts[0] === "watch") {
+        id = url.searchParams.get("v");
+      } else if (
+        ["shorts", "embed", "live"].includes(parts[0])
+      ) {
+        id = parts[1];
+      }
+    }
+
+    return /^[A-Za-z0-9_-]{11}$/.test(id || "")
+      ? id
+      : null;
+
+  } catch {
+    return null;
+  }
+}
+
+function save() {
+  try {
     localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify(videos)
     );
-
-    render();
+  } catch (error) {
+    alert("Brauzer xotirasiga saqlab bo‘lmadi.");
   }
 
-  function load() {
-    try {
-      const saved = JSON.parse(
-        localStorage.getItem(STORAGE_KEY) || "[]"
-      );
+  render();
+}
 
-      videos = Array.isArray(saved) ? saved : [];
-    } catch {
-      videos = [];
-    }
+function load() {
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem(STORAGE_KEY) || "[]"
+    );
 
-    render();
+    videos = Array.isArray(saved) ? saved : [];
+  } catch {
+    videos = [];
   }
 
-  function addVideo() {
-    const url = document
-      .getElementById("youtubeUrl")
-      .value.trim();
+  render();
+}
 
-    const title = document
-      .getElementById("videoTitle")
-      .value.trim();
+function showMessage(text) {
+  $("message").textContent = text;
+}
 
-    const channel = document
-      .getElementById("videoChannel")
-      .value.trim();
+async function getVideoMetadata(id) {
+  const videoUrl =
+    "https://www.youtube.com/watch?v=" + id;
 
-    const id = getYouTubeId(url);
+  const endpoint =
+    "https://www.youtube.com/oembed?url=" +
+    encodeURIComponent(videoUrl) +
+    "&format=json";
 
-    if (!id || !/^[A-Za-z0-9_-]{11}$/.test(id)) {
-      alert("YouTube havolasi noto‘g‘ri!");
-      return;
-    }
+  const response = await fetch(endpoint);
 
-    if (!title) {
-      alert("Video nomini kiriting!");
-      return;
-    }
+  if (!response.ok) {
+    throw new Error(
+      "YouTube video ma’lumotlarini olish imkoni bo‘lmadi."
+    );
+  }
 
-    if (videos.some(video => video.id === id)) {
-      alert("Bu video ro‘yxatda mavjud!");
-      return;
-    }
+  const data = await response.json();
+
+  return {
+    title: data.title || "YouTube video",
+    channel: data.author_name || "YouTube"
+  };
+}
+
+async function addVideo() {
+  const url = $("youtubeUrl").value.trim();
+  const id = getYouTubeId(url);
+
+  if (!id) {
+    showMessage("❌ YouTube havolasi noto‘g‘ri.");
+    return;
+  }
+
+  if (videos.some(video => video.id === id)) {
+    showMessage("⚠️ Bu video ro‘yxatda mavjud.");
+    return;
+  }
+
+  const button = $("addButton");
+
+  button.disabled = true;
+  button.textContent = "Yuklanmoqda...";
+
+  showMessage("⏳ Video ma’lumotlari olinmoqda...");
+
+  try {
+    const metadata = await getVideoMetadata(id);
 
     videos.unshift({
       id,
-      title,
-      channel: channel || "YouTube",
+      title: metadata.title,
+      channel: metadata.channel,
       published: new Date().toISOString(),
       thumbnail:
         "https://i.ytimg.com/vi/" + id + "/hqdefault.jpg",
@@ -289,150 +334,169 @@
       approved: false
     });
 
-    document.getElementById("youtubeUrl").value = "";
-    document.getElementById("videoTitle").value = "";
-    document.getElementById("videoChannel").value = "";
-
     save();
-  }
 
-  function approveVideo(index) {
-    videos[index].approved = true;
-    save();
-  }
+    $("youtubeUrl").value = "";
 
-  function rejectVideo(index) {
-    videos[index].approved = false;
-    save();
-  }
-
-  function deleteVideo(index) {
-    if (!confirm("Videoni ro‘yxatdan o‘chirasizmi?")) {
-      return;
-    }
-
-    videos.splice(index, 1);
-    save();
-  }
-
-  function previewVideo(index) {
-    const video = videos[index];
-
-    const preview = document.getElementById(
-      "preview-" + index
+    showMessage(
+      "✅ Video qo‘shildi. Endi tekshirib tasdiqlang."
     );
 
-    preview.innerHTML = "";
+  } catch (error) {
+    showMessage(
+      "❌ Ma’lumotlarni avtomatik olish ishlamadi. " +
+      "YouTube cheklovi yoki brauzer CORS siyosati " +
+      "sabab bo‘lishi mumkin."
+    );
+  } finally {
+    button.disabled = false;
+    button.textContent = "Videoni qo‘shish";
+  }
+}
 
-    const iframe = document.createElement("iframe");
+function approveVideo(index) {
+  videos[index].approved = true;
+  save();
+}
 
-    iframe.className = "preview";
-    iframe.src =
-      "https://www.youtube-nocookie.com/embed/" +
-      encodeURIComponent(video.id) +
-      "?rel=0";
+function rejectVideo(index) {
+  videos[index].approved = false;
+  save();
+}
 
-    iframe.allow =
-      "accelerometer; autoplay; clipboard-write; " +
-      "encrypted-media; gyroscope; picture-in-picture; " +
-      "web-share";
-
-    iframe.allowFullscreen = true;
-    iframe.referrerPolicy =
-      "strict-origin-when-cross-origin";
-
-    preview.appendChild(iframe);
+function deleteVideo(index) {
+  if (!confirm("Videoni ro‘yxatdan o‘chirasizmi?")) {
+    return;
   }
 
-  function render() {
-    const list = document.getElementById("videoList");
+  videos.splice(index, 1);
+  save();
+}
 
-    if (!videos.length) {
-      list.innerHTML =
-        "<p>Hozircha video qo‘shilmagan.</p>";
+function previewVideo(index) {
+  const video = videos[index];
+  const preview = $("preview-" + index);
 
-      return;
-    }
+  preview.replaceChildren();
 
-    list.innerHTML = videos.map((video, index) => `
-      <div class="video-card">
+  const iframe = document.createElement("iframe");
 
-        <img
-          src="${escapeHTML(video.thumbnail)}"
-          alt="${escapeHTML(video.title)}"
-          loading="lazy"
-        >
+  iframe.className = "preview";
 
-        <h3>${escapeHTML(video.title)}</h3>
+  iframe.src =
+    "https://www.youtube-nocookie.com/embed/" +
+    encodeURIComponent(video.id) +
+    "?rel=0";
 
-        <p>${escapeHTML(video.channel)}</p>
+  iframe.title = video.title;
 
-        <p class="status">
-          ${video.approved
-            ? "✅ Tasdiqlangan"
-            : "⏳ Tasdiqlanmagan"}
-        </p>
+  iframe.allow =
+    "accelerometer; autoplay; clipboard-write; " +
+    "encrypted-media; gyroscope; picture-in-picture; " +
+    "web-share";
 
-        <button onclick="previewVideo(${index})">
-          ▶️ Tekshirish
-        </button>
+  iframe.allowFullscreen = true;
 
-        <button
-          class="green"
-          onclick="approveVideo(${index})"
-        >
-          ✅ Tasdiqlash
-        </button>
+  iframe.referrerPolicy =
+    "strict-origin-when-cross-origin";
 
-        <button
-          class="secondary"
-          onclick="rejectVideo(${index})"
-        >
-          ❌ Rad etish
-        </button>
+  preview.appendChild(iframe);
+}
 
-        <button
-          class="secondary"
-          onclick="deleteVideo(${index})"
-        >
-          🗑️ O‘chirish
-        </button>
+function render() {
+  const list = $("videoList");
 
-        <div id="preview-${index}"></div>
-
-      </div>
-    `).join("");
+  if (!videos.length) {
+    list.innerHTML =
+      "<p>Hozircha video qo‘shilmagan.</p>";
+    return;
   }
 
-  function exportJSON() {
-    const output = {
-      updated_at: new Date().toISOString(),
-      videos
-    };
+  list.innerHTML = videos.map((video, index) => `
+    <div class="video-card">
 
-    document.getElementById("jsonOutput").value =
-      JSON.stringify(output, null, 2);
+      <img
+        src="${escapeHTML(video.thumbnail)}"
+        alt="${escapeHTML(video.title)}"
+        loading="lazy"
+      >
+
+      <h3>${escapeHTML(video.title)}</h3>
+
+      <p>${escapeHTML(video.channel)}</p>
+
+      <p class="status">
+        ${video.approved
+          ? "✅ Tasdiqlangan"
+          : "⏳ Tasdiqlanmagan"}
+      </p>
+
+      <button type="button"
+        onclick="previewVideo(${index})">
+        ▶️ Tekshirish
+      </button>
+
+      <button type="button" class="green"
+        onclick="approveVideo(${index})">
+        ✅ Tasdiqlash
+      </button>
+
+      <button type="button" class="secondary"
+        onclick="rejectVideo(${index})">
+        ❌ Rad etish
+      </button>
+
+      <button type="button" class="secondary"
+        onclick="deleteVideo(${index})">
+        🗑️ O‘chirish
+      </button>
+
+      <div id="preview-${index}"></div>
+
+    </div>
+  `).join("");
+}
+
+function exportJSON() {
+  const output = {
+    updated_at: new Date().toISOString(),
+    videos
+  };
+
+  $("jsonOutput").value =
+    JSON.stringify(output, null, 2);
+}
+
+async function copyJSON() {
+  exportJSON();
+
+  const text = $("jsonOutput").value;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    alert("✅ JSON nusxalandi!");
+  } catch {
+    $("jsonOutput").focus();
+    $("jsonOutput").select();
+
+    alert(
+      "Avtomatik nusxalash ishlamadi. " +
+      "JSON matnini qo‘lda nusxalang."
+    );
   }
+}
 
-  async function copyJSON() {
-    exportJSON();
+$("addButton").addEventListener("click", addVideo);
+$("exportButton").addEventListener("click", exportJSON);
+$("copyButton").addEventListener("click", copyJSON);
 
-    const text = document.getElementById(
-      "jsonOutput"
-    ).value;
-
-    try {
-      await navigator.clipboard.writeText(text);
-      alert("JSON nusxalandi!");
-    } catch {
-      alert(
-        "Avtomatik nusxalash ishlamadi. " +
-        "Pastdagi JSON’ni qo‘lda nusxalang."
-      );
-    }
+$("youtubeUrl").addEventListener("keydown", event => {
+  if (event.key === "Enter") {
+    addVideo();
   }
+});
 
-  load();
+load();
 </script>
 
 </body>
