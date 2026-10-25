@@ -3,144 +3,631 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>F1 CINEMA | Admin</title>
+
   <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; background: #080a0e; color: #fff; font-family: Arial, sans-serif; padding: 24px 16px; }
-    .box { max-width: 540px; margin: 30px auto; background: #141820; border: 1px solid #303540; border-radius: 20px; padding: 24px; }
-    h1 { margin: 0 0 8px; font-size: 26px; }
-    .red { color: #ff303e; }
-    p { color: #aeb5c1; line-height: 1.5; }
-    label { display: block; margin: 20px 0 8px; font-weight: bold; }
-    input, select { width: 100%; padding: 15px; background: #090c11; border: 1px solid #414753; border-radius: 10px; color: white; font-size: 16px; }
-    input:focus, select:focus { outline: none; border-color: #ff303e; }
-    input[type="file"] { padding: 12px; }
-    button { width: 100%; margin-top: 22px; padding: 16px; background: #e7192b; border: 0; border-radius: 11px; color: white; font-size: 17px; font-weight: bold; cursor: pointer; }
-    button:disabled { opacity: .55; cursor: wait; }
-    #message { margin-top: 20px; white-space: pre-wrap; line-height: 1.5; }
-    .success { color: #56e7a0; }
-    .error { color: #ff737d; }
-    .hint { font-size: 13px; color: #aeb5c1; }
-    .hidden { display: none; }
-    a { color: #ff737d; }
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #080a0e;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 24px 16px;
+    }
+
+    .box {
+      max-width: 540px;
+      margin: 30px auto;
+      background: #141820;
+      border: 1px solid #303540;
+      border-radius: 20px;
+      padding: 24px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+    }
+
+    .red {
+      color: #ff303e;
+    }
+
+    p {
+      color: #aeb5c1;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      margin: 20px 0 8px;
+      font-weight: bold;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 15px;
+      background: #090c11;
+      border: 1px solid #414753;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #ff303e;
+    }
+
+    input[type="file"] {
+      padding: 12px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 16px;
+      background: #e7192b;
+      border: 0;
+      border-radius: 11px;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: wait;
+    }
+
+    #message {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .success {
+      color: #56e7a0;
+    }
+
+    .error {
+      color: #ff737d;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: #aeb5c1;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .preview {
+      margin-top: 14px;
+      width: 100%;
+      max-height: 280px;
+      background: #000;
+      border-radius: 10px;
+    }
+
+    progress {
+      width: 100%;
+      height: 18px;
+      margin-top: 16px;
+    }
+
+    a {
+      color: #ff737d;
+    }
   </style>
 </head>
+
 <body>
+
   <div class="box">
-    <h1>🏎️ <span class="red">F1 CINEMA</span> ADMIN</h1>
-    <p>Facebook Reels qo‘shing yoki o‘zingizning videongizni yuklang.</p>
+
+    <h1>
+      🏎️ <span class="red">F1 CINEMA</span> ADMIN
+    </h1>
+
+    <p>
+      Facebook Reels qo‘shing yoki
+      telefoningizdan o‘z videongizni yuklang.
+    </p>
 
     <form id="videoForm">
-      <label for="password">🔐 Admin paroli</label>
-      <input id="password" type="password" autocomplete="current-password" required placeholder="Admin parolingiz">
 
-      <label for="platform">🎬 Video turi</label>
+      <label for="password">
+        🔐 Admin paroli
+      </label>
+
+      <input
+        id="password"
+        type="password"
+        autocomplete="current-password"
+        required
+        placeholder="Admin parolingiz"
+      >
+
+      <label for="platform">
+        🎬 Video turi
+      </label>
+
       <select id="platform">
-        <option value="facebook">🔵 Facebook Reels (9:16)</option>
-        <option value="upload">🟢 O‘z videomni yuklash</option>
+        <option value="facebook">
+          🔵 Facebook Reels (9:16)
+        </option>
+
+        <option value="upload">
+          🟢 O‘z videomni yuklash
+        </option>
       </select>
 
+      <!-- FACEBOOK REELS -->
+
       <div id="facebookFields">
-        <label for="url">🔗 Facebook Reels havolasi</label>
-        <input id="url" type="url" placeholder="https://www.facebook.com/reel/..." required>
-        <p class="hint">Ommaviy Facebook Reels havolasini kiriting. Ayrim Reels videolari tashqi saytlarda ochilmasligi mumkin.</p>
+
+        <label for="url">
+          🔗 Facebook Reels havolasi
+        </label>
+
+        <input
+          id="url"
+          type="url"
+          placeholder="https://www.facebook.com/reel/..."
+          required
+        >
+
+        <p class="hint">
+          Ommaviy Facebook Reels havolasini kiriting.
+          Ayrim videolar tashqi saytlarda ochilmasligi mumkin.
+        </p>
+
       </div>
+
+      <!-- VIDEO UPLOAD -->
 
       <div id="uploadFields" class="hidden">
-        <label for="videoFile">📱 Telefondan video tanlang</label>
-        <input id="videoFile" type="file" accept="video/mp4,video/webm,video/quicktime,video/*">
-        <p class="hint">Video yuklash Cloudflare R2 va server sozlamalari tayyor bo‘lgach ishlaydi.</p>
+
+        <label for="videoFile">
+          📱 Telefondan video tanlang
+        </label>
+
+        <input
+          id="videoFile"
+          type="file"
+          accept="video/mp4,video/webm"
+        >
+
+        <p class="hint">
+          MP4 yoki WebM video tanlang.
+          Yuklash hajmi server cheklovlariga bog‘liq.
+        </p>
+
+        <video
+          id="videoPreview"
+          class="preview hidden"
+          controls
+          playsinline
+          preload="metadata"
+        ></video>
+
+        <label for="aspectRatio">
+          📐 Video formati
+        </label>
+
+        <select id="aspectRatio">
+
+          <option value="9:16">
+            📱 9:16 — Reels / TikTok
+          </option>
+
+          <option value="16:9">
+            🖥️ 16:9 — Oddiy video
+          </option>
+
+        </select>
+
       </div>
 
-      <label for="title">📝 Video nomi</label>
-      <input id="title" type="text" maxlength="160" required placeholder="Formula 1 — qiziqarli lavha">
+      <!-- COMMON FIELDS -->
 
-      <label for="thumbnail">🖼️ Muqova rasmi URL (ixtiyoriy)</label>
-      <input id="thumbnail" type="text" placeholder="https://... yoki ./rasm.jpg">
+      <label for="title">
+        📝 Video nomi
+      </label>
 
-      <button id="submitBtn" type="submit">➕ VIDEO QO‘SHISH</button>
+      <input
+        id="title"
+        type="text"
+        maxlength="160"
+        required
+        placeholder="Formula 1 — qiziqarli lavha"
+      >
+
+      <label for="thumbnail">
+        🖼️ Muqova rasmi URL (ixtiyoriy)
+      </label>
+
+      <input
+        id="thumbnail"
+        type="text"
+        maxlength="500"
+        placeholder="https://... yoki ./rasm.jpg"
+      >
+
+      <button id="submitBtn" type="submit">
+        ➕ VIDEO QO‘SHISH
+      </button>
+
     </form>
 
-    <div id="message" role="status" aria-live="polite"></div>
-    <p><a href="/">← Bosh sahifaga qaytish</a></p>
+    <progress
+      id="uploadProgress"
+      class="hidden"
+      max="100"
+      value="0"
+    ></progress>
+
+    <div
+      id="message"
+      role="status"
+      aria-live="polite"
+    ></div>
+
+    <p>
+      <a href="/">
+        ← Bosh sahifaga qaytish
+      </a>
+    </p>
+
   </div>
 
   <script>
-    const form = document.getElementById('videoForm');
-    const button = document.getElementById('submitBtn');
-    const message = document.getElementById('message');
-    const platform = document.getElementById('platform');
-    const facebookFields = document.getElementById('facebookFields');
-    const uploadFields = document.getElementById('uploadFields');
-    const urlInput = document.getElementById('url');
-    const videoFile = document.getElementById('videoFile');
+    "use strict";
+
+    const form = document.getElementById("videoForm");
+    const button = document.getElementById("submitBtn");
+    const message = document.getElementById("message");
+
+    const platform = document.getElementById("platform");
+
+    const facebookFields =
+      document.getElementById("facebookFields");
+
+    const uploadFields =
+      document.getElementById("uploadFields");
+
+    const urlInput = document.getElementById("url");
+
+    const videoFile =
+      document.getElementById("videoFile");
+
+    const videoPreview =
+      document.getElementById("videoPreview");
+
+    const aspectRatio =
+      document.getElementById("aspectRatio");
+
+    const uploadProgress =
+      document.getElementById("uploadProgress");
+
+    const password =
+      document.getElementById("password");
+
+    const titleInput =
+      document.getElementById("title");
+
+    const thumbnailInput =
+      document.getElementById("thumbnail");
+
+    let previewURL = null;
+
+    function showMessage(text, type = "") {
+      message.textContent = text;
+      message.className = type;
+    }
 
     function updateMode() {
-      const isUpload = platform.value === 'upload';
-      facebookFields.classList.toggle('hidden', isUpload);
-      uploadFields.classList.toggle('hidden', !isUpload);
+      const isUpload = platform.value === "upload";
+
+      facebookFields.classList.toggle(
+        "hidden",
+        isUpload
+      );
+
+      uploadFields.classList.toggle(
+        "hidden",
+        !isUpload
+      );
+
       urlInput.required = !isUpload;
       videoFile.required = isUpload;
-      button.textContent = isUpload ? '⬆️ VIDEO YUKLASH' : '➕ VIDEO QO‘SHISH';
-      message.textContent = '';
-      message.className = '';
+
+      button.textContent = isUpload
+        ? "⬆️ VIDEO YUKLASH"
+        : "➕ VIDEO QO‘SHISH";
+
+      uploadProgress.classList.add("hidden");
+
+      showMessage("");
     }
-    platform.addEventListener('change', updateMode);
+
+    platform.addEventListener(
+      "change",
+      updateMode
+    );
+
     updateMode();
 
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      message.textContent = '';
-      message.className = '';
+    videoFile.addEventListener("change", () => {
+      if (previewURL) {
+        URL.revokeObjectURL(previewURL);
+        previewURL = null;
+      }
 
-      if (platform.value === 'upload') {
-        message.className = 'error';
-        message.textContent = '⚙️ Video yuklash hali ulanmagan. Avval Cloudflare R2 va serverdagi upload funksiyasini sozlashimiz kerak. Video hozircha yuklanmadi.';
+      const file = videoFile.files[0];
+
+      if (!file) {
+        videoPreview.pause();
+        videoPreview.removeAttribute("src");
+        videoPreview.load();
+        videoPreview.classList.add("hidden");
         return;
       }
 
-      const url = urlInput.value.trim();
-      let parsed;
-      try { parsed = new URL(url); } catch (_) {
-        message.className = 'error';
-        message.textContent = '❌ Facebook havolasi noto‘g‘ri.';
-        return;
-      }
-      if (!['facebook.com', 'www.facebook.com', 'm.facebook.com', 'fb.watch'].includes(parsed.hostname.toLowerCase()) || parsed.protocol !== 'https:') {
-        message.className = 'error';
-        message.textContent = '❌ Facebook Reels havolasini kiriting.';
-        return;
-      }
+      previewURL = URL.createObjectURL(file);
 
-      button.disabled = true;
-      button.textContent = '⏳ Saqlanmoqda...';
-      try {
-        const response = await fetch('/api/videos', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
-          body: JSON.stringify({
-            platform: 'facebook',
-            password: document.getElementById('password').value,
-            url,
-            title_uz: document.getElementById('title').value.trim(),
-            thumbnail: document.getElementById('thumbnail').value.trim()
-          })
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || 'Xatolik yuz berdi');
-        message.className = 'success';
-        message.textContent = '✅ Facebook Reels saqlandi! Cloudflare yangilangach F1 CINEMA’da ko‘rinadi.';
-        urlInput.value = '';
-        document.getElementById('title').value = '';
-        document.getElementById('thumbnail').value = '';
-      } catch (error) {
-        message.className = 'error';
-        message.textContent = '❌ ' + error.message + '\nFacebook Reels uchun server kodi ham yangilanishi kerak.';
-      } finally {
-        button.disabled = false;
-        updateMode();
-      }
+      videoPreview.src = previewURL;
+      videoPreview.classList.remove("hidden");
+      videoPreview.load();
+
+      const sizeMB = (
+        file.size / 1024 / 1024
+      ).toFixed(1);
+
+      showMessage(
+        "📹 Tanlangan video: " +
+        file.name +
+        "\nHajmi: " +
+        sizeMB +
+        " MB"
+      );
     });
+
+    function validFacebookURL(value) {
+      try {
+        const url = new URL(value);
+
+        const hosts = [
+          "facebook.com",
+          "www.facebook.com",
+          "m.facebook.com",
+          "web.facebook.com"
+        ];
+
+        if (
+          url.protocol !== "https:" ||
+          !hosts.includes(url.hostname.toLowerCase())
+        ) {
+          return false;
+        }
+
+        return (
+          /^\/(?:reel|reels)\/[A-Za-z0-9_-]+\/?$/i
+            .test(url.pathname) ||
+          /^\/share\/r\/[A-Za-z0-9_-]+\/?$/i
+            .test(url.pathname)
+        );
+
+      } catch {
+        return false;
+      }
+    }
+
+    async function parseResponse(response) {
+      const contentType =
+        response.headers.get("content-type") || "";
+
+      if (!contentType.includes("application/json")) {
+        throw new Error(
+          "Server JSON javob qaytarmadi. " +
+          "Cloudflare funksiyasini tekshiring."
+        );
+      }
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.error ||
+          "Serverda xatolik yuz berdi."
+        );
+      }
+
+      return result;
+    }
+
+    async function addFacebookVideo() {
+      const url = urlInput.value.trim();
+
+      if (!validFacebookURL(url)) {
+        throw new Error(
+          "Facebook Reels havolasini to‘g‘ri kiriting."
+        );
+      }
+
+      const response = await fetch("/api/videos", {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-store"
+        },
+
+        body: JSON.stringify({
+          platform: "facebook",
+          password: password.value,
+          url: url,
+          title_uz: titleInput.value.trim(),
+          thumbnail: thumbnailInput.value.trim()
+        })
+      });
+
+      await parseResponse(response);
+
+      showMessage(
+        "✅ Facebook Reels muvaffaqiyatli saqlandi!\n" +
+        "F1 CINEMA yangilangach video ko‘rinadi.",
+        "success"
+      );
+
+      urlInput.value = "";
+      titleInput.value = "";
+      thumbnailInput.value = "";
+    }
+
+    async function uploadOwnVideo() {
+      const file = videoFile.files[0];
+
+      if (!file) {
+        throw new Error(
+          "Avval telefoningizdan video tanlang."
+        );
+      }
+
+      const allowedTypes = [
+        "video/mp4",
+        "video/webm"
+      ];
+
+      const validExtension =
+        /\.(mp4|webm)$/i.test(file.name);
+
+      if (
+        !allowedTypes.includes(file.type) &&
+        !validExtension
+      ) {
+        throw new Error(
+          "Faqat MP4 yoki WebM video yuklang."
+        );
+      }
+
+      const formData = new FormData();
+
+      formData.append(
+        "password",
+        password.value
+      );
+
+      formData.append(
+        "video",
+        file,
+        file.name
+      );
+
+      formData.append(
+        "title_uz",
+        titleInput.value.trim()
+      );
+
+      formData.append(
+        "thumbnail",
+        thumbnailInput.value.trim()
+      );
+
+      formData.append(
+        "aspect_ratio",
+        aspectRatio.value
+      );
+
+      uploadProgress.value = 0;
+      uploadProgress.classList.remove("hidden");
+
+      // FormData avtomatik Content-Type belgilaydi.
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+        cache: "no-store"
+      });
+
+      const result = await parseResponse(response);
+
+      uploadProgress.value = 100;
+
+      showMessage(
+        "✅ Video muvaffaqiyatli yuklandi!\n" +
+        "F1 CINEMA’da ko‘rinishi uchun " +
+        "server ro‘yxati yangilanishi kerak.",
+        "success"
+      );
+
+      videoFile.value = "";
+      titleInput.value = "";
+      thumbnailInput.value = "";
+
+      videoPreview.pause();
+      videoPreview.removeAttribute("src");
+      videoPreview.load();
+      videoPreview.classList.add("hidden");
+
+      if (previewURL) {
+        URL.revokeObjectURL(previewURL);
+        previewURL = null;
+      }
+
+      return result;
+    }
+
+    form.addEventListener(
+      "submit",
+      async event => {
+        event.preventDefault();
+
+        showMessage("");
+
+        const isUpload =
+          platform.value === "upload";
+
+        button.disabled = true;
+
+        button.textContent = isUpload
+          ? "⏳ Video yuklanmoqda..."
+          : "⏳ Saqlanmoqda...";
+
+        try {
+          if (isUpload) {
+            await uploadOwnVideo();
+          } else {
+            await addFacebookVideo();
+          }
+
+        } catch (error) {
+          showMessage(
+            "❌ " + error.message,
+            "error"
+          );
+
+        } finally {
+          button.disabled = false;
+
+          button.textContent =
+            platform.value === "upload"
+              ? "⬆️ VIDEO YUKLASH"
+              : "➕ VIDEO QO‘SHISH";
+        }
+      }
+    );
   </script>
+
 </body>
 </html>
