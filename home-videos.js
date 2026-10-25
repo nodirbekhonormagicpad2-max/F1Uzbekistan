@@ -7,13 +7,9 @@
   const REFRESH_MS = 5 * 60 * 1000;
   const PAGE_SIZE = 4;
 
-  // Avtomatik muqova uchun videodan olinadigan soniya.
   const THUMBNAIL_SECOND = 1;
-
-  // Bir vaqtning o'zida ortiqcha video yuklamaslik.
   const THUMBNAIL_TIMEOUT = 15000;
 
-  // Tayyor muqovalarni xotirada saqlash.
   const thumbnailCache = new Map();
   const thumbnailJobs = new Map();
 
@@ -69,7 +65,7 @@
 
     #f1-cinema-premium .cp-all {
       background: #e10600;
-      color: white;
+      color: #fff;
       text-decoration: none;
       padding: 10px 12px;
       border-radius: 9px;
@@ -419,8 +415,12 @@
   document.head.appendChild(css);
 
   const root = document.createElement("section");
+
   root.id = "f1-cinema-premium";
-  root.setAttribute("aria-label", "F1 Cinema video markazi");
+  root.setAttribute(
+    "aria-label",
+    "F1 Cinema video markazi"
+  );
 
   root.innerHTML = `
     <div class="cp-shell">
@@ -438,8 +438,12 @@
       </div>
 
       <div class="cp-sectionhead">
-        <h3 class="cp-rowtitle">🔥 Eng qiziqarli videolar</h3>
-        <div class="cp-timer">Har 15 daqiqada almashadi</div>
+        <h3 class="cp-rowtitle">
+          🔥 Eng qiziqarli videolar
+        </h3>
+        <div class="cp-timer">
+          Har 15 daqiqada almashadi
+        </div>
       </div>
 
       <div class="cp-grid"></div>
@@ -450,15 +454,21 @@
     </div>
   `;
 
-  const target = document.querySelector(".calendar-section");
+  const target = document.querySelector(
+    ".calendar-section"
+  );
 
   if (target) {
     target.before(root);
   } else {
-    (document.querySelector("main") || document.body).append(root);
+    (
+      document.querySelector("main") ||
+      document.body
+    ).append(root);
   }
 
   const modal = document.createElement("div");
+
   modal.id = "f1-cinema-modal";
   modal.setAttribute("role", "dialog");
   modal.setAttribute("aria-modal", "true");
@@ -467,6 +477,7 @@
     <div class="cp-dialog">
       <div class="cp-modalhead">
         <h3 class="cp-modaltitle"></h3>
+
         <button type="button" class="cp-close">
           ✕ Yopish
         </button>
@@ -474,7 +485,10 @@
 
       <div class="cp-frame"></div>
 
-      <h4 class="cp-nexttitle">▶ Keyingi videolar</h4>
+      <h4 class="cp-nexttitle">
+        ▶ Keyingi videolar
+      </h4>
+
       <div class="cp-nextlist"></div>
     </div>
   `;
@@ -483,30 +497,46 @@
 
   const grid = root.querySelector(".cp-grid");
   const status = root.querySelector(".cp-status");
+
   const frame = modal.querySelector(".cp-frame");
   const close = modal.querySelector(".cp-close");
-  const nextList = modal.querySelector(".cp-nextlist");
+
+  const nextList = modal.querySelector(
+    ".cp-nextlist"
+  );
 
   let allVideos = [];
   let pageIndex = 0;
   let lastRotation = Date.now();
+
   let lastFocus = null;
   let previousOverflow = "";
 
   function platform(video) {
     const value = String(
-      video.platform || video.source || "youtube"
+      video.platform ||
+      video.source ||
+      "youtube"
     ).toLowerCase();
 
-    if (value === "facebook" || value === "fb") {
+    if (
+      value === "facebook" ||
+      value === "fb"
+    ) {
       return "facebook";
     }
 
-    if (value === "upload" || value === "local") {
+    if (
+      value === "upload" ||
+      value === "local"
+    ) {
       return "upload";
     }
 
-    if (value === "x" || value === "twitter") {
+    if (
+      value === "x" ||
+      value === "twitter"
+    ) {
       return "x";
     }
 
@@ -514,18 +544,25 @@
   }
 
   function validYouTubeId(id) {
-    return /^[A-Za-z0-9_-]{11}$/.test(String(id || ""));
+    return /^[A-Za-z0-9_-]{11}$/.test(
+      String(id || "")
+    );
   }
 
   function title(video) {
-    if (video.title_uz) return String(video.title_uz);
-
-    return String(video.title || "F1 videosi");
+    return String(
+      video.title_uz ||
+      video.title ||
+      "F1 videosi"
+    );
   }
 
   function videoURL(video) {
     return String(
-      video.video_url || video.videoUrl || video.url || ""
+      video.video_url ||
+      video.videoUrl ||
+      video.url ||
+      ""
     );
   }
 
@@ -541,7 +578,10 @@
         return true;
       }
 
-      const url = new URL(raw, window.location.origin);
+      const url = new URL(
+        raw,
+        window.location.origin
+      );
 
       return (
         url.protocol === "https:" &&
@@ -581,13 +621,16 @@
     }
 
     if (platform(video) === "upload") {
-      return thumbnailCache.get(videoURL(video)) || "";
+      return (
+        thumbnailCache.get(videoURL(video)) ||
+        ""
+      );
     }
 
     return "";
   }
 
-  // MP4 videodan avtomatik muqova tayyorlash.
+  // Yuklangan MP4 videodan avtomatik muqova.
   function generateThumbnail(video) {
     const url = videoURL(video);
 
@@ -596,7 +639,9 @@
     }
 
     if (thumbnailCache.has(url)) {
-      return Promise.resolve(thumbnailCache.get(url));
+      return Promise.resolve(
+        thumbnailCache.get(url)
+      );
     }
 
     if (thumbnailJobs.has(url)) {
@@ -604,7 +649,9 @@
     }
 
     const job = new Promise(resolve => {
-      const media = document.createElement("video");
+      const media = document.createElement(
+        "video"
+      );
 
       let finished = false;
       let timeoutId = null;
@@ -621,7 +668,10 @@
         media.load();
 
         if (result) {
-          thumbnailCache.set(url, result);
+          thumbnailCache.set(
+            url,
+            result
+          );
         }
 
         resolve(result);
@@ -637,26 +687,30 @@
             return;
           }
 
-          const canvas = document.createElement("canvas");
-
-          const maxWidth = 640;
+          const canvas =
+            document.createElement("canvas");
 
           const scale = Math.min(
             1,
-            maxWidth / media.videoWidth
+            640 / media.videoWidth
           );
 
           canvas.width = Math.max(
             1,
-            Math.round(media.videoWidth * scale)
+            Math.round(
+              media.videoWidth * scale
+            )
           );
 
           canvas.height = Math.max(
             1,
-            Math.round(media.videoHeight * scale)
+            Math.round(
+              media.videoHeight * scale
+            )
           );
 
-          const context = canvas.getContext("2d");
+          const context =
+            canvas.getContext("2d");
 
           if (!context) {
             finish("");
@@ -671,15 +725,16 @@
             canvas.height
           );
 
-          const result = canvas.toDataURL(
-            "image/jpeg",
-            0.78
-          );
+          const result =
+            canvas.toDataURL(
+              "image/jpeg",
+              0.78
+            );
 
           finish(result);
         } catch (error) {
           console.warn(
-            "F1 CINEMA muqova yaratish xatosi:",
+            "F1 CINEMA muqova xatosi:",
             error
           );
 
@@ -690,8 +745,6 @@
       media.muted = true;
       media.playsInline = true;
       media.preload = "auto";
-
-      // Bir xil domendagi R2 video uchun.
       media.crossOrigin = "anonymous";
 
       media.addEventListener(
@@ -700,10 +753,14 @@
           const duration = media.duration;
 
           const second =
-            Number.isFinite(duration) && duration > 0
+            Number.isFinite(duration) &&
+            duration > 0
               ? Math.min(
                   THUMBNAIL_SECOND,
-                  Math.max(0, duration - 0.1)
+                  Math.max(
+                    0,
+                    duration - 0.1
+                  )
                 )
               : THUMBNAIL_SECOND;
 
@@ -758,7 +815,9 @@
 
   function facebookURL(video) {
     try {
-      const url = new URL(String(video.url || ""));
+      const url = new URL(
+        String(video.url || "")
+      );
 
       if (
         url.protocol !== "https:" ||
@@ -767,7 +826,9 @@
           "www.facebook.com",
           "m.facebook.com",
           "web.facebook.com"
-        ].includes(url.hostname.toLowerCase())
+        ].includes(
+          url.hostname.toLowerCase()
+        )
       ) {
         return "";
       }
@@ -793,7 +854,9 @@
     const type = platform(video);
 
     if (type === "youtube") {
-      if (!validYouTubeId(video.id)) return "";
+      if (!validYouTubeId(video.id)) {
+        return "";
+      }
 
       return (
         "https://www.youtube-nocookie.com/embed/" +
@@ -834,12 +897,16 @@
     const seen = new Set();
 
     return items.filter(video => {
-      if (!video || typeof video !== "object") {
+      if (
+        !video ||
+        typeof video !== "object"
+      ) {
         return false;
       }
 
       const type = platform(video);
 
+      // X / Twitter videolari ko'rsatilmaydi.
       if (type === "x") return false;
 
       if (
@@ -865,7 +932,9 @@
 
       const key = videoKey(video);
 
-      if (seen.has(key)) return false;
+      if (seen.has(key)) {
+        return false;
+      }
 
       seen.add(key);
 
@@ -876,38 +945,64 @@
   function meta(video) {
     const parts = [];
 
-    if (video.channel || video.author) {
+    if (
+      video.channel ||
+      video.author
+    ) {
       parts.push(
-        String(video.channel || video.author)
+        String(
+          video.channel ||
+          video.author
+        )
       );
     }
 
     const value =
-      video.published || video.publishedAt;
+      video.published ||
+      video.publishedAt;
 
     if (value) {
       const date = new Date(value);
 
-      if (!Number.isNaN(date.getTime())) {
+      if (
+        !Number.isNaN(
+          date.getTime()
+        )
+      ) {
         parts.push(
-          date.toLocaleDateString("uz-UZ")
+          date.toLocaleDateString(
+            "uz-UZ"
+          )
         );
       }
     }
 
-    return parts.join(" · ") || "F1 Uzbekistan TV";
+    return (
+      parts.join(" · ") ||
+      "F1 Uzbekistan TV"
+    );
   }
 
   function setThumbnail(button, src) {
-    if (!button.isConnected || !src) return;
+    if (
+      !button.isConnected ||
+      !src
+    ) {
+      return;
+    }
 
-    const img = document.createElement("img");
+    const img = document.createElement(
+      "img"
+    );
 
     img.src = src;
     img.alt = "";
     img.loading = "lazy";
 
-    const oldCover = button.querySelector(".cp-cover");
+    const oldCover =
+      button.querySelector(
+        ".cp-cover"
+      );
 
     if (oldCover) {
       oldCover.replaceWith(img);
@@ -915,24 +1010,34 @@
   }
 
   function card(video) {
-    const article = document.createElement("article");
+    const article =
+      document.createElement(
+        "article"
+      );
 
     article.className = "cp-card";
 
-    const button = document.createElement("button");
+    const button =
+      document.createElement(
+        "button"
+      );
 
     button.className = "cp-thumb";
     button.type = "button";
 
     button.setAttribute(
       "aria-label",
-      title(video) + " — tomosha qilish"
+      title(video) +
+      " — tomosha qilish"
     );
 
     const thumb = image(video);
 
     if (thumb) {
-      const img = document.createElement("img");
+      const img =
+        document.createElement(
+          "img"
+        );
 
       img.src = thumb;
       img.alt = "";
@@ -940,13 +1045,22 @@
 
       button.append(img);
     } else {
-      const cover = document.createElement("div");
+      const cover =
+        document.createElement(
+          "div"
+        );
 
       cover.className = "cp-cover";
 
-      if (platform(video) === "upload") {
-        cover.classList.add("cp-loading");
-        cover.textContent = "Muqova tayyorlanmoqda…";
+      if (
+        platform(video) === "upload"
+      ) {
+        cover.classList.add(
+          "cp-loading"
+        );
+
+        cover.textContent =
+          "Muqova tayyorlanmoqda…";
       } else {
         cover.textContent =
           platform(video) === "facebook"
@@ -957,7 +1071,10 @@
       button.append(cover);
     }
 
-    const playIcon = document.createElement("span");
+    const playIcon =
+      document.createElement(
+        "span"
+      );
 
     playIcon.className = "cp-play";
     playIcon.textContent = "▶";
@@ -969,11 +1086,17 @@
       () => play(video)
     );
 
-    const body = document.createElement("div");
+    const body =
+      document.createElement(
+        "div"
+      );
 
     body.className = "cp-cardbody";
 
-    const source = document.createElement("div");
+    const source =
+      document.createElement(
+        "div"
+      );
 
     source.className = "cp-platform";
 
@@ -983,33 +1106,56 @@
       upload: "F1 Uzbekistan TV"
     }[platform(video)];
 
-    const heading = document.createElement("p");
+    const heading =
+      document.createElement(
+        "p"
+      );
 
     heading.className = "cp-cardtitle";
     heading.textContent = title(video);
 
-    const small = document.createElement("div");
+    const small =
+      document.createElement(
+        "div"
+      );
 
     small.className = "cp-cardmeta";
     small.textContent = meta(video);
 
-    body.append(source, heading, small);
-    article.append(button, body);
+    body.append(
+      source,
+      heading,
+      small
+    );
 
-    // Yuklangan video uchun avtomatik muqova.
+    article.append(
+      button,
+      body
+    );
+
     if (
       platform(video) === "upload" &&
       !thumb
     ) {
-      generateThumbnail(video).then(result => {
+      generateThumbnail(
+        video
+      ).then(result => {
         if (result) {
-          setThumbnail(button, result);
+          setThumbnail(
+            button,
+            result
+          );
         } else {
           const cover =
-            button.querySelector(".cp-cover");
+            button.querySelector(
+              ".cp-cover"
+            );
 
           if (cover) {
-            cover.classList.remove("cp-loading");
+            cover.classList.remove(
+              "cp-loading"
+            );
+
             cover.textContent = "🎬";
           }
         }
@@ -1020,14 +1166,23 @@
   }
 
   function closeModal() {
-    if (!modal.classList.contains("cp-open")) {
+    if (
+      !modal.classList.contains(
+        "cp-open"
+      )
+    ) {
       return;
     }
 
-    modal.classList.remove("cp-open");
+    modal.classList.remove(
+      "cp-open"
+    );
 
     frame.replaceChildren();
-    frame.classList.remove("cp-vertical");
+
+    frame.classList.remove(
+      "cp-vertical"
+    );
 
     document.body.style.overflow =
       previousOverflow;
@@ -1041,8 +1196,13 @@
   }
 
   function play(video) {
-    if (!modal.classList.contains("cp-open")) {
-      lastFocus = document.activeElement;
+    if (
+      !modal.classList.contains(
+        "cp-open"
+      )
+    ) {
+      lastFocus =
+        document.activeElement;
 
       previousOverflow =
         document.body.style.overflow;
@@ -1065,33 +1225,43 @@
       )
     );
 
-    modal.classList.add("cp-open");
+    modal.classList.add(
+      "cp-open"
+    );
 
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow =
+      "hidden";
 
     if (
       type === "upload" &&
       validUploadURL(video)
     ) {
       const player =
-        document.createElement("video");
+        document.createElement(
+          "video"
+        );
 
       player.src = videoURL(video);
       player.controls = true;
       player.playsInline = true;
       player.preload = "metadata";
       player.autoplay = true;
-      player.style.objectFit = "contain";
+      player.style.objectFit =
+        "contain";
 
       frame.append(player);
 
-      player.play().catch(() => {});
+      player.play().catch(
+        () => {}
+      );
     } else {
       const url = embedURL(video);
 
       if (url) {
         const iframe =
-          document.createElement("iframe");
+          document.createElement(
+            "iframe"
+          );
 
         iframe.title = title(video);
         iframe.src = url;
@@ -1107,7 +1277,9 @@
         frame.append(iframe);
       } else {
         const message =
-          document.createElement("div");
+          document.createElement(
+            "div"
+          );
 
         message.style.cssText =
           "display:grid;" +
@@ -1129,13 +1301,16 @@
     const others = allVideos
       .filter(
         item =>
-          videoKey(item) !== videoKey(video)
+          videoKey(item) !==
+          videoKey(video)
       )
       .slice(0, 6);
 
     for (const item of others) {
       const button =
-        document.createElement("button");
+        document.createElement(
+          "button"
+        );
 
       button.type = "button";
       button.className = "cp-next";
@@ -1144,7 +1319,9 @@
 
       if (thumb) {
         const img =
-          document.createElement("img");
+          document.createElement(
+            "img"
+          );
 
         img.src = thumb;
         img.alt = "";
@@ -1153,9 +1330,12 @@
         button.append(img);
       } else {
         const icon =
-          document.createElement("div");
+          document.createElement(
+            "div"
+          );
 
-        icon.className = "cp-next-icon";
+        icon.className =
+          "cp-next-icon";
 
         icon.textContent =
           platform(item) === "facebook"
@@ -1164,14 +1344,20 @@
 
         button.append(icon);
 
-        if (platform(item) === "upload") {
-          generateThumbnail(item).then(result => {
+        if (
+          platform(item) === "upload"
+        ) {
+          generateThumbnail(
+            item
+          ).then(result => {
             if (
               result &&
               button.isConnected
             ) {
               const img =
-                document.createElement("img");
+                document.createElement(
+                  "img"
+                );
 
               img.src = result;
               img.alt = "";
@@ -1184,9 +1370,12 @@
       }
 
       const label =
-        document.createElement("span");
+        document.createElement(
+          "span"
+        );
 
-      label.textContent = title(item);
+      label.textContent =
+        title(item);
 
       button.append(label);
 
@@ -1209,7 +1398,9 @@
   modal.addEventListener(
     "click",
     event => {
-      if (event.target === modal) {
+      if (
+        event.target === modal
+      ) {
         closeModal();
       }
     }
@@ -1220,7 +1411,9 @@
     event => {
       if (
         event.key === "Escape" &&
-        modal.classList.contains("cp-open")
+        modal.classList.contains(
+          "cp-open"
+        )
       ) {
         closeModal();
       }
@@ -1240,37 +1433,49 @@
     status.textContent = "";
 
     const totalPages = Math.ceil(
-      allVideos.length / PAGE_SIZE
+      allVideos.length /
+      PAGE_SIZE
     );
 
-    if (pageIndex >= totalPages) {
+    if (
+      pageIndex >= totalPages
+    ) {
       pageIndex = 0;
     }
 
     const start =
       pageIndex * PAGE_SIZE;
 
-    const selected = allVideos.slice(
-      start,
-      start + PAGE_SIZE
-    );
+    const selected =
+      allVideos.slice(
+        start,
+        start + PAGE_SIZE
+      );
 
-    for (const video of selected) {
-      grid.append(card(video));
+    for (
+      const video of selected
+    ) {
+      grid.append(
+        card(video)
+      );
     }
   }
 
   function rotate() {
     const totalPages = Math.ceil(
-      allVideos.length / PAGE_SIZE
+      allVideos.length /
+      PAGE_SIZE
     );
 
-    if (totalPages <= 1) {
+    if (
+      totalPages <= 1
+    ) {
       return;
     }
 
     pageIndex =
-      (pageIndex + 1) % totalPages;
+      (pageIndex + 1) %
+      totalPages;
 
     lastRotation = Date.now();
 
@@ -1280,7 +1485,10 @@
   async function readVideos(filename) {
     try {
       const response = await fetch(
-        "./" + filename + "?t=" + Date.now(),
+        "./" +
+        filename +
+        "?t=" +
+        Date.now(),
         {
           cache: "no-store"
         }
@@ -1294,7 +1502,8 @@
         );
       }
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
       return Array.isArray(data)
         ? data
@@ -1318,52 +1527,89 @@
       facebookVideos,
       uploadedVideos
     ] = await Promise.all([
-      readVideos("videos.json"),
-      readVideos("facebook-videos.json"),
-      readVideos("uploaded-videos.json")
+      readVideos(
+        "videos.json"
+      ),
+      readVideos(
+        "facebook-videos.json"
+      ),
+      readVideos(
+        "uploaded-videos.json"
+      )
     ]);
 
-    const oldYouTube = allVideos.filter(
-      video =>
-        platform(video) === "youtube"
-    );
+    const oldYouTube =
+      allVideos.filter(
+        video =>
+          platform(video) ===
+          "youtube"
+      );
 
-    const oldFacebook = allVideos.filter(
-      video =>
-        platform(video) === "facebook"
-    );
+    const oldFacebook =
+      allVideos.filter(
+        video =>
+          platform(video) ===
+          "facebook"
+      );
 
-    const oldUploads = allVideos.filter(
-      video =>
-        platform(video) === "upload"
-    );
+    const oldUploads =
+      allVideos.filter(
+        video =>
+          platform(video) ===
+          "upload"
+      );
 
-    const previousFirstVideo = allVideos[0]
-      ? videoKey(allVideos[0])
-      : "";
+    const previousFirstVideo =
+      allVideos[0]
+        ? videoKey(allVideos[0])
+        : "";
 
-    // Yuklangan videolar birinchi o'rinda.
-    allVideos = normalize([
-      ...(uploadedVideos !== null
+    // O'zimiz yuklagan videolar
+    // avtomatik ko'rsatiladi.
+    const approvedUploads =
+      uploadedVideos !== null
         ? uploadedVideos
-        : oldUploads),
+        : oldUploads;
 
-      ...(facebookVideos !== null
+    // Facebook faqat admin
+    // tasdiqlagan bo'lsa chiqadi.
+    const approvedFacebook = (
+      facebookVideos !== null
         ? facebookVideos
-        : oldFacebook),
+        : oldFacebook
+    ).filter(
+      video =>
+        video.approved === true
+    );
 
-      ...(youtubeVideos !== null
+    // YouTube faqat admin
+    // tasdiqlagan bo'lsa chiqadi.
+    const approvedYouTube = (
+      youtubeVideos !== null
         ? youtubeVideos
-        : oldYouTube)
+        : oldYouTube
+    ).filter(
+      video =>
+        video.approved === true
+    );
+
+    // Yuklangan videolar birinchi.
+    allVideos = normalize([
+      ...approvedUploads,
+      ...approvedFacebook,
+      ...approvedYouTube
     ]);
 
-    const newFirstVideo = allVideos[0]
-      ? videoKey(allVideos[0])
-      : "";
+    const newFirstVideo =
+      allVideos[0]
+        ? videoKey(allVideos[0])
+        : "";
 
-    // Yangi video qo'shilsa, birinchi sahifaga qaytadi.
+    // Yangi video qo'shilsa,
+    // birinchi sahifaga qaytadi.
     if (
-      newFirstVideo !== previousFirstVideo
+      newFirstVideo !==
+      previousFirstVideo
     ) {
       pageIndex = 0;
       lastRotation = Date.now();
@@ -1379,14 +1625,20 @@
     REFRESH_MS
   );
 
-  setInterval(() => {
-    if (
-      Date.now() - lastRotation >=
-      ROTATE_MS
-    ) {
-      rotate();
-      lastRotation = Date.now();
-    }
-  }, 30000);
+  setInterval(
+    () => {
+      if (
+        Date.now() -
+        lastRotation >=
+        ROTATE_MS
+      ) {
+        rotate();
+
+        lastRotation =
+          Date.now();
+      }
+    },
+    30000
+  );
 
 })();
