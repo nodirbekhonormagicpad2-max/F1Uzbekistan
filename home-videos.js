@@ -1,738 +1,849 @@
 
-(() => {
-  'use strict';
+(()=>{
+'use strict';
 
-  if (document.getElementById('f1-cinema')) return;
+if(document.getElementById('f1-cinema-premium'))return;
 
-  const css = document.createElement('style');
-  css.textContent = `
-    #f1-cinema {
-      --red: #e10600;
-      --bg: #101014;
-      --muted: #aaaab5;
-      max-width: 1180px;
-      margin: 36px auto;
-      padding: 0 14px;
-      color: white;
-      font-family: Arial, Helvetica, sans-serif;
-    }
+const style=document.createElement('style');
 
-    #f1-cinema * {
-      box-sizing: border-box;
-    }
+style.textContent=`
+#f1-cinema-premium{
+  --cp-red:#e10600;
+  color:#fff;
+  margin:28px 0;
+  font-family:Arial,Helvetica,sans-serif;
+}
+#f1-cinema-premium *{box-sizing:border-box}
+#f1-cinema-premium .cp-shell{
+  background:linear-gradient(140deg,#1b1b22,#0d0d11 70%);
+  border:1px solid #34343c;
+  border-radius:19px;
+  padding:clamp(13px,3vw,25px);
+  overflow:hidden;
+}
+#f1-cinema-premium .cp-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+#f1-cinema-premium .cp-logo{
+  font-size:clamp(24px,4vw,35px);
+  font-weight:900;
+  letter-spacing:-1px;
+  margin:0;
+}
+#f1-cinema-premium .cp-logo span{color:#ff3838}
+#f1-cinema-premium .cp-sub{
+  font-size:12px;
+  color:#a5a5b0;
+  margin-top:5px;
+}
+#f1-cinema-premium .cp-all{
+  display:inline-block;
+  background:var(--cp-red);
+  color:#fff;
+  text-decoration:none;
+  border-radius:9px;
+  padding:11px 14px;
+  font-weight:800;
+  font-size:12px;
+}
+#f1-cinema-premium .cp-hero{
+  display:grid;
+  grid-template-columns:1.4fr 1fr;
+  min-height:290px;
+  border:1px solid #3b3b43;
+  border-radius:15px;
+  overflow:hidden;
+  background:#101015;
+}
+#f1-cinema-premium .cp-hero-image{
+  position:relative;
+  min-height:270px;
+  overflow:hidden;
+  background:#202026;
+}
+#f1-cinema-premium .cp-hero-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  position:absolute;
+  inset:0;
+}
+#f1-cinema-premium .cp-hero-image:after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,transparent 70%,#101015);
+}
+#f1-cinema-premium .cp-label{
+  position:absolute;
+  z-index:1;
+  top:15px;
+  left:15px;
+  background:#e10600;
+  border-radius:5px;
+  padding:7px 10px;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+#f1-cinema-premium .cp-hero-body{
+  padding:clamp(16px,3vw,29px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:13px;
+}
+#f1-cinema-premium .cp-eyebrow{
+  color:#ff5555;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1.4px;
+}
+#f1-cinema-premium .cp-hero-title{
+  font-size:clamp(21px,3vw,31px);
+  line-height:1.18;
+  font-weight:900;
+  margin:0;
+  overflow-wrap:anywhere;
+}
+#f1-cinema-premium .cp-meta{
+  color:#aaaab4;
+  font-size:12px;
+  line-height:1.4;
+}
+#f1-cinema-premium .cp-watch{
+  align-self:flex-start;
+  border:0;
+  background:var(--cp-red);
+  color:#fff;
+  padding:13px 18px;
+  border-radius:9px;
+  font-weight:900;
+  font-size:12px;
+  cursor:pointer;
+}
+#f1-cinema-premium .cp-watch:hover,
+#f1-cinema-premium .cp-all:hover{
+  background:#b90500;
+}
+#f1-cinema-premium .cp-row{margin-top:26px}
+#f1-cinema-premium .cp-rowhead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
+}
+#f1-cinema-premium .cp-rowtitle{
+  font-size:clamp(17px,2.7vw,21px);
+  font-weight:900;
+  margin:0;
+}
+#f1-cinema-premium .cp-arrows{
+  display:flex;
+  gap:6px;
+}
+#f1-cinema-premium .cp-arrow{
+  border:1px solid #454550;
+  background:#262630;
+  color:#fff;
+  width:34px;
+  height:34px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:20px;
+}
+#f1-cinema-premium .cp-track{
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:thin;
+  scrollbar-color:#555 #151519;
+  padding:2px 0 12px;
+}
+#f1-cinema-premium .cp-card{
+  flex:0 0 clamp(210px,30%,280px);
+  min-width:0;
+  background:#1c1c24;
+  border:1px solid #363641;
+  border-radius:12px;
+  overflow:hidden;
+  scroll-snap-align:start;
+}
+#f1-cinema-premium .cp-thumb{
+  position:relative;
+  display:block;
+  width:100%;
+  aspect-ratio:16/9;
+  padding:0;
+  border:0;
+  cursor:pointer;
+  background:#222;
+}
+#f1-cinema-premium .cp-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+#f1-cinema-premium .cp-play{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:49px;
+  height:49px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#e10600;
+  color:white;
+  font-size:19px;
+  box-shadow:0 4px 20px #0009;
+}
+#f1-cinema-premium .cp-cardbody{padding:12px}
+#f1-cinema-premium .cp-cardtitle{
+  font-size:13px;
+  font-weight:800;
+  line-height:1.4;
+  min-height:37px;
+  margin:0;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+#f1-cinema-premium .cp-cardmeta{
+  font-size:11px;
+  color:#a2a2ad;
+  margin-top:9px;
+}
+#f1-cinema-premium .cp-status{
+  font-size:13px;
+  color:#aaa;
+  padding:14px 0;
+}
+#f1-cinema-premium .cp-empty{
+  font-size:12px;
+  color:#aaa;
+  padding:12px;
+  border:1px dashed #3a3a43;
+  border-radius:9px;
+}
 
-    #f1-cinema .cinema-panel {
-      background: linear-gradient(145deg, #1b1b23, #0b0b0e);
-      border: 1px solid #33333d;
-      border-radius: 18px;
-      padding: clamp(14px, 3vw, 25px);
-      overflow: hidden;
-    }
+#f1-cinema-modal{
+  position:fixed;
+  inset:0;
+  z-index:999999;
+  background:rgba(0,0,0,.96);
+  display:none;
+  overflow-y:auto;
+  padding:16px;
+  align-items:flex-start;
+  justify-content:center;
+}
+#f1-cinema-modal.cp-open{display:flex}
+#f1-cinema-modal .cp-dialog{
+  width:min(960px,100%);
+  margin:auto;
+  background:#111116;
+  border:1px solid #33343d;
+  border-radius:15px;
+  padding:13px;
+}
+#f1-cinema-modal .cp-modalhead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+#f1-cinema-modal .cp-modaltitle{
+  font-size:15px;
+  font-weight:900;
+  line-height:1.4;
+  margin:0;
+}
+#f1-cinema-modal .cp-close{
+  background:#e10600;
+  color:#fff;
+  border:0;
+  border-radius:8px;
+  padding:10px 13px;
+  font-weight:900;
+  cursor:pointer;
+  flex-shrink:0;
+}
+#f1-cinema-modal .cp-frame{
+  width:100%;
+  aspect-ratio:16/9;
+  background:#000;
+  border-radius:9px;
+  overflow:hidden;
+}
+#f1-cinema-modal iframe{
+  width:100%;
+  height:100%;
+  border:0;
+}
+#f1-cinema-modal .cp-nexttitle{
+  font-size:14px;
+  font-weight:900;
+  margin:17px 0 9px;
+}
+#f1-cinema-modal .cp-nextlist{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+}
+#f1-cinema-modal .cp-next{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  min-width:0;
+  background:#22222a;
+  color:#fff;
+  border:1px solid #393944;
+  border-radius:9px;
+  padding:7px;
+  text-align:left;
+  cursor:pointer;
+}
+#f1-cinema-modal .cp-next img{
+  width:90px;
+  aspect-ratio:16/9;
+  object-fit:cover;
+  border-radius:5px;
+  flex-shrink:0;
+}
+#f1-cinema-modal .cp-next span{
+  font-size:11px;
+  line-height:1.35;
+  font-weight:800;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
 
-    #f1-cinema .cinema-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    #f1-cinema h2 {
-      font-size: clamp(23px, 4vw, 34px);
-      font-weight: 900;
-      letter-spacing: -.5px;
-      margin: 0;
-    }
-
-    #f1-cinema h2 span {
-      color: #ff3636;
-    }
-
-    #f1-cinema .cinema-sub {
-      color: #9b9ba6;
-      font-size: 12px;
-      margin-top: 6px;
-    }
-
-    #f1-cinema .cinema-all {
-      color: white;
-      text-decoration: none;
-      background: var(--red);
-      padding: 11px 16px;
-      border-radius: 9px;
-      font-size: 12px;
-      font-weight: 900;
-    }
-
-    #f1-cinema .cinema-feature {
-      position: relative;
-      width: 100%;
-      min-height: 240px;
-      aspect-ratio: 16/8;
-      border: 1px solid #454550;
-      border-radius: 16px;
-      background: #151515;
-      overflow: hidden;
-      cursor: pointer;
-      padding: 0;
-      display: block;
-      text-align: left;
-      color: white;
-    }
-
-    #f1-cinema .cinema-feature img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform .4s ease;
-    }
-
-    #f1-cinema .cinema-feature:hover img {
-      transform: scale(1.04);
-    }
-
-    #f1-cinema .cinema-shade {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        0deg,
-        rgba(0,0,0,.96),
-        rgba(0,0,0,.25) 55%,
-        rgba(0,0,0,.05)
-      );
-    }
-
-    #f1-cinema .cinema-live {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      background: #e10600;
-      padding: 7px 11px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: 1px;
-    }
-
-    #f1-cinema .cinema-feature-content {
-      position: absolute;
-      left: clamp(16px, 4vw, 34px);
-      right: 16px;
-      bottom: clamp(16px, 4vw, 32px);
-      z-index: 1;
-    }
-
-    #f1-cinema .cinema-feature-title {
-      font-size: clamp(20px, 4vw, 34px);
-      font-weight: 900;
-      line-height: 1.2;
-      max-width: 740px;
-      text-shadow: 0 3px 12px #000;
-    }
-
-    #f1-cinema .cinema-feature-meta {
-      color: #d4d4da;
-      font-size: 12px;
-      margin-top: 10px;
-    }
-
-    #f1-cinema .cinema-watch {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 17px;
-      background: #e10600;
-      color: white;
-      border-radius: 8px;
-      padding: 12px 17px;
-      font-size: 13px;
-      font-weight: 900;
-    }
-
-    #f1-cinema .cinema-row-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin: 26px 0 14px;
-    }
-
-    #f1-cinema h3 {
-      margin: 0;
-      font-size: 19px;
-      font-weight: 900;
-    }
-
-    #f1-cinema .cinema-arrows {
-      display: flex;
-      gap: 7px;
-    }
-
-    #f1-cinema .cinema-arrow {
-      border: 1px solid #494955;
-      background: #25252d;
-      color: white;
-      border-radius: 8px;
-      width: 36px;
-      height: 36px;
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    #f1-cinema .cinema-track {
-      display: flex;
-      gap: 13px;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: thin;
-      scrollbar-color: #555 #18181e;
-      padding: 2px 0 12px;
-    }
-
-    #f1-cinema .cinema-card {
-      flex: 0 0 clamp(210px, 29%, 310px);
-      min-width: 0;
-      border: 1px solid #353540;
-      border-radius: 13px;
-      overflow: hidden;
-      background: #1a1a22;
-      scroll-snap-align: start;
-    }
-
-    #f1-cinema .cinema-thumb {
-      position: relative;
-      display: block;
-      width: 100%;
-      aspect-ratio: 16/9;
-      border: 0;
-      padding: 0;
-      background: #25252a;
-      cursor: pointer;
-    }
-
-    #f1-cinema .cinema-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    #f1-cinema .cinema-play {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      display: grid;
-      place-items: center;
-      width: 53px;
-      height: 53px;
-      border-radius: 50%;
-      background: #e10600;
-      color: white;
-      font-size: 22px;
-      box-shadow: 0 5px 20px #0009;
-    }
-
-    #f1-cinema .cinema-card-body {
-      padding: 13px;
-    }
-
-    #f1-cinema .cinema-card-title {
-      margin: 0;
-      font-size: 14px;
-      font-weight: 800;
-      line-height: 1.4;
-      min-height: 40px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    #f1-cinema .cinema-meta {
-      color: #9999a5;
-      font-size: 11px;
-      margin-top: 9px;
-    }
-
-    #f1-cinema .cinema-status {
-      padding: 18px 0;
-      color: #aaa;
-      font-size: 13px;
-    }
-
-    #f1-cinema-player {
-      position: fixed;
-      inset: 0;
-      z-index: 999999;
-      background: rgba(0,0,0,.96);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 15px;
-    }
-
-    #f1-cinema-player.open {
-      display: flex;
-    }
-
-    #f1-cinema-player .cinema-dialog {
-      width: min(960px, 100%);
-    }
-
-    #f1-cinema-player .cinema-close {
-      display: block;
-      margin: 0 0 12px auto;
-      padding: 11px 17px;
-      border: 0;
-      border-radius: 8px;
-      background: #e10600;
-      color: white;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    #f1-cinema-player .cinema-video {
-      width: 100%;
-      aspect-ratio: 16/9;
-      background: black;
-      border: 1px solid #333;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    #f1-cinema-player iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-
-    @media(max-width:600px) {
-      #f1-cinema {
-        margin: 24px auto;
-        padding: 0 10px;
-      }
-
-      #f1-cinema .cinema-panel {
-        padding: 12px;
-        border-radius: 13px;
-      }
-
-      #f1-cinema .cinema-feature {
-        aspect-ratio: 4/4;
-        min-height: 270px;
-      }
-
-      #f1-cinema .cinema-feature-title {
-        font-size: 21px;
-      }
-
-      #f1-cinema .cinema-card {
-        flex-basis: 78%;
-      }
-
-      #f1-cinema .cinema-all {
-        font-size: 11px;
-        padding: 10px 12px;
-      }
-    }
-  `;
-
-  document.head.appendChild(css);
-
-  // Inglizcha sarlavhalarni o‘zbekchalashtirish
-  function uzTitle(value) {
-    const original = String(value || '').trim();
-
-    if (!original) return 'F1 videosi';
-
-    const t = original
-      .replace(/&amp;/gi, '&')
-      .toLowerCase();
-
-    const names = [
-      ['fernando alonso', 'Fernando Alonso'],
-      ['max verstappen', 'Maks Verstappen'],
-      ['lewis hamilton', 'Lyuis Hemilton'],
-      ['charles leclerc', 'Sharl Lekler'],
-      ['lando norris', 'Lando Norris'],
-      ['oscar piastri', 'Oskar Piastri'],
-      ['george russell', 'Jorj Rassell'],
-      ['carlos sainz', 'Karlos Sayns'],
-      ['kimi antonelli', 'Kimi Antonelli'],
-      ['toto wolff', 'Toto Volf']
-    ];
-
-    let person = '';
-
-    for (const [en, uz] of names) {
-      if (t.includes(en)) {
-        person = uz;
-        break;
-      }
-    }
-
-    let gp = '';
-
-    if (/united states|usa gp|austin/.test(t)) {
-      gp = 'AQSH Gran-prisi';
-    } else if (/mexico|mexican/.test(t)) {
-      gp = 'Meksika Gran-prisi';
-    } else if (/brazil|sao paulo|são paulo/.test(t)) {
-      gp = 'Braziliya Gran-prisi';
-    } else if (/las vegas/.test(t)) {
-      gp = 'Las-Vegas Gran-prisi';
-    } else if (/qatar/.test(t)) {
-      gp = 'Qatar Gran-prisi';
-    } else if (/abu dhabi/.test(t)) {
-      gp = 'Abu-Dabi Gran-prisi';
-    }
-
-    const prefix = gp ? gp + ' — ' : '';
-
-    if (/crash|collision|accident|hits the wall/.test(t)) {
-      return prefix + (
-        person
-          ? '💥 ' + person + ' avariyaga uchradi'
-          : '💥 Poygadagi avariya lavhalari'
-      );
-    }
-
-    if (/fire|flames|burning/.test(t)) {
-      return prefix + '🔥 Boliddagi yong‘in';
-    }
-
-    if (/drivers react|driver reactions/.test(t)) {
-      return prefix + '🎤 Saralashdan keyin pilotlar fikri';
-    }
-
-    if (/qualifying leaderboard/.test(t)) {
-      return prefix + '📊 Saralash natijalari';
-    }
-
-    if (/qualifying/.test(t) && /highlight/.test(t)) {
-      return prefix + '🏁 Saralashning eng qiziqarli lahzalari';
-    }
-
-    if (/qualifying/.test(t) && /pole/.test(t)) {
-      return prefix + '🏁 Poul-pozitsiya uchun kurash';
-    }
-
-    if (/race/.test(t) && /highlight/.test(t)) {
-      return prefix + '🏎️ Poyganing eng qiziqarli lahzalari';
-    }
-
-    if (/interview/.test(t)) {
-      return prefix + (
-        person
-          ? '🎤 ' + person + ' bilan intervyu'
-          : '🎤 F1 intervyusi'
-      );
-    }
-
-    if (/overtak/.test(t)) {
-      return prefix + '⚡ Ajoyib quvib o‘tishlar';
-    }
-
-    return original.replace(/&amp;/gi, '&');
+@media(max-width:700px){
+  #f1-cinema-premium .cp-hero{
+    grid-template-columns:1fr;
   }
-
-  function videoTitle(v) {
-    return String(v.title_uz || uzTitle(v.title));
+  #f1-cinema-premium .cp-hero-image{
+    min-height:0;
+    aspect-ratio:16/9;
   }
-
-  function thumbnail(v) {
-    if (
-      typeof v.thumbnail === 'string' &&
-      /^https:\/\//i.test(v.thumbnail)
-    ) {
-      return v.thumbnail;
-    }
-
-    return 'https://i.ytimg.com/vi/' +
-      encodeURIComponent(v.id) +
-      '/hqdefault.jpg';
+  #f1-cinema-premium .cp-hero-image img{
+    position:static;
+    object-fit:contain;
   }
-
-  function metaText(v) {
-    const date = new Date(v.published);
-
-    return [
-      v.channel || '',
-      Number.isNaN(date.getTime())
-        ? ''
-        : date.toLocaleDateString('uz-UZ')
-    ].filter(Boolean).join(' · ');
+  #f1-cinema-premium .cp-hero-image:after{
+    display:none;
   }
+  #f1-cinema-premium .cp-hero-body{
+    padding:16px;
+    gap:10px;
+  }
+  #f1-cinema-premium .cp-hero-title{
+    font-size:21px;
+  }
+  #f1-cinema-premium .cp-card{
+    flex-basis:77%;
+  }
+  #f1-cinema-modal .cp-nextlist{
+    grid-template-columns:1fr;
+  }
+  #f1-cinema-modal .cp-next img{
+    width:100px;
+  }
+}
 
-  const section = document.createElement('section');
-  section.id = 'f1-cinema';
+@media(prefers-reduced-motion:reduce){
+  #f1-cinema-premium .cp-track{
+    scroll-behavior:auto;
+  }
+}
+`;
 
-  section.innerHTML = `
-    <div class="cinema-panel">
-      <div class="cinema-heading">
-        <div>
-          <h2>🎬 F1 <span>CINEMA</span></h2>
-          <div class="cinema-sub">
-            Poyga, saralash, avariyalar va eng qiziqarli lavhalar
-          </div>
-        </div>
-        <a class="cinema-all" href="./videos.html">
-          Barcha videolar →
-        </a>
-      </div>
+document.head.appendChild(style);
 
-      <div class="cinema-feature-holder"></div>
+const root=document.createElement('section');
+root.id='f1-cinema-premium';
+root.setAttribute('aria-label','F1 Cinema video markazi');
 
-      <div class="cinema-row-head">
-        <h3>🔥 So‘nggi videolar</h3>
-        <div class="cinema-arrows">
-          <button class="cinema-arrow cinema-prev"
-                  type="button"
-                  aria-label="Oldingi videolar">‹</button>
-          <button class="cinema-arrow cinema-next"
-                  type="button"
-                  aria-label="Keyingi videolar">›</button>
+root.innerHTML=`
+  <div class="cp-shell">
+    <div class="cp-top">
+      <div>
+        <h2 class="cp-logo">🎬 F1 <span>CINEMA</span></h2>
+        <div class="cp-sub">
+          F1 Uzbekistan TV · Premium video markazi
         </div>
       </div>
-
-      <div class="cinema-track"></div>
-      <div class="cinema-status">Videolar yuklanmoqda…</div>
+      <a class="cp-all" href="./videos.html">
+        Barcha videolar →
+      </a>
     </div>
-  `;
 
-  const target = document.querySelector(
-    '.calendar-section, #calendar-section, #calendar'
-  );
+    <div class="cp-hero-holder"></div>
+    <div class="cp-rows"></div>
 
-  if (target && target.parentNode) {
-    target.parentNode.insertBefore(section, target);
-  } else {
-    (document.querySelector('main') || document.body)
-      .appendChild(section);
-  }
+    <div class="cp-status" role="status">
+      Videolar yuklanmoqda…
+    </div>
+  </div>
+`;
 
-  const overlay = document.createElement('div');
-  overlay.id = 'f1-cinema-player';
-  overlay.setAttribute('role', 'dialog');
-  overlay.setAttribute('aria-modal', 'true');
-  overlay.setAttribute('aria-label', 'F1 video pleyeri');
+const target=document.querySelector('.calendar-section');
 
-  overlay.innerHTML = `
-    <div class="cinema-dialog">
-      <button class="cinema-close" type="button">
+if(target){
+  target.before(root);
+}else{
+  (document.querySelector('main')||document.body).append(root);
+}
+
+const modal=document.createElement('div');
+modal.id='f1-cinema-modal';
+modal.setAttribute('role','dialog');
+modal.setAttribute('aria-modal','true');
+modal.setAttribute('aria-label','F1 videopleyer');
+
+modal.innerHTML=`
+  <div class="cp-dialog">
+    <div class="cp-modalhead">
+      <h3 class="cp-modaltitle"></h3>
+      <button type="button" class="cp-close">
         ✕ Yopish
       </button>
-      <div class="cinema-video"></div>
     </div>
-  `;
 
-  document.body.appendChild(overlay);
+    <div class="cp-frame"></div>
 
-  const videoBox = overlay.querySelector('.cinema-video');
-  const closeButton = overlay.querySelector('.cinema-close');
+    <h4 class="cp-nexttitle">▶ Keyingi videolar</h4>
+    <div class="cp-nextlist"></div>
+  </div>
+`;
 
-  function closePlayer() {
-    overlay.classList.remove('open');
-    videoBox.replaceChildren();
-    document.body.style.overflow = '';
+document.body.append(modal);
+
+const close=modal.querySelector('.cp-close');
+const frame=modal.querySelector('.cp-frame');
+
+let allVideos=[];
+let lastFocus=null;
+
+const validId=id=>
+  /^[A-Za-z0-9_-]{11}$/.test(String(id||''));
+
+function title(v){
+  if(v.title_uz)return String(v.title_uz);
+
+  const raw=String(v.title||'F1 videosi')
+    .replace(/&amp;/gi,'&');
+
+  const s=raw.toLowerCase();
+  let gp='';
+
+  const races=[
+    [/united states|usa gp|austin/,'AQSH'],
+    [/mexico/,'Meksika'],
+    [/brazil|sao paulo|são paulo/,'Braziliya'],
+    [/las vegas/,'Las-Vegas'],
+    [/qatar/,'Qatar'],
+    [/abu dhabi/,'Abu-Dabi']
+  ];
+
+  for(const [pattern,name] of races){
+    if(pattern.test(s)){
+      gp=name+' Gran-prisi — ';
+      break;
+    }
   }
 
-  function openPlayer(id) {
-    if (!/^[A-Za-z0-9_-]{11}$/.test(String(id))) return;
-
-    const iframe = document.createElement('iframe');
-
-    iframe.src =
-      'https://www.youtube-nocookie.com/embed/' +
-      encodeURIComponent(id) +
-      '?autoplay=1&rel=0&playsinline=1';
-
-    iframe.title = 'F1 Uzbekistan video';
-    iframe.allow =
-      'autoplay; encrypted-media; picture-in-picture; fullscreen';
-    iframe.allowFullscreen = true;
-
-    videoBox.replaceChildren(iframe);
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    closeButton.focus();
+  if(/crash|collision|accident/.test(s)){
+    return gp+'💥 Poygadagi avariya lavhalari';
   }
 
-  closeButton.addEventListener('click', closePlayer);
+  if(/fire|flames/.test(s)){
+    return gp+'🔥 Boliddagi yong‘in';
+  }
 
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) closePlayer();
+  if(/qualifying/.test(s)&&/highlight/.test(s)){
+    return gp+'🏁 Saralashning eng qiziqarli lahzalari';
+  }
+
+  if(/race/.test(s)&&/highlight/.test(s)){
+    return gp+'🏎️ Poyganing eng qiziqarli lahzalari';
+  }
+
+  if(/interview|drivers react|driver reactions/.test(s)){
+    return gp+'🎤 Pilotlar intervyusi';
+  }
+
+  if(/overtak/.test(s)){
+    return gp+'⚡ Eng yaxshi quvib o‘tishlar';
+  }
+
+  return raw;
+}
+
+function image(v){
+  const u=v.thumbnail||v.thumbnail_url||v.thumbnailUrl;
+
+  if(typeof u==='string'&&/^https:\/\//i.test(u)){
+    return u;
+  }
+
+  return 'https://i.ytimg.com/vi/'
+    +encodeURIComponent(v.id)
+    +'/hqdefault.jpg';
+}
+
+function meta(v){
+  let d='';
+
+  if(v.published||v.publishedAt){
+    const date=new Date(v.published||v.publishedAt);
+
+    if(!Number.isNaN(date.getTime())){
+      d=date.toLocaleDateString('uz-UZ');
+    }
+  }
+
+  return [v.channel||'',d].filter(Boolean).join(' · ');
+}
+
+function closeModal(){
+  modal.classList.remove('cp-open');
+  frame.replaceChildren();
+  document.body.style.overflow='';
+
+  if(lastFocus&&lastFocus.isConnected){
+    lastFocus.focus();
+  }
+}
+
+close.addEventListener('click',closeModal);
+
+modal.addEventListener('click',e=>{
+  if(e.target===modal)closeModal();
+});
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&modal.classList.contains('cp-open')){
+    closeModal();
+  }
+});
+
+function play(v){
+  if(!validId(v.id))return;
+
+  if(!modal.classList.contains('cp-open')){
+    lastFocus=document.activeElement;
+  }
+
+  modal.querySelector('.cp-modaltitle').textContent=title(v);
+
+  const iframe=document.createElement('iframe');
+  iframe.title=title(v);
+
+  iframe.src=
+    'https://www.youtube-nocookie.com/embed/'
+    +encodeURIComponent(v.id)
+    +'?autoplay=1&rel=0&playsinline=1';
+
+  iframe.allow=
+    'autoplay; encrypted-media; picture-in-picture; fullscreen';
+
+  iframe.allowFullscreen=true;
+  frame.replaceChildren(iframe);
+
+  const next=modal.querySelector('.cp-nextlist');
+  next.replaceChildren();
+
+  const others=allVideos
+    .filter(x=>x.id!==v.id)
+    .slice(0,6);
+
+  for(const item of others){
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='cp-next';
+
+    const img=document.createElement('img');
+    img.src=image(item);
+    img.alt='';
+    img.loading='lazy';
+
+    const label=document.createElement('span');
+    label.textContent=title(item);
+
+    b.append(img,label);
+    b.addEventListener('click',()=>play(item));
+
+    next.append(b);
+  }
+
+  modal.classList.add('cp-open');
+  document.body.style.overflow='hidden';
+  close.focus();
+}
+
+function hero(v){
+  const h=document.createElement('div');
+  h.className='cp-hero';
+
+  const visual=document.createElement('div');
+  visual.className='cp-hero-image';
+
+  const img=document.createElement('img');
+  img.src=image(v);
+  img.alt='';
+  img.loading='eager';
+
+  const badge=document.createElement('span');
+  badge.className='cp-label';
+  badge.textContent='▶ YANGI VIDEO';
+
+  visual.append(img,badge);
+
+  const body=document.createElement('div');
+  body.className='cp-hero-body';
+
+  const eyebrow=document.createElement('div');
+  eyebrow.className='cp-eyebrow';
+  eyebrow.textContent='F1 UZBEKISTAN · VIDEO';
+
+  const heading=document.createElement('h3');
+  heading.className='cp-hero-title';
+  heading.textContent=title(v);
+
+  const info=document.createElement('div');
+  info.className='cp-meta';
+  info.textContent=meta(v)||'Eng yangi video lavha';
+
+  const button=document.createElement('button');
+  button.className='cp-watch';
+  button.type='button';
+  button.textContent='▶ HOZIR TOMOSHA QILISH';
+  button.addEventListener('click',()=>play(v));
+
+  body.append(eyebrow,heading,info,button);
+  h.append(visual,body);
+
+  return h;
+}
+
+function card(v){
+  const el=document.createElement('article');
+  el.className='cp-card';
+
+  const thumb=document.createElement('button');
+  thumb.className='cp-thumb';
+  thumb.type='button';
+  thumb.setAttribute(
+    'aria-label',
+    title(v)+' — tomosha qilish'
+  );
+
+  const img=document.createElement('img');
+  img.src=image(v);
+  img.alt='';
+  img.loading='lazy';
+
+  const icon=document.createElement('span');
+  icon.className='cp-play';
+  icon.textContent='▶';
+
+  thumb.append(img,icon);
+  thumb.addEventListener('click',()=>play(v));
+
+  const body=document.createElement('div');
+  body.className='cp-cardbody';
+
+  const heading=document.createElement('p');
+  heading.className='cp-cardtitle';
+  heading.textContent=title(v);
+
+  const small=document.createElement('div');
+  small.className='cp-cardmeta';
+  small.textContent=meta(v)||'F1 Uzbekistan TV';
+
+  body.append(heading,small);
+  el.append(thumb,body);
+
+  return el;
+}
+
+function category(v){
+  const t=String(
+    (v.title||'')+' '+(v.title_uz||'')
+  ).toLowerCase();
+
+  if(/crash|collision|accident|fire|flames|avariya|yong.in/.test(t)){
+    return 'crash';
+  }
+
+  if(/qualifying|pole|saralash|kvalifik/.test(t)){
+    return 'qualifying';
+  }
+
+  if(/interview|react|press conference|intervyu|fikri/.test(t)){
+    return 'interview';
+  }
+
+  if(/race|grand prix|gp|poyga|highlight|overtak/.test(t)){
+    return 'race';
+  }
+
+  return 'other';
+}
+
+function row(name,items){
+  if(!items.length)return null;
+
+  const wrap=document.createElement('section');
+  wrap.className='cp-row';
+
+  const head=document.createElement('div');
+  head.className='cp-rowhead';
+
+  const heading=document.createElement('h3');
+  heading.className='cp-rowtitle';
+  heading.textContent=name;
+
+  const arrows=document.createElement('div');
+  arrows.className='cp-arrows';
+
+  const prev=document.createElement('button');
+  const next=document.createElement('button');
+
+  for(const [b,label,txt] of [
+    [prev,'Oldingi videolar','‹'],
+    [next,'Keyingi videolar','›']
+  ]){
+    b.type='button';
+    b.className='cp-arrow';
+    b.setAttribute('aria-label',label);
+    b.textContent=txt;
+    arrows.append(b);
+  }
+
+  head.append(heading,arrows);
+
+  const track=document.createElement('div');
+  track.className='cp-track';
+
+  for(const v of items){
+    track.append(card(v));
+  }
+
+  prev.addEventListener('click',()=>{
+    track.scrollBy({
+      left:-track.clientWidth*.85,
+      behavior:'smooth'
+    });
   });
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' &&
-        overlay.classList.contains('open')) {
-      closePlayer();
-    }
+  next.addEventListener('click',()=>{
+    track.scrollBy({
+      left:track.clientWidth*.85,
+      behavior:'smooth'
+    });
   });
 
-  function makeImage(v) {
-    const img = document.createElement('img');
-    img.src = thumbnail(v);
-    img.alt = '';
-    img.loading = 'lazy';
-    return img;
+  wrap.append(head,track);
+  return wrap;
+}
+
+function render(items){
+  allVideos=items.filter(v=>v&&validId(v.id));
+
+  const holder=root.querySelector('.cp-hero-holder');
+  const rows=root.querySelector('.cp-rows');
+  const status=root.querySelector('.cp-status');
+
+  holder.replaceChildren();
+  rows.replaceChildren();
+
+  if(!allVideos.length){
+    status.textContent='Hozircha videolar mavjud emas.';
+    return;
   }
 
-  function render(videos) {
-    const featureHolder =
-      section.querySelector('.cinema-feature-holder');
+  status.textContent='';
+  holder.append(hero(allVideos[0]));
 
-    const track = section.querySelector('.cinema-track');
-    const status = section.querySelector('.cinema-status');
+  const configs=[
+    ['🔥 So‘nggi videolar',allVideos.slice(1,13)],
+    [
+      '🏁 Saralash',
+      allVideos.filter(v=>category(v)==='qualifying')
+    ],
+    [
+      '🏎️ Poyga lavhalari',
+      allVideos.filter(v=>category(v)==='race')
+    ],
+    [
+      '💥 Avariyalar',
+      allVideos.filter(v=>category(v)==='crash')
+    ],
+    [
+      '🎤 Intervyular',
+      allVideos.filter(v=>category(v)==='interview')
+    ]
+  ];
 
-    featureHolder.replaceChildren();
-    track.replaceChildren();
+  for(const [name,vs] of configs){
+    const r=row(name,vs);
+    if(r)rows.append(r);
+  }
 
-    const list = videos.filter(v =>
-      v &&
-      /^[A-Za-z0-9_-]{11}$/.test(String(v.id || ''))
+  if(!rows.children.length){
+    const note=document.createElement('div');
+    note.className='cp-empty';
+    note.textContent=
+      'Yangi videolar qo‘shilganda bu yerda paydo bo‘ladi.';
+    rows.append(note);
+  }
+}
+
+async function load(){
+  try{
+    const res=await fetch(
+      './videos.json?t='+Date.now(),
+      {cache:'no-store'}
     );
 
-    if (!list.length) {
-      status.textContent = 'Hozircha videolar mavjud emas.';
-      return;
+    if(!res.ok){
+      throw Error('HTTP '+res.status);
     }
 
-    status.textContent = '';
+    const data=await res.json();
 
-    const featured = list[0];
+    const items=Array.isArray(data)
+      ?data
+      :Array.isArray(data.videos)
+        ?data.videos
+        :[];
 
-    const feature = document.createElement('button');
-    feature.type = 'button';
-    feature.className = 'cinema-feature';
-    feature.setAttribute(
-      'aria-label',
-      'Videoni ko‘rish: ' + videoTitle(featured)
-    );
+    render(items);
 
-    const image = makeImage(featured);
-    image.loading = 'eager';
-
-    const shade = document.createElement('span');
-    shade.className = 'cinema-shade';
-
-    const badge = document.createElement('span');
-    badge.className = 'cinema-live';
-    badge.textContent = '▶ YANGI VIDEO';
-
-    const content = document.createElement('span');
-    content.className = 'cinema-feature-content';
-
-    const title = document.createElement('span');
-    title.className = 'cinema-feature-title';
-    title.style.display = 'block';
-    title.textContent = videoTitle(featured);
-
-    const meta = document.createElement('span');
-    meta.className = 'cinema-feature-meta';
-    meta.style.display = 'block';
-    meta.textContent = metaText(featured);
-
-    const watch = document.createElement('span');
-    watch.className = 'cinema-watch';
-    watch.textContent = '▶ HOZIR TOMOSHA QILISH';
-
-    content.append(title, meta, watch);
-    feature.append(image, shade, badge, content);
-
-    feature.addEventListener('click', () => {
-      openPlayer(featured.id);
-    });
-
-    featureHolder.appendChild(feature);
-
-    for (const v of list.slice(1, 13)) {
-      const card = document.createElement('article');
-      card.className = 'cinema-card';
-
-      const thumb = document.createElement('button');
-      thumb.className = 'cinema-thumb';
-      thumb.type = 'button';
-      thumb.setAttribute(
-        'aria-label',
-        'Videoni ko‘rish: ' + videoTitle(v)
-      );
-
-      const play = document.createElement('span');
-      play.className = 'cinema-play';
-      play.textContent = '▶';
-
-      thumb.append(makeImage(v), play);
-
-      thumb.addEventListener('click', () => {
-        openPlayer(v.id);
-      });
-
-      const body = document.createElement('div');
-      body.className = 'cinema-card-body';
-
-      const heading = document.createElement('p');
-      heading.className = 'cinema-card-title';
-      heading.textContent = videoTitle(v);
-
-      const meta = document.createElement('div');
-      meta.className = 'cinema-meta';
-      meta.textContent = metaText(v);
-
-      body.append(heading, meta);
-      card.append(thumb, body);
-      track.appendChild(card);
-    }
+  }catch(err){
+    root.querySelector('.cp-status').textContent=
+      'Videolarni yuklashda xatolik: '+err.message;
   }
+}
 
-  const track = section.querySelector('.cinema-track');
+load();
+setInterval(load,300000);
 
-  section.querySelector('.cinema-prev')
-    .addEventListener('click', () => {
-      track.scrollBy({
-        left: -track.clientWidth * 0.8,
-        behavior: 'smooth'
-      });
-    });
-
-  section.querySelector('.cinema-next')
-    .addEventListener('click', () => {
-      track.scrollBy({
-        left: track.clientWidth * 0.8,
-        behavior: 'smooth'
-      });
-    });
-
-  async function load() {
-    try {
-      const response = await fetch(
-        './videos.json?t=' + Date.now(),
-        { cache: 'no-store' }
-      );
-
-      if (!response.ok) {
-        throw new Error('HTTP ' + response.status);
-      }
-
-      const data = await response.json();
-
-      render(
-        Array.isArray(data.videos)
-          ? data.videos
-          : []
-      );
-    } catch (error) {
-      section.querySelector('.cinema-status').textContent =
-        'Videolarni yuklashda xatolik: ' + error.message;
-    }
-  }
-
-  load();
-
-  // Har 5 daqiqada yangilash
-  setInterval(load, 300000);
 })();
