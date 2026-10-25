@@ -1,4 +1,3 @@
-
 (()=>{
 'use strict';
 
@@ -7,6 +6,19 @@ if(document.getElementById('f1-cinema-premium'))return;
 const ROTATE_MS=15*60*1000;
 const REFRESH_MS=5*60*1000;
 const PAGE_SIZE=4;
+
+// X videolari shu yerga qo‘lda qo‘shiladi.
+// Yangi post qo‘shish uchun shu ro‘yxatga obyekt kiriting.
+const X_VIDEOS=[
+  {
+    platform:'x',
+    id:'2114036757406601436',
+    url:'https://x.com/verstoppen3/status/2114036757406601436',
+    title_uz:'🏎️ Maks Verstappen — qiziqarli lavha',
+    channel:'kai · @verstoppen3',
+    published:'2026-10-24T00:00:00Z'
+  }
+];
 
 const style=document.createElement('style');
 
@@ -175,6 +187,29 @@ style.textContent=`
 #f1-cinema-premium .cp-status:empty{
   display:none;
 }
+#f1-cinema-premium .cp-x-cover{
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  background:
+    radial-gradient(circle at 50% 40%,#393942,#101014 75%);
+  color:#fff;
+}
+#f1-cinema-premium .cp-x-logo{
+  font-size:44px;
+  font-weight:900;
+  line-height:1;
+}
+#f1-cinema-premium .cp-x-label{
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:2px;
+  color:#ff4a4a;
+}
 #f1-cinema-modal{
   position:fixed;
   inset:0;
@@ -227,10 +262,39 @@ style.textContent=`
   border-radius:9px;
   overflow:hidden;
 }
+#f1-cinema-modal .cp-frame.cp-x-frame{
+  aspect-ratio:auto;
+  min-height:300px;
+  max-height:75vh;
+  overflow-y:auto;
+  background:#111116;
+}
+#f1-cinema-modal .cp-x-host{
+  width:100%;
+  min-height:280px;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding:10px;
+}
+#f1-cinema-modal .cp-x-host blockquote{
+  width:100%;
+  max-width:560px;
+  margin:0 auto;
+}
+#f1-cinema-modal .cp-x-loading{
+  color:#ccc;
+  font-size:13px;
+  text-align:center;
+  padding:35px 12px;
+}
 #f1-cinema-modal iframe{
   width:100%;
   height:100%;
   border:0;
+}
+#f1-cinema-modal .cp-x-host iframe{
+  height:auto;
 }
 #f1-cinema-modal .cp-nexttitle{
   font-size:13px;
@@ -261,6 +325,16 @@ style.textContent=`
   object-fit:cover;
   border-radius:5px;
   flex-shrink:0;
+}
+#f1-cinema-modal .cp-next .cp-next-x{
+  width:90px;
+  aspect-ratio:16/9;
+  flex-shrink:0;
+  display:grid;
+  place-items:center;
+  border-radius:5px;
+  background:#111;
+  font-size:25px;
 }
 #f1-cinema-modal .cp-next span{
   font-size:11px;
@@ -320,6 +394,9 @@ style.textContent=`
   #f1-cinema-premium .cp-timer{
     font-size:10px;
   }
+  #f1-cinema-premium .cp-x-logo{
+    font-size:32px;
+  }
   #f1-cinema-modal{
     padding:8px;
   }
@@ -329,7 +406,8 @@ style.textContent=`
   #f1-cinema-modal .cp-nextlist{
     grid-template-columns:1fr;
   }
-  #f1-cinema-modal .cp-next img{
+  #f1-cinema-modal .cp-next img,
+  #f1-cinema-modal .cp-next .cp-next-x{
     width:100px;
   }
 }
@@ -427,6 +505,8 @@ let lastFocus=null;
 let previousOverflow='';
 let pageIndex=0;
 let lastRotation=Date.now();
+let playSequence=0;
+let xScriptPromise=null;
 
 function decodeHTML(text){
   const el=document.createElement('textarea');
@@ -438,7 +518,9 @@ const validId=id=>
   /^[A-Za-z0-9_-]{11}$/.test(String(id||''));
 
 function platform(v){
-  const p=String(v.platform||v.source||'youtube').toLowerCase();
+  const p=String(
+    v.platform||v.source||'youtube'
+  ).toLowerCase();
 
   if(p==='x'||p==='twitter')return 'x';
   if(p==='facebook'||p==='fb')return 'facebook';
@@ -556,6 +638,31 @@ function videoKey(v){
   return platform(v)+':'+String(v.id||v.url||'');
 }
 
+function xPostId(v){
+  const url=String(v.url||'');
+
+  try{
+    const parsed=new URL(url);
+
+    if(![
+      'x.com',
+      'www.x.com',
+      'twitter.com',
+      'www.twitter.com'
+    ].includes(parsed.hostname)){
+      return '';
+    }
+
+    const match=parsed.pathname.match(
+      /^\/[^/]+\/status\/(\d+)(?:\/|$)/
+    );
+
+    return match?match[1]:'';
+  }catch(e){
+    return '';
+  }
+}
+
 function embedURL(v){
   const p=platform(v);
 
@@ -573,7 +680,12 @@ function embedURL(v){
     try{
       const parsed=new URL(u);
 
-      if(!['facebook.com','www.facebook.com','m.facebook.com','fb.watch'].includes(parsed.hostname)){
+      if(![
+        'facebook.com',
+        'www.facebook.com',
+        'm.facebook.com',
+        'fb.watch'
+      ].includes(parsed.hostname)){
         return '';
       }
 
@@ -586,18 +698,113 @@ function embedURL(v){
     }
   }
 
-  // X videolarining standart YouTube uslubidagi
-  // mustaqil iframe manzili mavjud emas.
-  // X postini joylashtirish uchun alohida
-  // rasmiy embed integratsiyasi kerak.
   return '';
+}
+
+// Rasmiy X vidjeti skriptini bir marta yuklash.
+function loadXScript(){
+  if(window.twttr&&window.twttr.widgets){
+    return Promise.resolve(window.twttr);
+  }
+
+  if(xScriptPromise)return xScriptPromise;
+
+  xScriptPromise=new Promise((resolve,reject)=>{
+    const script=document.createElement('script');
+
+    script.src='https://platform.x.com/widgets.js';
+    script.async=true;
+    script.charset='utf-8';
+
+    script.onload=()=>{
+      if(window.twttr&&window.twttr.widgets){
+        resolve(window.twttr);
+      }else{
+        reject(Error('X vidjeti mavjud emas'));
+      }
+    };
+
+    script.onerror=()=>{
+      reject(Error('X vidjeti yuklanmadi'));
+    };
+
+    document.head.appendChild(script);
+  }).catch(err=>{
+    xScriptPromise=null;
+    throw err;
+  });
+
+  return xScriptPromise;
+}
+
+async function renderX(v,sequence){
+  const id=xPostId(v);
+
+  const loading=document.createElement('div');
+  loading.className='cp-x-loading';
+  loading.textContent='X posti yuklanmoqda…';
+
+  frame.append(loading);
+
+  if(!id){
+    loading.textContent='X post havolasi noto‘g‘ri.';
+    return;
+  }
+
+  try{
+    const twttr=await loadXScript();
+
+    if(
+      sequence!==playSequence||
+      !modal.classList.contains('cp-open')
+    )return;
+
+    const host=document.createElement('div');
+    host.className='cp-x-host';
+
+    frame.replaceChildren(host);
+
+    const result=await twttr.widgets.createTweet(
+      id,
+      host,
+      {
+        theme:'dark',
+        align:'center',
+        dnt:true,
+        conversation:'none'
+      }
+    );
+
+    if(
+      sequence!==playSequence||
+      !modal.classList.contains('cp-open')
+    )return;
+
+    if(!result){
+      host.textContent=
+        'Bu X posti hozir sayt ichida ko‘rsatilmayapti.';
+    }
+
+  }catch(err){
+    if(sequence!==playSequence)return;
+
+    loading.textContent=
+      'X vidjetini yuklab bo‘lmadi. '+
+      'Post cheklangan yoki brauzer uni bloklagan bo‘lishi mumkin.';
+
+    frame.replaceChildren(loading);
+  }
 }
 
 function closeModal(){
   if(!modal.classList.contains('cp-open'))return;
 
+  playSequence++;
+
   modal.classList.remove('cp-open');
   frame.replaceChildren();
+  frame.classList.remove('cp-x-frame');
+
   document.body.style.overflow=previousOverflow;
 
   if(lastFocus&&lastFocus.isConnected){
@@ -612,7 +819,10 @@ modal.addEventListener('click',e=>{
 });
 
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'&&modal.classList.contains('cp-open')){
+  if(
+    e.key==='Escape'&&
+    modal.classList.contains('cp-open')
+  ){
     closeModal();
   }
 });
@@ -623,31 +833,46 @@ function play(v){
     previousOverflow=document.body.style.overflow;
   }
 
+  const sequence=++playSequence;
+
   modal.querySelector('.cp-modaltitle').textContent=title(v);
 
   frame.replaceChildren();
+  frame.classList.toggle(
+    'cp-x-frame',
+    platform(v)==='x'
+  );
 
-  const url=embedURL(v);
+  modal.classList.add('cp-open');
+  document.body.style.overflow='hidden';
 
-  if(url){
-    const iframe=document.createElement('iframe');
-    iframe.title=title(v);
-    iframe.src=url;
-    iframe.allow=
-      'autoplay; encrypted-media; picture-in-picture; fullscreen';
-    iframe.allowFullscreen=true;
-
-    frame.append(iframe);
+  if(platform(v)==='x'){
+    renderX(v,sequence);
   }else{
-    const message=document.createElement('div');
-    message.style.cssText=
-      'display:grid;place-items:center;height:100%;'+
-      'padding:20px;text-align:center;color:#ddd;font-size:13px;';
+    const url=embedURL(v);
 
-    message.textContent=
-      'Bu video hozircha sayt ichida ko‘rsatish uchun mavjud emas.';
+    if(url){
+      const iframe=document.createElement('iframe');
 
-    frame.append(message);
+      iframe.title=title(v);
+      iframe.src=url;
+      iframe.allow=
+        'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      iframe.allowFullscreen=true;
+
+      frame.append(iframe);
+    }else{
+      const message=document.createElement('div');
+
+      message.style.cssText=
+        'display:grid;place-items:center;height:100%;'+
+        'padding:20px;text-align:center;color:#ddd;font-size:13px;';
+
+      message.textContent=
+        'Bu video hozircha sayt ichida ko‘rsatish uchun mavjud emas.';
+
+      frame.append(message);
+    }
   }
 
   const next=modal.querySelector('.cp-nextlist');
@@ -662,22 +887,30 @@ function play(v){
     b.type='button';
     b.className='cp-next';
 
-    const img=document.createElement('img');
-    img.src=image(item);
-    img.alt='';
-    img.loading='lazy';
+    const thumb=image(item);
+
+    if(thumb){
+      const img=document.createElement('img');
+      img.src=thumb;
+      img.alt='';
+      img.loading='lazy';
+      b.append(img);
+    }else{
+      const xIcon=document.createElement('div');
+      xIcon.className='cp-next-x';
+      xIcon.textContent='𝕏';
+      b.append(xIcon);
+    }
 
     const label=document.createElement('span');
     label.textContent=title(item);
 
-    b.append(img,label);
+    b.append(label);
     b.addEventListener('click',()=>play(item));
 
     next.append(b);
   }
 
-  modal.classList.add('cp-open');
-  document.body.style.overflow='hidden';
   close.focus();
 }
 
@@ -688,18 +921,41 @@ function card(v){
   const thumb=document.createElement('button');
   thumb.className='cp-thumb';
   thumb.type='button';
-  thumb.setAttribute('aria-label',title(v)+' — tomosha qilish');
 
-  const img=document.createElement('img');
-  img.src=image(v);
-  img.alt='';
-  img.loading='lazy';
+  thumb.setAttribute(
+    'aria-label',
+    title(v)+' — tomosha qilish'
+  );
+
+  const thumbURL=image(v);
+
+  if(thumbURL){
+    const img=document.createElement('img');
+    img.src=thumbURL;
+    img.alt='';
+    img.loading='lazy';
+    thumb.append(img);
+  }else{
+    const cover=document.createElement('div');
+    cover.className='cp-x-cover';
+
+    const logo=document.createElement('span');
+    logo.className='cp-x-logo';
+    logo.textContent='𝕏';
+
+    const label=document.createElement('span');
+    label.className='cp-x-label';
+    label.textContent='F1 VIDEO';
+
+    cover.append(logo,label);
+    thumb.append(cover);
+  }
 
   const icon=document.createElement('span');
   icon.className='cp-play';
   icon.textContent='▶';
 
-  thumb.append(img,icon);
+  thumb.append(icon);
   thumb.addEventListener('click',()=>play(v));
 
   const body=document.createElement('div');
@@ -712,6 +968,7 @@ function card(v){
   dot.className='cp-platformdot';
 
   const name=document.createElement('span');
+
   name.textContent={
     youtube:'YouTube',
     x:'X · F1 lavhalari',
@@ -744,14 +1001,20 @@ function renderPage(){
 
   status.textContent='';
 
-  const totalPages=Math.ceil(allVideos.length/PAGE_SIZE);
+  const totalPages=Math.ceil(
+    allVideos.length/PAGE_SIZE
+  );
 
   if(pageIndex>=totalPages){
     pageIndex=0;
   }
 
   const start=pageIndex*PAGE_SIZE;
-  const selected=allVideos.slice(start,start+PAGE_SIZE);
+
+  const selected=allVideos.slice(
+    start,
+    start+PAGE_SIZE
+  );
 
   for(const v of selected){
     grid.append(card(v));
@@ -761,7 +1024,9 @@ function renderPage(){
 function rotate(){
   if(!allVideos.length)return;
 
-  const totalPages=Math.ceil(allVideos.length/PAGE_SIZE);
+  const totalPages=Math.ceil(
+    allVideos.length/PAGE_SIZE
+  );
 
   if(totalPages<=1)return;
 
@@ -779,9 +1044,17 @@ function normalize(items){
 
     const p=platform(v);
 
-    if(p==='youtube'&&!validId(v.id))return false;
+    if(p==='youtube'&&!validId(v.id)){
+      return false;
+    }
 
-    if(p!=='youtube'&&!v.url)return false;
+    if(p==='x'&&!xPostId(v)){
+      return false;
+    }
+
+    if(p==='facebook'&&!v.url){
+      return false;
+    }
 
     const key=videoKey(v);
 
@@ -811,13 +1084,22 @@ async function load(){
         ?data.videos
         :[];
 
-    allVideos=normalize(items);
+    // X videolarini YouTube videolari bilan birlashtiramiz.
+    // X postini boshida ko‘rsatamiz, qolganlari
+    // 15 daqiqada navbat bilan almashadi.
+    allVideos=normalize([
+      ...X_VIDEOS,
+      ...items
+    ]);
+
     renderPage();
 
   }catch(err){
+    // YouTube ma'lumotlari vaqtincha yuklanmasa ham
+    // qo‘lda qo‘shilgan X postlari ko‘rinadi.
     if(!allVideos.length){
-      status.textContent=
-        'Videolarni yuklashda xatolik: '+err.message;
+      allVideos=normalize(X_VIDEOS);
+      renderPage();
     }
   }
 }
