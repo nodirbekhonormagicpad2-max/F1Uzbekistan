@@ -1,13 +1,13 @@
 [
   {
     "platform": "facebook",
-    "type": "video",
-    "id": "share-v-1dcJ8prRif",
-    "url": "https://www.facebook.com/share/v/1dcJ8prRif/",
+    "type": "reel",
+    "id": "1977367446309674",
+    "url": "https://www.facebook.com/reel/1977367446309674/",
     "title_uz": "Formula 1",
     "channel": "Facebook",
     "published": "2026-10-25T18:57:07.312Z",
-    "aspect_ratio": "16:9",
+    "aspect_ratio": "9:16",
     "approved": true
   }
 ]
