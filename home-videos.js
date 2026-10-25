@@ -2,7 +2,7 @@
 (()=>{
 'use strict';
 
-if(document.getElementById('f1-cinema-premium'))return;
+if(document.getElementById('f1-cinema-premium')) return;
 
 const style=document.createElement('style');
 
@@ -13,7 +13,9 @@ style.textContent=`
   margin:22px 0;
   font-family:Arial,Helvetica,sans-serif;
 }
-#f1-cinema-premium *{box-sizing:border-box}
+#f1-cinema-premium *{
+  box-sizing:border-box;
+}
 #f1-cinema-premium .cp-shell{
   background:linear-gradient(140deg,#1b1b22,#0d0d11 70%);
   border:1px solid #34343c;
@@ -27,7 +29,7 @@ style.textContent=`
   justify-content:space-between;
   gap:12px;
   flex-wrap:wrap;
-  margin-bottom:16px;
+  margin-bottom:17px;
 }
 #f1-cinema-premium .cp-logo{
   font-size:clamp(23px,3.6vw,32px);
@@ -35,7 +37,9 @@ style.textContent=`
   letter-spacing:-1px;
   margin:0;
 }
-#f1-cinema-premium .cp-logo span{color:#ff3838}
+#f1-cinema-premium .cp-logo span{
+  color:#ff3838;
+}
 #f1-cinema-premium .cp-sub{
   font-size:11px;
   color:#a5a5b0;
@@ -51,94 +55,15 @@ style.textContent=`
   font-weight:800;
   font-size:12px;
 }
-#f1-cinema-premium .cp-hero{
-  display:grid;
-  grid-template-columns:1.4fr 1fr;
-  min-height:270px;
-  border:1px solid #3b3b43;
-  border-radius:13px;
-  overflow:hidden;
-  background:#101015;
-}
-#f1-cinema-premium .cp-hero-image{
-  position:relative;
-  min-height:250px;
-  overflow:hidden;
-  background:#000;
-}
-#f1-cinema-premium .cp-hero-image img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-  position:absolute;
-  inset:0;
-}
-#f1-cinema-premium .cp-hero-image:after{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(90deg,transparent 75%,#101015);
-}
-#f1-cinema-premium .cp-label{
-  position:absolute;
-  z-index:1;
-  top:12px;
-  left:12px;
-  background:#e10600;
-  border-radius:5px;
-  padding:6px 9px;
-  font-size:10px;
-  font-weight:900;
-  letter-spacing:.6px;
-}
-#f1-cinema-premium .cp-hero-body{
-  padding:clamp(14px,2.5vw,25px);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:11px;
-}
-#f1-cinema-premium .cp-eyebrow{
-  color:#ff5555;
-  font-size:10px;
-  font-weight:900;
-  letter-spacing:1.2px;
-}
-#f1-cinema-premium .cp-hero-title{
-  font-size:clamp(20px,2.8vw,29px);
-  line-height:1.22;
-  font-weight:900;
-  margin:0;
-  overflow-wrap:anywhere;
-}
-#f1-cinema-premium .cp-meta{
-  color:#aaaab4;
-  font-size:11px;
-  line-height:1.4;
-}
-#f1-cinema-premium .cp-watch{
-  align-self:flex-start;
-  border:0;
-  background:var(--cp-red);
-  color:#fff;
-  padding:12px 15px;
-  border-radius:8px;
-  font-weight:900;
-  font-size:11px;
-  cursor:pointer;
-}
-#f1-cinema-premium .cp-watch:hover,
 #f1-cinema-premium .cp-all:hover{
   background:#b90500;
 }
-#f1-cinema-premium .cp-row{margin-top:24px}
 #f1-cinema-premium .cp-rowhead{
   display:flex;
   justify-content:space-between;
   align-items:center;
   gap:10px;
-  margin-bottom:11px;
+  margin-bottom:12px;
 }
 #f1-cinema-premium .cp-rowtitle{
   font-size:clamp(16px,2.5vw,20px);
@@ -209,7 +134,9 @@ style.textContent=`
   font-size:18px;
   box-shadow:0 4px 20px #0009;
 }
-#f1-cinema-premium .cp-cardbody{padding:10px}
+#f1-cinema-premium .cp-cardbody{
+  padding:10px;
+}
 #f1-cinema-premium .cp-cardtitle{
   font-size:12px;
   font-weight:800;
@@ -231,14 +158,6 @@ style.textContent=`
   color:#aaa;
   padding:12px 0;
 }
-#f1-cinema-premium .cp-empty{
-  font-size:12px;
-  color:#aaa;
-  padding:12px;
-  border:1px dashed #3a3a43;
-  border-radius:9px;
-}
-
 #f1-cinema-modal{
   position:fixed;
   inset:0;
@@ -250,7 +169,9 @@ style.textContent=`
   align-items:flex-start;
   justify-content:center;
 }
-#f1-cinema-modal.cp-open{display:flex}
+#f1-cinema-modal.cp-open{
+  display:flex;
+}
 #f1-cinema-modal .cp-dialog{
   width:min(960px,100%);
   margin:auto;
@@ -342,71 +263,15 @@ style.textContent=`
     padding:12px;
     border-radius:13px;
   }
-  #f1-cinema-premium .cp-top{
-    gap:10px;
-    margin-bottom:13px;
-  }
   #f1-cinema-premium .cp-logo{
     font-size:24px;
-    letter-spacing:-.5px;
   }
   #f1-cinema-premium .cp-sub{
     font-size:10px;
-    line-height:1.4;
   }
   #f1-cinema-premium .cp-all{
     padding:9px 11px;
     font-size:11px;
-  }
-  #f1-cinema-premium .cp-hero{
-    display:block;
-    min-height:0;
-    border-radius:11px;
-  }
-  #f1-cinema-premium .cp-hero-image{
-    min-height:0;
-    aspect-ratio:16/9;
-    background:#000;
-  }
-  #f1-cinema-premium .cp-hero-image img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    position:absolute;
-    inset:0;
-  }
-  #f1-cinema-premium .cp-hero-image:after{
-    display:none;
-  }
-  #f1-cinema-premium .cp-label{
-    top:8px;
-    left:8px;
-    padding:5px 7px;
-    font-size:9px;
-  }
-  #f1-cinema-premium .cp-hero-body{
-    padding:13px;
-    gap:8px;
-  }
-  #f1-cinema-premium .cp-eyebrow{
-    font-size:9px;
-    letter-spacing:1px;
-  }
-  #f1-cinema-premium .cp-hero-title{
-    font-size:18px;
-    line-height:1.28;
-    letter-spacing:-.3px;
-  }
-  #f1-cinema-premium .cp-meta{
-    font-size:10px;
-  }
-  #f1-cinema-premium .cp-watch{
-    padding:10px 12px;
-    font-size:10px;
-    max-width:100%;
-  }
-  #f1-cinema-premium .cp-row{
-    margin-top:20px;
   }
   #f1-cinema-premium .cp-rowtitle{
     font-size:16px;
@@ -416,15 +281,11 @@ style.textContent=`
     height:29px;
   }
   #f1-cinema-premium .cp-card{
-    flex:0 0 70%;
+    flex:0 0 65%;
     border-radius:9px;
   }
   #f1-cinema-premium .cp-cardbody{
     padding:9px;
-  }
-  #f1-cinema-premium .cp-cardtitle{
-    font-size:12px;
-    min-height:33px;
   }
   #f1-cinema-premium .cp-play{
     width:40px;
@@ -442,6 +303,12 @@ style.textContent=`
   }
   #f1-cinema-modal .cp-next img{
     width:100px;
+  }
+}
+
+@media(max-width:380px){
+  #f1-cinema-premium .cp-card{
+    flex-basis:76%;
   }
 }
 
@@ -472,7 +339,6 @@ root.innerHTML=`
       </a>
     </div>
 
-    <div class="cp-hero-holder"></div>
     <div class="cp-rows"></div>
 
     <div class="cp-status" role="status">
@@ -518,6 +384,7 @@ const frame=modal.querySelector('.cp-frame');
 
 let allVideos=[];
 let lastFocus=null;
+let previousOverflow='';
 
 const validId=id=>
   /^[A-Za-z0-9_-]{11}$/.test(String(id||''));
@@ -603,7 +470,7 @@ function meta(v){
 function closeModal(){
   modal.classList.remove('cp-open');
   frame.replaceChildren();
-  document.body.style.overflow='';
+  document.body.style.overflow=previousOverflow;
 
   if(lastFocus&&lastFocus.isConnected){
     lastFocus.focus();
@@ -620,6 +487,25 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&modal.classList.contains('cp-open')){
     closeModal();
   }
+
+  if(e.key==='Tab'&&modal.classList.contains('cp-open')){
+    const buttons=Array.from(
+      modal.querySelectorAll('button:not(:disabled)')
+    );
+
+    if(!buttons.length)return;
+
+    const first=buttons[0];
+    const last=buttons[buttons.length-1];
+
+    if(e.shiftKey&&document.activeElement===first){
+      e.preventDefault();
+      last.focus();
+    }else if(!e.shiftKey&&document.activeElement===last){
+      e.preventDefault();
+      first.focus();
+    }
+  }
 });
 
 function play(v){
@@ -627,6 +513,7 @@ function play(v){
 
   if(!modal.classList.contains('cp-open')){
     lastFocus=document.activeElement;
+    previousOverflow=document.body.style.overflow;
   }
 
   modal.querySelector('.cp-modaltitle').textContent=title(v);
@@ -676,51 +563,6 @@ function play(v){
   close.focus();
 }
 
-function hero(v){
-  const h=document.createElement('div');
-  h.className='cp-hero';
-
-  const visual=document.createElement('div');
-  visual.className='cp-hero-image';
-
-  const img=document.createElement('img');
-  img.src=image(v);
-  img.alt='';
-  img.loading='eager';
-
-  const badge=document.createElement('span');
-  badge.className='cp-label';
-  badge.textContent='▶ YANGI VIDEO';
-
-  visual.append(img,badge);
-
-  const body=document.createElement('div');
-  body.className='cp-hero-body';
-
-  const eyebrow=document.createElement('div');
-  eyebrow.className='cp-eyebrow';
-  eyebrow.textContent='F1 UZBEKISTAN · VIDEO';
-
-  const heading=document.createElement('h3');
-  heading.className='cp-hero-title';
-  heading.textContent=title(v);
-
-  const info=document.createElement('div');
-  info.className='cp-meta';
-  info.textContent=meta(v)||'Eng yangi video lavha';
-
-  const button=document.createElement('button');
-  button.className='cp-watch';
-  button.type='button';
-  button.textContent='▶ HOZIR TOMOSHA QILISH';
-  button.addEventListener('click',()=>play(v));
-
-  body.append(eyebrow,heading,info,button);
-  h.append(visual,body);
-
-  return h;
-}
-
 function card(v){
   const el=document.createElement('article');
   el.className='cp-card';
@@ -760,30 +602,6 @@ function card(v){
   el.append(thumb,body);
 
   return el;
-}
-
-function category(v){
-  const t=String(
-    (v.title||'')+' '+(v.title_uz||'')
-  ).toLowerCase();
-
-  if(/crash|collision|accident|fire|flames|avariya|yong.in/.test(t)){
-    return 'crash';
-  }
-
-  if(/qualifying|pole|saralash|kvalifik/.test(t)){
-    return 'qualifying';
-  }
-
-  if(/interview|react|press conference|intervyu|fikri/.test(t)){
-    return 'interview';
-  }
-
-  if(/race|grand prix|gp|poyga|highlight|overtak/.test(t)){
-    return 'race';
-  }
-
-  return 'other';
 }
 
 function row(name,items){
@@ -844,13 +662,20 @@ function row(name,items){
 }
 
 function render(items){
-  allVideos=items.filter(v=>v&&validId(v.id));
+  const seen=new Set();
 
-  const holder=root.querySelector('.cp-hero-holder');
+  allVideos=items.filter(v=>{
+    if(!v||!validId(v.id)||seen.has(v.id)){
+      return false;
+    }
+
+    seen.add(v.id);
+    return true;
+  });
+
   const rows=root.querySelector('.cp-rows');
   const status=root.querySelector('.cp-status');
 
-  holder.replaceChildren();
   rows.replaceChildren();
 
   if(!allVideos.length){
@@ -859,39 +684,16 @@ function render(items){
   }
 
   status.textContent='';
-  holder.append(hero(allVideos[0]));
 
-  const configs=[
-    ['🔥 So‘nggi videolar',allVideos.slice(1,13)],
-    [
-      '🏁 Saralash',
-      allVideos.filter(v=>category(v)==='qualifying')
-    ],
-    [
-      '🏎️ Poyga lavhalari',
-      allVideos.filter(v=>category(v)==='race')
-    ],
-    [
-      '💥 Avariyalar',
-      allVideos.filter(v=>category(v)==='crash')
-    ],
-    [
-      '🎤 Intervyular',
-      allVideos.filter(v=>category(v)==='interview')
-    ]
-  ];
+  // BOSH SAHIFADA FAQAT 6 TA VIDEO.
+  // KATTA ASOSIY VIDEO YO‘Q.
+  // QO‘SHIMCHA KATEGORIYALAR YO‘Q.
+  const latest=allVideos.slice(0,6);
 
-  for(const [name,vs] of configs){
-    const r=row(name,vs);
-    if(r)rows.append(r);
-  }
+  const latestRow=row('🔥 Eng yangi videolar',latest);
 
-  if(!rows.children.length){
-    const note=document.createElement('div');
-    note.className='cp-empty';
-    note.textContent=
-      'Yangi videolar qo‘shilganda bu yerda paydo bo‘ladi.';
-    rows.append(note);
+  if(latestRow){
+    rows.append(latestRow);
   }
 }
 
