@@ -8,13 +8,9 @@
 <title>F1 Videolar | F1 Uzbekistan TV</title>
 
 <style>
-:root{
-  color-scheme:dark;
-}
+:root{color-scheme:dark}
 
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
   margin:0;
@@ -46,9 +42,7 @@ h1{
   margin:0 0 8px;
 }
 
-h1 span{
-  color:#ff2929;
-}
+h1 span{color:#ff2929}
 
 .sub{
   color:#a8abb6;
@@ -94,15 +88,20 @@ h1 span{
 .thumb{
   position:relative;
   display:block;
+  width:100%;
   aspect-ratio:16/9;
+  padding:0;
+  border:0;
   background:#222;
   overflow:hidden;
+  cursor:pointer;
 }
 
 .thumb img{
   width:100%;
   height:100%;
   object-fit:cover;
+  display:block;
 }
 
 .play{
@@ -132,20 +131,6 @@ h1 span{
   color:#aaa;
 }
 
-.watch{
-  display:inline-block;
-  color:#fff;
-  background:#a80c0c;
-  text-decoration:none;
-  border-radius:7px;
-  padding:9px 13px;
-  margin-top:12px;
-}
-
-.watch:hover{
-  background:#e10600;
-}
-
 .status{
   color:#a8abb6;
   padding:25px 0;
@@ -158,7 +143,7 @@ h1 span{
 .viewer{
   position:fixed;
   inset:0;
-  background:#000e;
+  background:rgba(0,0,0,.95);
   display:none;
   place-items:center;
   padding:18px;
@@ -188,6 +173,8 @@ h1 span{
   clear:both;
   aspect-ratio:16/9;
   background:#000;
+  border-radius:8px;
+  overflow:hidden;
 }
 
 .frame iframe{
@@ -225,6 +212,10 @@ h1 span{
     padding:9px 13px;
     font-size:12px;
   }
+
+  .viewer{
+    padding:9px;
+  }
 }
 </style>
 </head>
@@ -246,6 +237,7 @@ h1 span{
   </p>
 
   <nav class="filters" aria-label="Video turlari">
+
     <button class="active" data-filter="all">
       Barchasi
     </button>
@@ -261,6 +253,7 @@ h1 span{
     <button data-filter="race">
       🏁 Poyga
     </button>
+
   </nav>
 
   <p id="status" class="status">
@@ -302,9 +295,12 @@ const grid=document.querySelector('#grid');
 const status=document.querySelector('#status');
 const viewer=document.querySelector('#viewer');
 const frame=document.querySelector('#frame');
+const closeButton=document.querySelector('#close');
 
 let videos=[];
 let filter='all';
+let previousOverflow='';
+let lastFocus=null;
 
 function decodeHTML(text){
   const el=document.createElement('textarea');
@@ -404,15 +400,15 @@ function videoTitle(v){
   }
 
   if(/pole position/.test(s)){
-    return gp+'🥇 Poygada birinchi start o‘rni uchun kurash';
+    return gp+'🥇 Birinchi start o‘rni uchun kurash';
   }
 
   if(/best moments|top moments|top 10/.test(s)){
-    return gp+'⭐ Eng yaxshi 10 ta lahza';
+    return gp+'⭐ Eng yaxshi lahzalar';
   }
 
   if(/grand prix|formula 1|formula one|f1/.test(s)){
-    return gp+'🏎️ Formula 1 olamidagi eng qiziqarli voqealar';
+    return gp+'🏎️ Formula 1 olamidagi qiziqarli voqealar';
   }
 
   return raw;
@@ -459,11 +455,6 @@ function image(v){
     +'/hqdefault.jpg';
 }
 
-function videoURL(v){
-  return 'https://www.youtube.com/watch?v='
-    +encodeURIComponent(v.id);
-}
-
 function render(){
   grid.replaceChildren();
 
@@ -480,11 +471,14 @@ function render(){
     const card=document.createElement('article');
     card.className='card';
 
-    const thumb=document.createElement('a');
-    thumb.href=videoURL(v);
+    // Video rasmi tugma sifatida ishlaydi.
+    const thumb=document.createElement('button');
+    thumb.type='button';
     thumb.className='thumb';
-    thumb.target='_blank';
-    thumb.rel='noopener noreferrer';
+    thumb.setAttribute(
+      'aria-label',
+      videoTitle(v)+' — tomosha qilish'
+    );
 
     const img=document.createElement('img');
     img.loading='lazy';
@@ -497,8 +491,7 @@ function render(){
 
     thumb.append(img,play);
 
-    thumb.addEventListener('click',e=>{
-      e.preventDefault();
+    thumb.addEventListener('click',()=>{
       openVideo(v.id);
     });
 
@@ -522,14 +515,10 @@ function render(){
       dateText
     ].filter(Boolean).join(' · ');
 
-    const link=document.createElement('a');
-    link.href=videoURL(v);
-    link.target='_blank';
-    link.rel='noopener noreferrer';
-    link.className='watch';
-    link.textContent='YouTube’da ko‘rish ↗';
+    // YouTube tugmasi olib tashlandi.
+    // Faqat sarlavha va sana ko‘rsatiladi.
+    info.append(h,meta);
 
-    info.append(h,meta,link);
     card.append(thumb,info);
     grid.append(card);
   }
@@ -537,6 +526,11 @@ function render(){
 
 function openVideo(id){
   if(!validId(id))return;
+
+  if(!viewer.classList.contains('open')){
+    lastFocus=document.activeElement;
+    previousOverflow=document.body.style.overflow;
+  }
 
   const iframe=document.createElement('iframe');
 
@@ -555,16 +549,22 @@ function openVideo(id){
   viewer.classList.add('open');
 
   document.body.style.overflow='hidden';
-  document.querySelector('#close').focus();
+  closeButton.focus();
 }
 
 function closeVideo(){
+  if(!viewer.classList.contains('open'))return;
+
   viewer.classList.remove('open');
   frame.replaceChildren();
-  document.body.style.overflow='';
+  document.body.style.overflow=previousOverflow;
+
+  if(lastFocus&&lastFocus.isConnected){
+    lastFocus.focus();
+  }
 }
 
-document.querySelector('#close').onclick=closeVideo;
+closeButton.addEventListener('click',closeVideo);
 
 viewer.addEventListener('click',e=>{
   if(e.target===viewer){
@@ -573,13 +573,13 @@ viewer.addEventListener('click',e=>{
 });
 
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'&&viewer.classList.contains('open')){
+  if(e.key==='Escape'){
     closeVideo();
   }
 });
 
 document.querySelectorAll('[data-filter]').forEach(button=>{
-  button.onclick=()=>{
+  button.addEventListener('click',()=>{
     filter=button.dataset.filter;
 
     document.querySelectorAll('[data-filter]').forEach(x=>{
@@ -587,7 +587,7 @@ document.querySelectorAll('[data-filter]').forEach(button=>{
     });
 
     render();
-  };
+  });
 });
 
 async function load(){
@@ -629,7 +629,6 @@ async function load(){
 }
 
 load();
-
 setInterval(load,300000);
 </script>
 
