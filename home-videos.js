@@ -1,3 +1,4 @@
+
 (()=>{
 'use strict';
 
@@ -7,8 +8,7 @@ const ROTATE_MS=15*60*1000;
 const REFRESH_MS=5*60*1000;
 const PAGE_SIZE=4;
 
-// X videolari shu yerga qo‘lda qo‘shiladi.
-// Yangi post qo‘shish uchun shu ro‘yxatga obyekt kiriting.
+// X postlari bepul va rasmiy embed orqali ko'rsatiladi.
 const X_VIDEOS=[
   {
     platform:'x',
@@ -29,7 +29,8 @@ style.textContent=`
   margin:22px 0;
   font-family:Arial,Helvetica,sans-serif;
 }
-#f1-cinema-premium *{
+#f1-cinema-premium *,
+#f1-cinema-modal *{
   box-sizing:border-box;
 }
 #f1-cinema-premium .cp-shell{
@@ -195,8 +196,11 @@ style.textContent=`
   align-items:center;
   justify-content:center;
   gap:8px;
-  background:
-    radial-gradient(circle at 50% 40%,#393942,#101014 75%);
+  background:radial-gradient(
+    circle at 50% 40%,
+    #393942,
+    #101014 75%
+  );
   color:#fff;
 }
 #f1-cinema-premium .cp-x-logo{
@@ -277,11 +281,6 @@ style.textContent=`
   align-items:flex-start;
   padding:10px;
 }
-#f1-cinema-modal .cp-x-host blockquote{
-  width:100%;
-  max-width:560px;
-  margin:0 auto;
-}
 #f1-cinema-modal .cp-x-loading{
   color:#ccc;
   font-size:13px;
@@ -326,7 +325,7 @@ style.textContent=`
   border-radius:5px;
   flex-shrink:0;
 }
-#f1-cinema-modal .cp-next .cp-next-x{
+#f1-cinema-modal .cp-next-x{
   width:90px;
   aspect-ratio:16/9;
   flex-shrink:0;
@@ -407,7 +406,7 @@ style.textContent=`
     grid-template-columns:1fr;
   }
   #f1-cinema-modal .cp-next img,
-  #f1-cinema-modal .cp-next .cp-next-x{
+  #f1-cinema-modal .cp-next-x{
     width:100px;
   }
 }
@@ -434,7 +433,10 @@ document.head.appendChild(style);
 
 const root=document.createElement('section');
 root.id='f1-cinema-premium';
-root.setAttribute('aria-label','F1 Cinema video markazi');
+root.setAttribute(
+  'aria-label',
+  'F1 Cinema video markazi'
+);
 
 root.innerHTML=`
   <div class="cp-shell">
@@ -451,8 +453,12 @@ root.innerHTML=`
     </div>
 
     <div class="cp-sectionhead">
-      <h3 class="cp-rowtitle">🔥 Eng qiziqarli videolar</h3>
-      <div class="cp-timer">Har 15 daqiqada almashadi</div>
+      <h3 class="cp-rowtitle">
+        🔥 Eng qiziqarli videolar
+      </h3>
+      <div class="cp-timer">
+        Har 15 daqiqada almashadi
+      </div>
     </div>
 
     <div class="cp-grid"></div>
@@ -485,9 +491,7 @@ modal.innerHTML=`
         ✕ Yopish
       </button>
     </div>
-
     <div class="cp-frame"></div>
-
     <h4 class="cp-nexttitle">▶ Keyingi videolar</h4>
     <div class="cp-nextlist"></div>
   </div>
@@ -514,8 +518,9 @@ function decodeHTML(text){
   return el.value;
 }
 
-const validId=id=>
-  /^[A-Za-z0-9_-]{11}$/.test(String(id||''));
+function validId(id){
+  return /^[A-Za-z0-9_-]{11}$/.test(String(id||''));
+}
 
 function platform(v){
   const p=String(
@@ -524,7 +529,6 @@ function platform(v){
 
   if(p==='x'||p==='twitter')return 'x';
   if(p==='facebook'||p==='fb')return 'facebook';
-
   return 'youtube';
 }
 
@@ -533,7 +537,6 @@ function title(v){
 
   const raw=decodeHTML(v.title||'F1 videosi');
   const s=raw.toLowerCase();
-
   let gp='';
 
   const races=[
@@ -560,39 +563,30 @@ function title(v){
   if(/crash|collision|accident/.test(s)){
     return gp+'💥 Poygadagi avariya lavhalari';
   }
-
   if(/fire|flames/.test(s)){
     return gp+'🔥 Boliddagi yong‘in';
   }
-
   if(/spin|spins/.test(s)){
     return gp+'🔄 Pilotning trassada aylanib ketishi';
   }
-
   if(/qualifying/.test(s)&&/highlight|best/.test(s)){
     return gp+'🏁 Saralashning eng qiziqarli lahzalari';
   }
-
   if(/qualifying/.test(s)){
     return gp+'⏱ Saralash natijalari va asosiy lahzalar';
   }
-
   if(/sprint/.test(s)&&/highlight/.test(s)){
     return gp+'⚡ Sprint poygasining eng yaxshi lahzalari';
   }
-
   if(/race/.test(s)&&/highlight/.test(s)){
     return gp+'🏎️ Poyganing eng qiziqarli lahzalari';
   }
-
   if(/interview|drivers react|driver reactions/.test(s)){
     return gp+'🎤 Pilotlar intervyusi';
   }
-
   if(/team radio|radio messages/.test(s)){
     return gp+'🎧 Pilotlarning radio suhbatlari';
   }
-
   if(/overtak/.test(s)){
     return gp+'⚡ Eng yaxshi quvib o‘tishlar';
   }
@@ -618,12 +612,10 @@ function image(v){
 
 function meta(v){
   let dateText='';
-
   const value=v.published||v.publishedAt;
 
   if(value){
     const d=new Date(value);
-
     if(!Number.isNaN(d.getTime())){
       dateText=d.toLocaleDateString('uz-UZ');
     }
@@ -639,21 +631,19 @@ function videoKey(v){
 }
 
 function xPostId(v){
-  const url=String(v.url||'');
-
   try{
-    const parsed=new URL(url);
+    const u=new URL(String(v.url||''));
 
     if(![
       'x.com',
       'www.x.com',
       'twitter.com',
       'www.twitter.com'
-    ].includes(parsed.hostname)){
+    ].includes(u.hostname)){
       return '';
     }
 
-    const match=parsed.pathname.match(
+    const match=u.pathname.match(
       /^\/[^/]+\/status\/(\d+)(?:\/|$)/
     );
 
@@ -671,28 +661,25 @@ function embedURL(v){
 
     return 'https://www.youtube-nocookie.com/embed/'
       +encodeURIComponent(v.id)
-      +'?autoplay=1&rel=0&playsinline=1';
+      +'?autoplay=1&playsinline=1&rel=0&enablejsapi=1';
   }
 
   if(p==='facebook'){
-    const u=String(v.url||'');
-
     try{
-      const parsed=new URL(u);
+      const u=new URL(String(v.url||''));
 
       if(![
         'facebook.com',
         'www.facebook.com',
         'm.facebook.com',
         'fb.watch'
-      ].includes(parsed.hostname)){
+      ].includes(u.hostname)){
         return '';
       }
 
       return 'https://www.facebook.com/plugins/video.php?href='
-        +encodeURIComponent(u)
+        +encodeURIComponent(u.href)
         +'&show_text=false&autoplay=true';
-
     }catch(e){
       return '';
     }
@@ -701,7 +688,6 @@ function embedURL(v){
   return '';
 }
 
-// Rasmiy X vidjeti skriptini bir marta yuklash.
 function loadXScript(){
   if(window.twttr&&window.twttr.widgets){
     return Promise.resolve(window.twttr);
@@ -742,8 +728,7 @@ async function renderX(v,sequence){
 
   const loading=document.createElement('div');
   loading.className='cp-x-loading';
-  loading.textContent='X posti yuklanmoqda…';
-
+  loading.textContent='X videosi yuklanmoqda…';
   frame.append(loading);
 
   if(!id){
@@ -764,6 +749,8 @@ async function renderX(v,sequence){
 
     frame.replaceChildren(host);
 
+    // Rasmiy X vidjeti.
+    // X avtomatik ijroni cheklashi mumkin.
     const result=await twttr.widgets.createTweet(
       id,
       host,
@@ -771,7 +758,8 @@ async function renderX(v,sequence){
         theme:'dark',
         align:'center',
         dnt:true,
-        conversation:'none'
+        conversation:'none',
+        cards:'visible'
       }
     );
 
@@ -782,17 +770,18 @@ async function renderX(v,sequence){
 
     if(!result){
       host.textContent=
-        'Bu X posti hozir sayt ichida ko‘rsatilmayapti.';
+        'Bu X videosi hozir sayt ichida ko‘rsatilmayapti.';
     }
-
   }catch(err){
     if(sequence!==playSequence)return;
 
-    loading.textContent=
-      'X vidjetini yuklab bo‘lmadi. '+
-      'Post cheklangan yoki brauzer uni bloklagan bo‘lishi mumkin.';
+    const message=document.createElement('div');
+    message.className='cp-x-loading';
+    message.textContent=
+      'X videosini yuklab bo‘lmadi. '+
+      'Post cheklangan yoki brauzer bloklagan bo‘lishi mumkin.';
 
-    frame.replaceChildren(loading);
+    frame.replaceChildren(message);
   }
 }
 
@@ -800,11 +789,9 @@ function closeModal(){
   if(!modal.classList.contains('cp-open'))return;
 
   playSequence++;
-
   modal.classList.remove('cp-open');
   frame.replaceChildren();
   frame.classList.remove('cp-x-frame');
-
   document.body.style.overflow=previousOverflow;
 
   if(lastFocus&&lastFocus.isConnected){
@@ -859,6 +846,10 @@ function play(v){
       iframe.allow=
         'autoplay; encrypted-media; picture-in-picture; fullscreen';
       iframe.allowFullscreen=true;
+      iframe.setAttribute(
+        'referrerpolicy',
+        'strict-origin-when-cross-origin'
+      );
 
       frame.append(iframe);
     }else{
@@ -869,7 +860,7 @@ function play(v){
         'padding:20px;text-align:center;color:#ddd;font-size:13px;';
 
       message.textContent=
-        'Bu video hozircha sayt ichida ko‘rsatish uchun mavjud emas.';
+        'Bu video hozircha sayt ichida mavjud emas.';
 
       frame.append(message);
     }
@@ -907,7 +898,6 @@ function play(v){
 
     b.append(label);
     b.addEventListener('click',()=>play(item));
-
     next.append(b);
   }
 
@@ -1010,7 +1000,6 @@ function renderPage(){
   }
 
   const start=pageIndex*PAGE_SIZE;
-
   const selected=allVideos.slice(
     start,
     start+PAGE_SIZE
@@ -1032,7 +1021,6 @@ function rotate(){
 
   pageIndex=(pageIndex+1)%totalPages;
   lastRotation=Date.now();
-
   renderPage();
 }
 
@@ -1047,11 +1035,9 @@ function normalize(items){
     if(p==='youtube'&&!validId(v.id)){
       return false;
     }
-
     if(p==='x'&&!xPostId(v)){
       return false;
     }
-
     if(p==='facebook'&&!v.url){
       return false;
     }
@@ -1084,19 +1070,13 @@ async function load(){
         ?data.videos
         :[];
 
-    // X videolarini YouTube videolari bilan birlashtiramiz.
-    // X postini boshida ko‘rsatamiz, qolganlari
-    // 15 daqiqada navbat bilan almashadi.
     allVideos=normalize([
       ...X_VIDEOS,
       ...items
     ]);
 
     renderPage();
-
   }catch(err){
-    // YouTube ma'lumotlari vaqtincha yuklanmasa ham
-    // qo‘lda qo‘shilgan X postlari ko‘rinadi.
     if(!allVideos.length){
       allVideos=normalize(X_VIDEOS);
       renderPage();
