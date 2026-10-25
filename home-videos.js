@@ -543,14 +543,12 @@
 
       if (!raw) return false;
 
-      // Cloudflare R2 videolari uchun ichki manzil
       if (
         /^\/api\/media\/videos\/[a-f0-9-]{36}\.(mp4|webm)$/i.test(raw)
       ) {
         return true;
       }
 
-      // Tashqi HTTPS video manzili
       const url = new URL(raw, window.location.origin);
 
       return (
@@ -639,7 +637,6 @@
 
       const type = platform(video);
 
-      // X videolarini yashiramiz.
       if (type === "x") return false;
 
       if (
@@ -986,22 +983,35 @@
       video => platform(video) === "upload"
     );
 
+    // Yangi video qo‘shilganini aniqlash.
+    const previousFirstVideo = allVideos[0]
+      ? videoKey(allVideos[0])
+      : "";
+
+    // Yuklangan videolar doim birinchi o‘rinda.
     allVideos = normalize([
-      // 1. O'zingiz yuklagan videolar
       ...(uploadedVideos !== null
         ? uploadedVideos
         : oldUploads),
 
-      // 2. Facebook Reels
       ...(facebookVideos !== null
         ? facebookVideos
         : oldFacebook),
 
-      // 3. YouTube videolari
       ...(youtubeVideos !== null
         ? youtubeVideos
         : oldYouTube)
     ]);
+
+    // Yangi video paydo bo‘lsa, birinchi sahifaga qaytish.
+    const newFirstVideo = allVideos[0]
+      ? videoKey(allVideos[0])
+      : "";
+
+    if (newFirstVideo !== previousFirstVideo) {
+      pageIndex = 0;
+      lastRotation = Date.now();
+    }
 
     renderPage();
   }
