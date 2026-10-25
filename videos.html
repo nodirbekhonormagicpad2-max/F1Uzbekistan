@@ -31,6 +31,40 @@ header a{
   font-weight:800;
 }
 
+/* YANGI: BOSH SAHIFAGA QAYTISH TUGMASI */
+.video-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.video-header .site-logo{
+  font-size:15px;
+  font-weight:800;
+  min-width:0;
+}
+
+.video-header .home-button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#e10600;
+  color:#fff;
+  padding:10px 13px;
+  border-radius:9px;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:800;
+  white-space:nowrap;
+  flex-shrink:0;
+  transition:background .2s;
+}
+
+.video-header .home-button:hover{
+  background:#b90500;
+}
+
 main{
   max-width:1180px;
   margin:auto;
@@ -216,14 +250,40 @@ h1 span{color:#ff2929}
   .viewer{
     padding:9px;
   }
+
+  .video-header .site-logo{
+    font-size:12px;
+  }
+
+  .video-header .home-button{
+    font-size:11px;
+    padding:9px 10px;
+  }
+}
+
+@media(max-width:360px){
+  .video-header .site-logo{
+    font-size:11px;
+  }
+
+  .video-header .home-button{
+    font-size:10px;
+    padding:8px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <a href="./index.html">🏎️ F1 UZBEKISTAN TV</a>
+<header class="video-header">
+  <a href="./index.html" class="site-logo">
+    🏎️ F1 UZBEKISTAN TV
+  </a>
+
+  <a href="./index.html" class="home-button">
+    ← Bosh sahifaga
+  </a>
 </header>
 
 <main>
@@ -471,7 +531,6 @@ function render(){
     const card=document.createElement('article');
     card.className='card';
 
-    // Video rasmi tugma sifatida ishlaydi.
     const thumb=document.createElement('button');
     thumb.type='button';
     thumb.className='thumb';
@@ -515,8 +574,7 @@ function render(){
       dateText
     ].filter(Boolean).join(' · ');
 
-    // YouTube tugmasi olib tashlandi.
-    // Faqat sarlavha va sana ko‘rsatiladi.
+    // Video ostida YouTube tugmasi yo‘q.
     info.append(h,meta);
 
     card.append(thumb,info);
