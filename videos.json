@@ -1,13 +1,23 @@
 {
-  "updated_at": "2026-10-25T19:52:26.062370+00:00",
+  "updated_at": "2026-10-25T19:53:06.817Z",
   "videos": [
+    {
+      "id": "F3aaTsKR1hM",
+      "title": "Drivers React After Qualifying | 2026 United States Grand Prix",
+      "channel": "FORMULA 1",
+      "published": "2026-10-25T01:07:59Z",
+      "thumbnail": "https://i.ytimg.com/vi/F3aaTsKR1hM/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=F3aaTsKR1hM",
+      "approved": true
+    },
     {
       "id": "4YTuyqiSrHg",
       "title": "Every Tenth Counts! 🏎️ | Austin GP 2026 Q2 Highlights",
       "channel": "Racing Corner F1",
       "published": "2026-10-25T12:37:09Z",
       "thumbnail": "https://i.ytimg.com/vi/4YTuyqiSrHg/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=4YTuyqiSrHg"
+      "url": "https://www.youtube.com/watch?v=4YTuyqiSrHg",
+      "approved": false
     },
     {
       "id": "tGFj_7e4eyQ",
@@ -15,15 +25,17 @@
       "channel": "Formula 1 Info",
       "published": "2026-10-25T11:13:33Z",
       "thumbnail": "https://i.ytimg.com/vi/tGFj_7e4eyQ/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=tGFj_7e4eyQ"
+      "url": "https://www.youtube.com/watch?v=tGFj_7e4eyQ",
+      "approved": false
     },
     {
       "id": "6cMEEqclPcA",
-      "title": "The Knockout Game  Anatomy of a Championship Pole",
+      "title": "The Knockout Game Anatomy of a Championship Pole",
       "channel": "Chethan",
       "published": "2026-10-25T10:10:36Z",
       "thumbnail": "https://i.ytimg.com/vi/6cMEEqclPcA/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=6cMEEqclPcA"
+      "url": "https://www.youtube.com/watch?v=6cMEEqclPcA",
+      "approved": false
     },
     {
       "id": "SB9Kr5uGkLo",
@@ -31,119 +43,125 @@
       "channel": "The Daily Guardian",
       "published": "2026-10-25T10:01:36Z",
       "thumbnail": "https://i.ytimg.com/vi/SB9Kr5uGkLo/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=SB9Kr5uGkLo"
+      "url": "https://www.youtube.com/watch?v=SB9Kr5uGkLo",
+      "approved": false
     },
     {
       "id": "y9d79ZjJC-s",
-      "title": "2026 United States Grand Prix | Best Qualifying Highlights &amp; Fastest Laps",
+      "title": "2026 United States Grand Prix | Best Qualifying Highlights & Fastest Laps",
       "channel": "CHAMPION STORM",
       "published": "2026-10-25T04:36:00Z",
       "thumbnail": "https://i.ytimg.com/vi/y9d79ZjJC-s/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=y9d79ZjJC-s"
+      "url": "https://www.youtube.com/watch?v=y9d79ZjJC-s",
+      "approved": false
     },
     {
       "id": "EBOx97-xj9s",
-      "title": "🔥 F1 Qualifying Highlights! Pole Position Battle &amp; Fastest Lap Drama 🏎️ | Formula 1#shorts #f1 #race",
+      "title": "🔥 F1 Qualifying Highlights! Pole Position Battle & Fastest Lap Drama 🏎️",
       "channel": "ClutchZone Sports",
       "published": "2026-10-25T01:19:03Z",
       "thumbnail": "https://i.ytimg.com/vi/EBOx97-xj9s/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=EBOx97-xj9s"
-    },
-    {
-      "id": "F3aaTsKR1hM",
-      "title": "Drivers React After Qualifying | 2026 United States Grand Prix",
-      "channel": "FORMULA 1",
-      "published": "2026-10-25T01:07:59Z",
-      "thumbnail": "https://i.ytimg.com/vi/F3aaTsKR1hM/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=F3aaTsKR1hM"
-    },
-    {
-      "id": "7ySqOCLvobU",
-      "title": "LIVE: Reverse Grid Race | Austin 2026 | F1 ACADEMY",
-      "channel": "F1 Academy",
-      "published": "2026-10-25T00:00:04Z",
-      "thumbnail": "https://i.ytimg.com/vi/7ySqOCLvobU/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=7ySqOCLvobU"
+      "url": "https://www.youtube.com/watch?v=EBOx97-xj9s",
+      "approved": false
     },
     {
       "id": "ICu9hXLvjs8",
-      "title": "F1 Qualifying Press Conference  | Kimi Antonelli, Max Verstappen, Hadjar | 2026 United States GP",
-      "channel": "Crazy Police ",
+      "title": "F1 Qualifying Press Conference | Kimi Antonelli, Max Verstappen, Hadjar",
+      "channel": "Crazy Police",
       "published": "2026-10-24T23:43:34Z",
       "thumbnail": "https://i.ytimg.com/vi/ICu9hXLvjs8/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=ICu9hXLvjs8"
+      "url": "https://www.youtube.com/watch?v=ICu9hXLvjs8",
+      "approved": false
     },
     {
       "id": "nxTV6RF6Y5Q",
-      "title": "⚪ QULIFYING LEADERBOARD HIGHLIGHTS F1 USA GP 2026 ⚪ #f1 #usagp #qualifying #highlights #cota",
+      "title": "Qualifying Leaderboard Highlights F1 USA GP 2026",
       "channel": "izquierdoF1",
       "published": "2026-10-24T23:09:34Z",
       "thumbnail": "https://i.ytimg.com/vi/nxTV6RF6Y5Q/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=nxTV6RF6Y5Q"
+      "url": "https://www.youtube.com/watch?v=nxTV6RF6Y5Q",
+      "approved": false
     },
     {
       "id": "R1ksloV94UU",
-      "title": "Drivers React After Qualifying  | 2026 United States Grand Prix",
-      "channel": "Crazy Police ",
+      "title": "Drivers React After Qualifying | 2026 United States Grand Prix",
+      "channel": "Crazy Police",
       "published": "2026-10-24T23:05:45Z",
       "thumbnail": "https://i.ytimg.com/vi/R1ksloV94UU/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=R1ksloV94UU"
+      "url": "https://www.youtube.com/watch?v=R1ksloV94UU",
+      "approved": false
     },
     {
       "id": "rOh1mtzdDZs",
-      "title": "Toto Wolff Post- Qualifying interview | 2026 United States Grand Prix",
-      "channel": "Crazy Police ",
+      "title": "Toto Wolff Post-Qualifying Interview | 2026 United States Grand Prix",
+      "channel": "Crazy Police",
       "published": "2026-10-24T23:01:22Z",
       "thumbnail": "https://i.ytimg.com/vi/rOh1mtzdDZs/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=rOh1mtzdDZs"
+      "url": "https://www.youtube.com/watch?v=rOh1mtzdDZs",
+      "approved": false
     },
     {
       "id": "Yboh9BHSemc",
-      "title": "LIVE 🔴 F1 2026 United States GP 🇺🇸 Qualifying | Who Will Win Pole Position? | Dashboard + Commentary",
+      "title": "LIVE F1 2026 United States GP Qualifying",
       "channel": "F1 No.13",
       "published": "2026-10-24T22:59:15Z",
       "thumbnail": "https://i.ytimg.com/vi/Yboh9BHSemc/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=Yboh9BHSemc"
+      "url": "https://www.youtube.com/watch?v=Yboh9BHSemc",
+      "approved": false
     },
     {
       "id": "E4KAGS7y7PM",
-      "title": "Lewis Hamilton Post- Qualifying interview | 2026 United States Grand Prix",
-      "channel": "Crazy Police ",
+      "title": "Lewis Hamilton Post-Qualifying Interview",
+      "channel": "Crazy Police",
       "published": "2026-10-24T22:58:22Z",
       "thumbnail": "https://i.ytimg.com/vi/E4KAGS7y7PM/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=E4KAGS7y7PM"
+      "url": "https://www.youtube.com/watch?v=E4KAGS7y7PM",
+      "approved": false
     },
     {
       "id": "2KkrYIla-sA",
-      "title": "F1 Qualifying Press Conference - United States GP | Kimi Antonelli, Max Verstappen, Hadjar",
+      "title": "F1 Qualifying Press Conference - United States GP",
       "channel": "Formula 1 Info",
       "published": "2026-10-24T22:52:52Z",
       "thumbnail": "https://i.ytimg.com/vi/2KkrYIla-sA/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=2KkrYIla-sA"
+      "url": "https://www.youtube.com/watch?v=2KkrYIla-sA",
+      "approved": false
+    },
+    {
+      "id": "HJZMc4qRRl0",
+      "title": "Qualifying Chart Highlights F1 USA GP 2026",
+      "channel": "izquierdoF1",
+      "published": "2026-10-24T22:52:01Z",
+      "thumbnail": "https://i.ytimg.com/vi/HJZMc4qRRl0/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=HJZMc4qRRl0",
+      "approved": false
     },
     {
       "id": "2fQx8d2LEgU",
-      "title": "The most satisfying overtake you’ll see today 💨🏎️ #f1 #motorsport #racing",
+      "title": "The Most Satisfying Overtake You'll See Today",
       "channel": "FalcMusics",
       "published": "2026-10-24T10:23:25Z",
       "thumbnail": "https://i.ytimg.com/vi/2fQx8d2LEgU/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=2fQx8d2LEgU"
+      "url": "https://www.youtube.com/watch?v=2fQx8d2LEgU",
+      "approved": false
     },
     {
       "id": "l5WlCWvB_MM",
-      "title": "The most satisfying overtake you’ll see today 💨🏎️ #f1 #motorsport #racing",
+      "title": "The Most Satisfying Overtake You'll See Today",
       "channel": "FalcMusics",
       "published": "2026-10-24T08:22:38Z",
       "thumbnail": "https://i.ytimg.com/vi/l5WlCWvB_MM/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=l5WlCWvB_MM"
+      "url": "https://www.youtube.com/watch?v=l5WlCWvB_MM",
+      "approved": false
     },
     {
       "id": "r-7-8PrYDqQ",
-      "title": "#5 vs #1: the F1 crash you didn&#39;t see coming 💥 #F1Crashes #Shorts",
-      "channel": "Parga Garage ",
+      "title": "F1 Crash You Didn't See Coming",
+      "channel": "Parga Garage",
       "published": "2026-10-24T01:32:40Z",
       "thumbnail": "https://i.ytimg.com/vi/r-7-8PrYDqQ/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=r-7-8PrYDqQ"
+      "url": "https://www.youtube.com/watch?v=r-7-8PrYDqQ",
+      "approved": false
     },
     {
       "id": "UG3Kg0_xRKE",
@@ -151,7 +169,8 @@
       "channel": "Conqueror Motorsports",
       "published": "2026-10-23T10:00:33Z",
       "thumbnail": "https://i.ytimg.com/vi/UG3Kg0_xRKE/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=UG3Kg0_xRKE"
+      "url": "https://www.youtube.com/watch?v=UG3Kg0_xRKE",
+      "approved": false
     },
     {
       "id": "SqvOgFEAv38",
@@ -159,39 +178,44 @@
       "channel": "Grid Push",
       "published": "2026-10-22T13:05:14Z",
       "thumbnail": "https://i.ytimg.com/vi/SqvOgFEAv38/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=SqvOgFEAv38"
+      "url": "https://www.youtube.com/watch?v=SqvOgFEAv38",
+      "approved": false
     },
     {
       "id": "vCANKFsfbvA",
-      "title": "Ranking The BEST F1 Races Of ALL TIME! #f1shorts",
+      "title": "Ranking The Best F1 Races Of All Time",
       "channel": "Formula Focus",
       "published": "2026-10-21T06:31:13Z",
       "thumbnail": "https://i.ytimg.com/vi/vCANKFsfbvA/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=vCANKFsfbvA"
+      "url": "https://www.youtube.com/watch?v=vCANKFsfbvA",
+      "approved": false
     },
     {
       "id": "w_VVXJVyxXw",
-      "title": "How did he survive this?! 🤯 #f1 #crash",
+      "title": "How Did He Survive This?!",
       "channel": "Grid Gear",
       "published": "2026-10-20T02:10:47Z",
       "thumbnail": "https://i.ytimg.com/vi/w_VVXJVyxXw/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=w_VVXJVyxXw"
+      "url": "https://www.youtube.com/watch?v=w_VVXJVyxXw",
+      "approved": false
     },
     {
       "id": "PQhXbKv2ES0",
-      "title": "Every 2026 F1 Drivers Worst Crash of their career (Part 3) #f1 #formula1",
+      "title": "Every 2026 F1 Driver's Worst Crash (Part 3)",
       "channel": "F1Fanatic",
       "published": "2026-10-19T17:42:20Z",
       "thumbnail": "https://i.ytimg.com/vi/PQhXbKv2ES0/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=PQhXbKv2ES0"
+      "url": "https://www.youtube.com/watch?v=PQhXbKv2ES0",
+      "approved": false
     },
     {
       "id": "FMoq76t2gNo",
-      "title": "🏁 F1 2026 MONACO GRAND PRIX | FULL RACE REPLAY | DLSS 5",
+      "title": "F1 2026 Monaco Grand Prix | Full Race Replay | DLSS 5",
       "channel": "SDG Racing Network",
       "published": "2026-10-18T22:41:08Z",
       "thumbnail": "https://i.ytimg.com/vi/FMoq76t2gNo/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=FMoq76t2gNo"
+      "url": "https://www.youtube.com/watch?v=FMoq76t2gNo",
+      "approved": false
     }
   ]
 }
