@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-25T10:57:00.982474+00:00",
+  "updated_at": "2026-10-25T11:24:55.628179+00:00",
   "videos": [
     {
       "id": "6cMEEqclPcA",
@@ -8,6 +8,14 @@
       "published": "2026-10-25T10:10:36Z",
       "thumbnail": "https://i.ytimg.com/vi/6cMEEqclPcA/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=6cMEEqclPcA"
+    },
+    {
+      "id": "SB9Kr5uGkLo",
+      "title": "WATCH LIVE: United States GP Qualifying 2026 | F1 LIVE | Pole Position Battle at Austin",
+      "channel": "The Daily Guardian",
+      "published": "2026-10-25T10:01:36Z",
+      "thumbnail": "https://i.ytimg.com/vi/SB9Kr5uGkLo/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=SB9Kr5uGkLo"
     },
     {
       "id": "y9d79ZjJC-s",
@@ -122,14 +130,6 @@
       "url": "https://www.youtube.com/watch?v=GiyJ8VsxDYg"
     },
     {
-      "id": "EHUMrGmOIW4",
-      "title": "Lewis Hamilton FULL UNHAPPY TEAM RADIO After QUALIFYING P5 For The US GP!",
-      "channel": "F1Fun4u",
-      "published": "2026-10-24T22:24:12Z",
-      "thumbnail": "https://i.ytimg.com/vi/EHUMrGmOIW4/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=EHUMrGmOIW4"
-    },
-    {
       "id": "OZiA2RVySJg",
       "title": "F1 Qualifying FULL Highlights | 2026 United States Grand Prix | F1 Highlights | Formula1 Highlights",
       "channel": "🌷المطبخ الوردي🌷",
@@ -152,14 +152,6 @@
       "published": "2026-10-24T08:22:38Z",
       "thumbnail": "https://i.ytimg.com/vi/l5WlCWvB_MM/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=l5WlCWvB_MM"
-    },
-    {
-      "id": "r-7-8PrYDqQ",
-      "title": "#5 vs #1: the F1 crash you didn&#39;t see coming 💥 #F1Crashes #Shorts",
-      "channel": "Parga Garage ",
-      "published": "2026-10-24T01:32:40Z",
-      "thumbnail": "https://i.ytimg.com/vi/r-7-8PrYDqQ/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=r-7-8PrYDqQ"
     },
     {
       "id": "UG3Kg0_xRKE",
@@ -192,6 +184,14 @@
       "published": "2026-10-20T02:10:47Z",
       "thumbnail": "https://i.ytimg.com/vi/w_VVXJVyxXw/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=w_VVXJVyxXw"
+    },
+    {
+      "id": "PQhXbKv2ES0",
+      "title": "Every 2026 F1 Drivers Worst Crash of their career (Part 3) #f1 #formula1",
+      "channel": "F1Fanatic",
+      "published": "2026-10-19T17:42:20Z",
+      "thumbnail": "https://i.ytimg.com/vi/PQhXbKv2ES0/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=PQhXbKv2ES0"
     }
   ]
 }
