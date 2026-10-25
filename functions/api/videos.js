@@ -1,7 +1,7 @@
 const OWNER = "nodirbekhonormagicpad2-max";
 const REPO = "F1Uzbekistan";
 const BRANCH = "main";
-const FILE = "x-videos.json";
+const FILE = "facebook-videos.json";
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -68,7 +68,7 @@ async function passwordMatches(given, expected) {
   return difference === 0 && given.length > 0;
 }
 
-function parseXPost(value) {
+function parseFacebookReel(value) {
   let url;
 
   try {
@@ -77,30 +77,70 @@ function parseXPost(value) {
     return null;
   }
 
+  if (url.protocol !== "https:") {
+    return null;
+  }
+
   const host = url.hostname.toLowerCase();
 
   if (
     ![
-      "x.com",
-      "www.x.com",
-      "twitter.com",
-      "www.twitter.com"
+      "facebook.com",
+      "www.facebook.com",
+      "m.facebook.com",
+      "web.facebook.com",
+      "fb.watch"
     ].includes(host)
   ) {
     return null;
   }
 
-  const match = url.pathname.match(
-    /^\/([A-Za-z0-9_]{1,15})\/status\/(\d+)(?:\/.*)?$/
-  );
+  const path = url.pathname;
 
-  if (!match) return null;
+  const isReel =
+    /^\/reel\/[A-Za-z0-9_-]+\/?$/i.test(path) ||
+    /^\/reels\/[A-Za-z0-9_-]+\/?$/i.test(path) ||
+    /^\/share\/r\/[A-Za-z0-9_-]+\/?$/i.test(path);
+
+  if (!isReel) {
+    return null;
+  }
+
+  const cleanURL =
+    `https://www.facebook.com${path.replace(/\/$/, "")}/`;
 
   return {
-    username: match[1],
-    id: match[2],
-    url: `https://x.com/${match[1]}/status/${match[2]}`
+    id: path
+      .replace(/^\/|\/$/g, "")
+      .replace(/\//g, "-"),
+    url: cleanURL
   };
+}
+
+function validThumbnail(value) {
+  if (!value) return true;
+
+  if (value.length > 500) return false;
+
+  const localImage =
+    /^\.\/[A-Za-z0-9_./-]+\.(jpg|jpeg|png|webp)$/i.test(
+      value
+    ) &&
+    !value.includes("..");
+
+  if (localImage) return true;
+
+  try {
+    const url = new URL(value);
+
+    return (
+      url.protocol === "https:" &&
+      !url.username &&
+      !url.password
+    );
+  } catch {
+    return false;
+  }
 }
 
 export async function onRequestPost(context) {
@@ -152,11 +192,12 @@ export async function onRequestPost(context) {
     }, 401);
   }
 
-  const post = parseXPost(body?.url);
+  const post = parseFacebookReel(body?.url);
 
   if (!post) {
     return json({
-      error: "X postining to‘g‘ri havolasini kiriting."
+      error:
+        "Facebook Reels havolasini kiriting. Masalan: https://www.facebook.com/share/r/123/"
     }, 400);
   }
 
@@ -174,46 +215,19 @@ export async function onRequestPost(context) {
     body.thumbnail || ""
   ).trim();
 
-  if (thumbnail.length > 500) {
+  if (!validThumbnail(thumbnail)) {
     return json({
-      error: "Rasm manzili juda uzun."
+      error:
+        "Rasm uchun ./rasm.jpg yoki HTTPS havolasini kiriting."
     }, 400);
-  }
-
-  if (thumbnail) {
-    const localImage =
-      /^\.\/[A-Za-z0-9_./-]+\.(jpg|jpeg|png|webp)$/i.test(
-        thumbnail
-      ) &&
-      !thumbnail.includes("..");
-
-    let remoteImage = false;
-
-    try {
-      const imageURL = new URL(thumbnail);
-
-      remoteImage =
-        imageURL.protocol === "https:" &&
-        !imageURL.username &&
-        !imageURL.password;
-    } catch {
-      remoteImage = false;
-    }
-
-    if (!localImage && !remoteImage) {
-      return json({
-        error:
-          "Rasm uchun ./rasm.jpg yoki HTTPS havolasini kiriting."
-      }, 400);
-    }
   }
 
   const apiURL =
     `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE}`;
 
   const headers = {
-    "Authorization": `Bearer ${env.GITHUB_TOKEN}`,
-    "Accept": "application/vnd.github+json",
+    Authorization: `Bearer ${env.GITHUB_TOKEN}`,
+    Accept: "application/vnd.github+json",
     "X-GitHub-Api-Version": "2022-11-28",
     "User-Agent": "F1-Cinema-Admin"
   };
@@ -224,18 +238,25 @@ export async function onRequestPost(context) {
       { headers }
     );
 
-    if (!currentResponse.ok) {
+    let existing = [];
+    let sha;
+
+    if (currentResponse.status === 404) {
+      existing = [];
+    } else if (currentResponse.ok) {
+      const current = await currentResponse.json();
+
+      sha = current.sha;
+
+      existing = JSON.parse(
+        decodeBase64(current.content)
+      );
+    } else {
       return json({
         error:
-          "GitHub’dan x-videos.json faylini o‘qib bo‘lmadi."
+          "GitHub’dan video ma’lumotlarini o‘qib bo‘lmadi."
       }, 502);
     }
-
-    const current = await currentResponse.json();
-
-    const existing = JSON.parse(
-      decodeBase64(current.content)
-    );
 
     const videos = Array.isArray(existing)
       ? existing
@@ -245,12 +266,14 @@ export async function onRequestPost(context) {
 
     if (!videos) {
       return json({
-        error: "x-videos.json formati noto‘g‘ri."
+        error: "facebook-videos.json formati noto‘g‘ri."
       }, 500);
     }
 
     const duplicate = videos.some(video => {
-      const existingPost = parseXPost(video.url);
+      const existingPost = parseFacebookReel(
+        video.url || ""
+      );
 
       return (
         String(video.id || "") === post.id ||
@@ -260,17 +283,19 @@ export async function onRequestPost(context) {
 
     if (duplicate) {
       return json({
-        error: "Bu X videosi allaqachon qo‘shilgan."
+        error: "Bu Facebook Reels allaqachon qo‘shilgan."
       }, 409);
     }
 
     const newVideo = {
-      platform: "x",
+      platform: "facebook",
+      type: "reel",
       id: post.id,
       url: post.url,
       title_uz: title,
-      channel: `@${post.username}`,
-      published: new Date().toISOString()
+      channel: "Facebook Reels",
+      published: new Date().toISOString(),
+      aspect_ratio: "9:16"
     };
 
     if (thumbnail) {
@@ -283,21 +308,26 @@ export async function onRequestPost(context) {
       ? videos
       : { ...existing, videos };
 
+    const payload = {
+      message:
+        `F1 CINEMA: add Facebook Reel ${post.id}`,
+      content: encodeBase64(
+        JSON.stringify(updated, null, 2) + "\n"
+      ),
+      branch: BRANCH
+    };
+
+    if (sha) {
+      payload.sha = sha;
+    }
+
     const saveResponse = await fetch(apiURL, {
       method: "PUT",
       headers: {
         ...headers,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        message:
-          `F1 CINEMA: add X video ${post.id}`,
-        content: encodeBase64(
-          JSON.stringify(updated, null, 2) + "\n"
-        ),
-        sha: current.sha,
-        branch: BRANCH
-      })
+      body: JSON.stringify(payload)
     });
 
     if (saveResponse.status === 409) {
@@ -315,15 +345,12 @@ export async function onRequestPost(context) {
 
     return json({
       success: true,
-      message: "Video muvaffaqiyatli qo‘shildi!",
+      message: "Facebook Reels muvaffaqiyatli qo‘shildi!",
       video: newVideo
     });
 
   } catch (error) {
-    console.error(
-      "F1 CINEMA ADMIN:",
-      error
-    );
+    console.error("F1 CINEMA ADMIN:", error);
 
     return json({
       error: "Serverda xatolik yuz berdi."
