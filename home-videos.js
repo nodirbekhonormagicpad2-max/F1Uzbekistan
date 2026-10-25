@@ -1,4 +1,3 @@
-
 (()=>{
 'use strict';
 
@@ -16,7 +15,8 @@ const X_VIDEOS=[
     url:'https://x.com/verstoppen3/status/2114036757406601436',
     title_uz:'🏎️ Maks Verstappen — qiziqarli lavha',
     channel:'kai · @verstoppen3',
-    published:'2026-10-24T00:00:00Z'
+    published:'2026-10-24T00:00:00Z',
+    thumbnail:'./verstappen-x.jpg'
   }
 ];
 
@@ -597,7 +597,11 @@ function title(v){
 function image(v){
   const u=v.thumbnail||v.thumbnail_url||v.thumbnailUrl;
 
-  if(typeof u==='string'&&/^https:\/\//i.test(u)){
+  // HTTPS rasmlar va sayt ichidagi ./rasm.jpg fayllari.
+  if(
+    typeof u==='string'&&
+    (/^https:\/\//i.test(u)||/^\.\//.test(u))
+  ){
     return u;
   }
 
