@@ -1,6 +1,16 @@
 [
   {
     "platform": "upload",
+    "id": "731166df-ea79-4b05-9a38-bf411264ede5",
+    "url": "/api/media/videos/731166df-ea79-4b05-9a38-bf411264ede5.mp4",
+    "video_url": "/api/media/videos/731166df-ea79-4b05-9a38-bf411264ede5.mp4",
+    "title_uz": "Driver of the day",
+    "channel": "F1 Uzbekistan TV",
+    "aspect_ratio": "9:16",
+    "published": "2026-10-25T22:07:47.089Z"
+  },
+  {
+    "platform": "upload",
     "id": "97ef3176-fc76-42d8-8db2-c4b81fdfc698",
     "url": "/api/media/videos/97ef3176-fc76-42d8-8db2-c4b81fdfc698.mp4",
     "video_url": "/api/media/videos/97ef3176-fc76-42d8-8db2-c4b81fdfc698.mp4",
