@@ -1,8 +1,8 @@
 "use strict";
 
 const MAX_VIDEO_SIZE = 1024 * 1024 * 1024;
-const PART_SIZE = 10 * 1024 * 1024;
-const MAX_PARTS = 100;
+const PART_SIZE = 5 * 1024 * 1024;
+const MAX_PARTS = 205;
 
 const ALLOWED_TYPES = {
   mp4: "video/mp4",
@@ -111,9 +111,7 @@ function encodeBase64(text) {
 }
 
 function decodeBase64(base64) {
-  const binary = atob(
-    base64.replace(/\s/g, "")
-  );
+  const binary = atob(base64.replace(/\s/g, ""));
 
   return new TextDecoder().decode(
     Uint8Array.from(
@@ -146,7 +144,7 @@ async function saveToGitHub(env, video) {
   let sha;
 
   if (currentResponse.status === 404) {
-    // Birinchi video: yangi JSON fayl yaratiladi.
+    // Fayl hali mavjud emas.
   } else if (currentResponse.ok) {
     const current = await currentResponse.json();
 
@@ -173,7 +171,6 @@ async function saveToGitHub(env, video) {
     );
   }
 
-  // Bir xil videoni takroran qo‘shmaymiz.
   if (videos.some(item => item.id === video.id)) {
     return;
   }
@@ -208,6 +205,14 @@ async function saveToGitHub(env, video) {
   }
 }
 
+async function readJSON(request) {
+  try {
+    return await request.json();
+  } catch {
+    return null;
+  }
+}
+
 export async function onRequestPost({ request, env }) {
   if (
     !env.ADMIN_PASSWORD ||
@@ -222,34 +227,34 @@ export async function onRequestPost({ request, env }) {
     }, 503);
   }
 
-  let body;
+  const url = new URL(request.url);
+  const action = url.searchParams.get("action");
 
   try {
-    body = await request.json();
-  } catch {
-    return json({
-      success: false,
-      error: "JSON ma’lumot noto‘g‘ri."
-    }, 400);
-  }
+    // =====================================
+    // 1. VIDEO YUKLASHNI BOSHLASH
+    // =====================================
 
-  const authorized = await passwordMatches(
-    body.password,
-    env.ADMIN_PASSWORD
-  );
-
-  if (!authorized) {
-    return json({
-      success: false,
-      error: "Admin paroli noto‘g‘ri."
-    }, 401);
-  }
-
-  const action = String(body.action || "");
-
-  try {
-    // 1. Multipart yuklashni boshlash
     if (action === "init") {
+      const body = await readJSON(request);
+
+      if (!body) {
+        return json({
+          success: false,
+          error: "JSON ma’lumot noto‘g‘ri."
+        }, 400);
+      }
+
+      if (!await passwordMatches(
+        body.password,
+        env.ADMIN_PASSWORD
+      )) {
+        return json({
+          success: false,
+          error: "Admin paroli noto‘g‘ri."
+        }, 401);
+      }
+
       const extension = String(
         body.extension || ""
       ).toLowerCase();
@@ -259,7 +264,7 @@ export async function onRequestPost({ request, env }) {
       if (!ALLOWED_TYPES[extension]) {
         return json({
           success: false,
-          error: "Faqat MP4 va WebM qo‘llab-quvvatlanadi."
+          error: "Faqat MP4 va WebM yuklash mumkin."
         }, 400);
       }
 
@@ -278,16 +283,20 @@ export async function onRequestPost({ request, env }) {
         body.title_uz || ""
       ).trim();
 
-      if (!title || title.length > 160) {
-        return json({
-          success: false,
-          error: "Video nomi 1–160 belgi bo‘lishi kerak."
-        }, 400);
-      }
-
       const thumbnail = String(
         body.thumbnail || ""
       ).trim();
+
+      const aspectRatio = String(
+        body.aspect_ratio || "16:9"
+      );
+
+      if (!title || title.length > 160) {
+        return json({
+          success: false,
+          error: "Video nomi noto‘g‘ri."
+        }, 400);
+      }
 
       if (!validThumbnail(thumbnail)) {
         return json({
@@ -295,10 +304,6 @@ export async function onRequestPost({ request, env }) {
           error: "Muqova rasmi havolasi noto‘g‘ri."
         }, 400);
       }
-
-      const aspectRatio = String(
-        body.aspect_ratio || "16:9"
-      );
 
       if (!["9:16", "16:9"].includes(aspectRatio)) {
         return json({
@@ -316,6 +321,9 @@ export async function onRequestPost({ request, env }) {
           {
             httpMetadata: {
               contentType: ALLOWED_TYPES[extension]
+            },
+            customMetadata: {
+              expectedSize: String(size)
             }
           }
         );
@@ -330,11 +338,31 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    // 2. Bitta video qismini yuklash
+    // =====================================
+    // 2. BINAR VIDEO QISMINI YUKLASH
+    // =====================================
+
     if (action === "part") {
-      const key = body.key;
-      const uploadId = body.uploadId;
-      const partNumber = Number(body.partNumber);
+      const key = request.headers.get("X-Upload-Key");
+      const uploadId =
+        request.headers.get("X-Upload-Id");
+
+      const partNumber = Number(
+        request.headers.get("X-Part-Number")
+      );
+
+      const adminPassword =
+        request.headers.get("X-Admin-Password");
+
+      if (!await passwordMatches(
+        adminPassword,
+        env.ADMIN_PASSWORD
+      )) {
+        return json({
+          success: false,
+          error: "Admin paroli noto‘g‘ri."
+        }, 401);
+      }
 
       if (
         !validKey(key) ||
@@ -349,33 +377,31 @@ export async function onRequestPost({ request, env }) {
         }, 400);
       }
 
+      const contentLength = Number(
+        request.headers.get("Content-Length")
+      );
+
       if (
-        typeof body.data !== "string" ||
-        !body.data
+        Number.isFinite(contentLength) &&
+        contentLength > PART_SIZE
       ) {
         return json({
           success: false,
-          error: "Video qismi yuborilmagan."
-        }, 400);
+          error: "Video qismi 5 MB dan katta."
+        }, 413);
       }
 
-      // Base64 ko‘rinishidagi qismni tiklash.
-      const binary = atob(body.data);
+      const buffer = await request.arrayBuffer();
 
       if (
-        binary.length === 0 ||
-        binary.length > PART_SIZE
+        buffer.byteLength === 0 ||
+        buffer.byteLength > PART_SIZE
       ) {
         return json({
           success: false,
           error: "Video qismi hajmi noto‘g‘ri."
         }, 413);
       }
-
-      const bytes = Uint8Array.from(
-        binary,
-        char => char.charCodeAt(0)
-      );
 
       const upload =
         env.VIDEO_BUCKET.resumeMultipartUpload(
@@ -385,7 +411,7 @@ export async function onRequestPost({ request, env }) {
 
       const part = await upload.uploadPart(
         partNumber,
-        bytes
+        buffer
       );
 
       return json({
@@ -395,8 +421,30 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    // 3. Barcha qismlarni birlashtirish
+    // =====================================
+    // 3. VIDEONI YAKUNLASH
+    // =====================================
+
     if (action === "complete") {
+      const body = await readJSON(request);
+
+      if (!body) {
+        return json({
+          success: false,
+          error: "JSON ma’lumot noto‘g‘ri."
+        }, 400);
+      }
+
+      if (!await passwordMatches(
+        body.password,
+        env.ADMIN_PASSWORD
+      )) {
+        return json({
+          success: false,
+          error: "Admin paroli noto‘g‘ri."
+        }, 401);
+      }
+
       const key = body.key;
       const uploadId = body.uploadId;
       const parts = body.parts;
@@ -479,7 +527,18 @@ export async function onRequestPost({ request, env }) {
           uploadId
         );
 
-      await upload.complete(normalizedParts);
+      const object = await upload.complete(
+        normalizedParts
+      );
+
+      if (object.size > MAX_VIDEO_SIZE) {
+        await env.VIDEO_BUCKET.delete(key);
+
+        return json({
+          success: false,
+          error: "Video 1 GB dan katta."
+        }, 413);
+      }
 
       const id = key.split("/")[1].split(".")[0];
 
@@ -506,27 +565,46 @@ export async function onRequestPost({ request, env }) {
         return json({
           success: false,
           error:
-            "Video R2’ga yuklandi, lekin GitHub " +
-            "ro‘yxatiga yozilmadi. Qayta " +
-            "yuklashdan oldin tekshiring."
+            "Video R2 ga yuklandi, ammo GitHub " +
+            "ro‘yxatiga yozilmadi. " +
+            "Qayta yuklashdan oldin tekshiring."
         }, 502);
       }
 
       return json({
         success: true,
-        message: "Katta video muvaffaqiyatli yuklandi!",
+        message: "Video muvaffaqiyatli yuklandi!",
         video
       });
     }
 
-    // 4. Tugallanmagan yuklashni bekor qilish
+    // =====================================
+    // 4. YUKLASHNI BEKOR QILISH
+    // =====================================
+
     if (action === "abort") {
-      const key = body.key;
-      const uploadId = body.uploadId;
+      const body = await readJSON(request);
+
+      if (!body) {
+        return json({
+          success: false,
+          error: "JSON ma’lumot noto‘g‘ri."
+        }, 400);
+      }
+
+      if (!await passwordMatches(
+        body.password,
+        env.ADMIN_PASSWORD
+      )) {
+        return json({
+          success: false,
+          error: "Admin paroli noto‘g‘ri."
+        }, 401);
+      }
 
       if (
-        !validKey(key) ||
-        !validUploadId(uploadId)
+        !validKey(body.key) ||
+        !validUploadId(body.uploadId)
       ) {
         return json({
           success: false,
@@ -536,8 +614,8 @@ export async function onRequestPost({ request, env }) {
 
       const upload =
         env.VIDEO_BUCKET.resumeMultipartUpload(
-          key,
-          uploadId
+          body.key,
+          body.uploadId
         );
 
       await upload.abort();
