@@ -19,7 +19,6 @@ time { display: block; color: #aaa; font-size: 13px; }
 .hero { display: block; width: 100%; max-height: 460px; object-fit: cover; border-radius: 14px; margin: 24px 0; background: #171717; }
 .article-content { margin-top: 25px; color: #e5e5e5; font-size: 17px; line-height: 1.85; overflow-wrap: anywhere; }
 .article-content p { margin: 0 0 22px; }
-.article-content h2 { font-size: 23px; line-height: 1.4; color: #fff; margin: 30px 0 15px; }
 .notice { margin-top: 25px; padding: 20px; background: #171717; border: 1px solid #333; border-radius: 12px; color: #ddd; line-height: 1.7; }
 .error { color: #ff7772; font-size: 16px; line-height: 1.6; }
 footer { text-align: center; padding: 25px 15px; border-top: 1px solid #222; color: #888; font-size: 12px; }
@@ -57,21 +56,22 @@ footer span { color: #e10600; font-weight: 900; }
   function cleanArticleText(value) {
     if (typeof value !== "string") return "";
     let text = value.replace(/\s+/g, " ").trim();
+    if (!text) return "";
 
-    // RSS parchalari oxiridagi 'davom eting' yozuvlarini olib tashlash.
-    // Tarjima qilingan matnda bu yozuv bir nechta shaklda uchrashi mumkin.
-    const continuation = /(?:O['‘’`]qishda davom eting|O['‘’`]qishni davom eting|O['‘’`]qishni davom ettiring|Read more|Continue reading|Read the full story)/i;
+    // RSS manbalaridagi davom ettirish yozuvlarini (tarjimalari bilan) olib tashlash.
+    const continuation = /(?:o['‘’`]?qishda davom eting|o['‘’`]?qishni davom eting|o['‘’`]?qishni davom ettiring|kirish so['‘’`]?zidan keyin|read more|continue reading|read the full story|read more after the intro|davomini o['‘’`]?qing)/i;
     const match = continuation.exec(text);
     if (match) text = text.slice(0, match.index).trim();
 
     text = text.replace(/\s*(?:\.{2,}|…)\s*$/, "").trim();
+    if (!text) return "";
 
-    // Oxirgi jumla chala qolgan bo'lsa, faqat tugallangan jumlalarni ko'rsatish.
-    // Hech qanday tugallangan jumla bo'lmasa, matnni butunlay yo'qotmaymiz.
-    if (text && !/[.!?]["'»”’)]?$/.test(text)) {
-      const matches = [...text.matchAll(/[.!?](?=\s|$)/g)];
-      if (matches.length) {
-        const last = matches[matches.length - 1];
+    // Gap o'rtasida uzilgan RSS parchasining oxirgi qismini yashirish.
+    // Faqat aniq gap yakuni mavjud bo'lsa qisqartiramiz.
+    if (!/[.!?]["'»”’)]?$/.test(text)) {
+      const endings = [...text.matchAll(/[.!?](?=\s|$)/g)];
+      if (endings.length) {
+        const last = endings[endings.length - 1];
         text = text.slice(0, last.index + 1).trim();
       }
     }
