@@ -7,9 +7,7 @@
   <title>F1 CINEMA | Admin</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -34,9 +32,7 @@
       font-size: 26px;
     }
 
-    .red {
-      color: #ff303e;
-    }
+    .red { color: #ff303e; }
 
     p {
       color: #aeb5c1;
@@ -66,9 +62,7 @@
       border-color: #ff303e;
     }
 
-    input[type="file"] {
-      padding: 12px;
-    }
+    input[type="file"] { padding: 12px; }
 
     button {
       width: 100%;
@@ -100,22 +94,15 @@
       overflow-wrap: anywhere;
     }
 
-    .success {
-      color: #56e7a0;
-    }
-
-    .error {
-      color: #ff737d;
-    }
+    .success { color: #56e7a0; }
+    .error { color: #ff737d; }
 
     .hint {
       font-size: 13px;
       color: #aeb5c1;
     }
 
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
 
     .preview {
       margin-top: 14px;
@@ -140,923 +127,821 @@
       white-space: pre-wrap;
     }
 
-    a {
-      color: #ff737d;
-    }
+    a { color: #ff737d; }
   </style>
 </head>
 
 <body>
 
-  <div class="box">
+<div class="box">
 
-    <h1>
-      🏎️ <span class="red">F1 CINEMA</span> ADMIN
-    </h1>
+  <h1>🏎️ <span class="red">F1 CINEMA</span> ADMIN</h1>
 
-    <p>
-      Facebook Reels qo‘shing yoki
-      telefoningizdan 1 GB gacha video yuklang.
-    </p>
+  <p>
+    Facebook videosini qo‘shing yoki
+    telefoningizdan 1 GB gacha video yuklang.
+  </p>
 
-    <form id="videoForm">
+  <form id="videoForm">
 
-      <label for="password">
-        🔐 Admin paroli
+    <label for="password">🔐 Admin paroli</label>
+
+    <input
+      id="password"
+      type="password"
+      autocomplete="current-password"
+      required
+      placeholder="Admin parolingiz"
+    >
+
+    <label for="platform">🎬 Video turi</label>
+
+    <select id="platform">
+      <option value="facebook">
+        🔵 Facebook video / Reels
+      </option>
+
+      <option value="upload">
+        🟢 O‘z videomni yuklash
+      </option>
+    </select>
+
+    <div id="facebookFields">
+
+      <label for="url">🔗 Facebook video havolasi</label>
+
+      <input
+        id="url"
+        type="url"
+        placeholder="https://www.facebook.com/share/v/..."
+        required
+      >
+
+      <p class="hint">
+        Reel, share/r, share/v yoki Facebook Watch
+        havolasini kiriting. Ayrim videolar boshqa
+        saytlarda ochilmasligi mumkin.
+      </p>
+
+    </div>
+
+    <div id="uploadFields" class="hidden">
+
+      <label for="videoFile">
+        📱 Telefondan video tanlang
       </label>
 
       <input
-        id="password"
-        type="password"
-        autocomplete="current-password"
-        required
-        placeholder="Admin parolingiz"
+        id="videoFile"
+        type="file"
+        accept="video/mp4,video/webm,.mp4,.webm"
       >
 
-      <label for="platform">
-        🎬 Video turi
-      </label>
+      <p class="hint">
+        MP4 yoki WebM. Maksimal hajm: 1 GB.
+        Video 5 MB lik qismlarga bo‘lib yuklanadi.
+        Yuklash davomida sahifani yopmang.
+      </p>
 
-      <select id="platform">
-        <option value="facebook">
-          🔵 Facebook Reels (9:16)
+      <video
+        id="videoPreview"
+        class="preview hidden"
+        controls
+        playsinline
+        preload="metadata"
+      ></video>
+
+      <label for="aspectRatio">📐 Video formati</label>
+
+      <select id="aspectRatio">
+        <option value="9:16">
+          📱 9:16 — Reels / TikTok
         </option>
 
-        <option value="upload">
-          🟢 O‘z videomni yuklash
+        <option value="16:9">
+          🖥️ 16:9 — Oddiy video
         </option>
       </select>
 
-      <!-- FACEBOOK REELS -->
+    </div>
 
-      <div id="facebookFields">
+    <label for="title">📝 Video nomi</label>
 
-        <label for="url">
-          🔗 Facebook Reels havolasi
-        </label>
+    <input
+      id="title"
+      type="text"
+      maxlength="160"
+      required
+      placeholder="Formula 1 — qiziqarli lavha"
+    >
 
-        <input
-          id="url"
-          type="url"
-          placeholder="https://www.facebook.com/reel/..."
-          required
-        >
+    <label for="thumbnail">
+      🖼️ Muqova rasmi URL (ixtiyoriy)
+    </label>
 
-        <p class="hint">
-          Ommaviy Facebook Reels havolasini kiriting.
-          Ayrim videolar tashqi saytlarda ochilmasligi mumkin.
-        </p>
+    <input
+      id="thumbnail"
+      type="text"
+      maxlength="500"
+      placeholder="https://... yoki ./rasm.jpg"
+    >
 
-      </div>
+    <button id="submitBtn" type="submit">
+      ➕ VIDEO QO‘SHISH
+    </button>
 
-      <!-- VIDEO UPLOAD -->
-
-      <div id="uploadFields" class="hidden">
-
-        <label for="videoFile">
-          📱 Telefondan video tanlang
-        </label>
-
-        <input
-          id="videoFile"
-          type="file"
-          accept="video/mp4,video/webm,.mp4,.webm"
-        >
-
-        <p class="hint">
-          MP4 yoki WebM. Maksimal hajm: 1 GB.
-          Video 5 MB lik qismlarga bo‘lib yuklanadi.
-          Yuklash davomida sahifani yopmang.
-        </p>
-
-        <video
-          id="videoPreview"
-          class="preview hidden"
-          controls
-          playsinline
-          preload="metadata"
-        ></video>
-
-        <label for="aspectRatio">
-          📐 Video formati
-        </label>
-
-        <select id="aspectRatio">
-
-          <option value="9:16">
-            📱 9:16 — Reels / TikTok
-          </option>
-
-          <option value="16:9">
-            🖥️ 16:9 — Oddiy video
-          </option>
-
-        </select>
-
-      </div>
-
-      <!-- COMMON FIELDS -->
-
-      <label for="title">
-        📝 Video nomi
-      </label>
-
-      <input
-        id="title"
-        type="text"
-        maxlength="160"
-        required
-        placeholder="Formula 1 — qiziqarli lavha"
-      >
-
-      <label for="thumbnail">
-        🖼️ Muqova rasmi URL (ixtiyoriy)
-      </label>
-
-      <input
-        id="thumbnail"
-        type="text"
-        maxlength="500"
-        placeholder="https://... yoki ./rasm.jpg"
-      >
-
-      <button id="submitBtn" type="submit">
-        ➕ VIDEO QO‘SHISH
-      </button>
-
-      <button
-        id="cancelBtn"
-        type="button"
-        class="hidden"
-      >
-        ✕ Yuklashni bekor qilish
-      </button>
-
-    </form>
-
-    <progress
-      id="uploadProgress"
+    <button
+      id="cancelBtn"
+      type="button"
       class="hidden"
-      max="100"
-      value="0"
-    ></progress>
+    >
+      ✕ Yuklashni bekor qilish
+    </button>
 
-    <div id="progressText" class="hidden"></div>
+  </form>
 
-    <div
-      id="message"
-      role="status"
-      aria-live="polite"
-    ></div>
+  <progress
+    id="uploadProgress"
+    class="hidden"
+    max="100"
+    value="0"
+  ></progress>
 
-    <p>
-      <a href="/">
-        ← Bosh sahifaga qaytish
-      </a>
-    </p>
+  <div id="progressText" class="hidden"></div>
 
-  </div>
+  <div
+    id="message"
+    role="status"
+    aria-live="polite"
+  ></div>
 
-  <script>
-    "use strict";
+  <p>
+    <a href="/">← Bosh sahifaga qaytish</a>
+  </p>
 
-    const MAX_SIZE = 1024 * 1024 * 1024;
-    const DEFAULT_PART_SIZE = 5 * 1024 * 1024;
-    const MAX_RETRIES = 3;
+</div>
 
-    const form =
-      document.getElementById("videoForm");
+<script>
+"use strict";
 
-    const button =
-      document.getElementById("submitBtn");
+const MAX_SIZE = 1024 * 1024 * 1024;
+const DEFAULT_PART_SIZE = 5 * 1024 * 1024;
+const MAX_RETRIES = 3;
 
-    const cancelBtn =
-      document.getElementById("cancelBtn");
+const form = document.getElementById("videoForm");
+const button = document.getElementById("submitBtn");
+const cancelBtn = document.getElementById("cancelBtn");
+const message = document.getElementById("message");
+const platform = document.getElementById("platform");
 
-    const message =
-      document.getElementById("message");
+const facebookFields =
+  document.getElementById("facebookFields");
 
-    const platform =
-      document.getElementById("platform");
+const uploadFields =
+  document.getElementById("uploadFields");
 
-    const facebookFields =
-      document.getElementById("facebookFields");
+const urlInput = document.getElementById("url");
+const videoFile = document.getElementById("videoFile");
+const videoPreview = document.getElementById("videoPreview");
+const aspectRatio = document.getElementById("aspectRatio");
 
-    const uploadFields =
-      document.getElementById("uploadFields");
+const uploadProgress =
+  document.getElementById("uploadProgress");
 
-    const urlInput =
-      document.getElementById("url");
+const progressText =
+  document.getElementById("progressText");
 
-    const videoFile =
-      document.getElementById("videoFile");
+const password = document.getElementById("password");
+const titleInput = document.getElementById("title");
+const thumbnailInput = document.getElementById("thumbnail");
 
-    const videoPreview =
-      document.getElementById("videoPreview");
+let previewURL = null;
+let uploading = false;
+let cancelRequested = false;
+let activeController = null;
+let currentUpload = null;
 
-    const aspectRatio =
-      document.getElementById("aspectRatio");
+function showMessage(text, type = "") {
+  message.textContent = text;
+  message.className = type;
+}
 
-    const uploadProgress =
-      document.getElementById("uploadProgress");
+function setProgress(percent, detail = "") {
+  const safePercent = Math.max(
+    0,
+    Math.min(100, Math.round(percent))
+  );
 
-    const progressText =
-      document.getElementById("progressText");
+  uploadProgress.value = safePercent;
+  uploadProgress.classList.remove("hidden");
 
-    const password =
-      document.getElementById("password");
+  progressText.textContent =
+    "📊 Yuklandi: " +
+    safePercent +
+    "%" +
+    (detail ? "\n" + detail : "");
 
-    const titleInput =
-      document.getElementById("title");
+  progressText.classList.remove("hidden");
+}
 
-    const thumbnailInput =
-      document.getElementById("thumbnail");
+function updateMode() {
+  const isUpload = platform.value === "upload";
 
-    let previewURL = null;
+  facebookFields.classList.toggle("hidden", isUpload);
+  uploadFields.classList.toggle("hidden", !isUpload);
 
-    let uploading = false;
-    let cancelRequested = false;
-    let activeController = null;
-    let currentUpload = null;
+  urlInput.required = !isUpload;
+  videoFile.required = isUpload;
 
-    function showMessage(text, type = "") {
-      message.textContent = text;
-      message.className = type;
-    }
+  button.textContent = isUpload
+    ? "⬆️ VIDEO YUKLASH"
+    : "➕ VIDEO QO‘SHISH";
 
-    function setProgress(percent, detail = "") {
-      const safePercent = Math.max(
-        0,
-        Math.min(100, Math.round(percent))
-      );
+  uploadProgress.classList.add("hidden");
+  progressText.classList.add("hidden");
 
-      uploadProgress.value = safePercent;
-      uploadProgress.classList.remove("hidden");
+  showMessage("");
+}
 
-      progressText.textContent =
-        "📊 Yuklandi: " +
-        safePercent +
-        "%" +
-        (detail ? "\n" + detail : "");
+platform.addEventListener("change", updateMode);
+updateMode();
 
-      progressText.classList.remove("hidden");
-    }
+function clearPreview() {
+  videoPreview.pause();
+  videoPreview.removeAttribute("src");
+  videoPreview.load();
+  videoPreview.classList.add("hidden");
 
-    function updateMode() {
-      const isUpload = platform.value === "upload";
+  if (previewURL) {
+    URL.revokeObjectURL(previewURL);
+    previewURL = null;
+  }
+}
 
-      facebookFields.classList.toggle(
-        "hidden",
-        isUpload
-      );
+videoFile.addEventListener("change", () => {
+  clearPreview();
 
-      uploadFields.classList.toggle(
-        "hidden",
-        !isUpload
-      );
+  const file = videoFile.files[0];
 
-      urlInput.required = !isUpload;
-      videoFile.required = isUpload;
+  if (!file) return;
 
-      button.textContent = isUpload
-        ? "⬆️ VIDEO YUKLASH"
-        : "➕ VIDEO QO‘SHISH";
+  previewURL = URL.createObjectURL(file);
 
-      uploadProgress.classList.add("hidden");
-      progressText.classList.add("hidden");
+  videoPreview.src = previewURL;
+  videoPreview.classList.remove("hidden");
+  videoPreview.load();
 
-      showMessage("");
-    }
+  const sizeMB = (file.size / 1024 / 1024).toFixed(1);
 
-    platform.addEventListener(
-      "change",
-      updateMode
+  showMessage(
+    "📹 Tanlangan video: " +
+    file.name +
+    "\nHajmi: " +
+    sizeMB +
+    " MB"
+  );
+
+  if (file.size > MAX_SIZE) {
+    showMessage(
+      "❌ Video 1 GB dan katta. Kichikroq video tanlang.",
+      "error"
     );
+  }
+});
 
-    updateMode();
+/*
+ * FACEBOOK HAVOLASINI TEKSHIRISH
+ *
+ * Qo‘llab-quvvatlanadi:
+ * /reel/...
+ * /reels/...
+ * /share/r/...
+ * /share/v/...
+ * /watch/?v=...
+ * /USERNAME/videos/123...
+ * /videos/123...
+ */
 
-    function clearPreview() {
-      videoPreview.pause();
-      videoPreview.removeAttribute("src");
-      videoPreview.load();
-      videoPreview.classList.add("hidden");
+function validFacebookURL(value) {
+  try {
+    const url = new URL(value.trim());
 
-      if (previewURL) {
-        URL.revokeObjectURL(previewURL);
-        previewURL = null;
-      }
+    const hosts = [
+      "facebook.com",
+      "www.facebook.com",
+      "m.facebook.com",
+      "web.facebook.com"
+    ];
+
+    if (
+      url.protocol !== "https:" ||
+      !hosts.includes(url.hostname.toLowerCase())
+    ) {
+      return false;
     }
 
-    videoFile.addEventListener("change", () => {
-      clearPreview();
+    const path = url.pathname;
 
-      const file = videoFile.files[0];
+    if (
+      /^\/(?:reel|reels)\/[A-Za-z0-9_-]+\/?$/i.test(path)
+    ) {
+      return true;
+    }
 
-      if (!file) {
-        return;
-      }
+    if (
+      /^\/share\/(?:r|v)\/[A-Za-z0-9_-]+\/?$/i.test(path)
+    ) {
+      return true;
+    }
 
-      previewURL = URL.createObjectURL(file);
+    if (
+      /^\/watch\/?$/i.test(path) &&
+      /^[0-9]+$/.test(url.searchParams.get("v") || "")
+    ) {
+      return true;
+    }
 
-      videoPreview.src = previewURL;
-      videoPreview.classList.remove("hidden");
-      videoPreview.load();
+    if (
+      /^\/(?:[^/]+\/)?videos\/[0-9]+\/?$/i.test(path)
+    ) {
+      return true;
+    }
 
-      const sizeMB = (
-        file.size / 1024 / 1024
-      ).toFixed(1);
+    return false;
 
-      showMessage(
-        "📹 Tanlangan video: " +
-        file.name +
-        "\nHajmi: " +
-        sizeMB +
-        " MB"
+  } catch {
+    return false;
+  }
+}
+
+async function parseResponse(response) {
+  const contentType =
+    response.headers.get("content-type") || "";
+
+  if (!contentType.includes("application/json")) {
+    throw new Error(
+      "Server JSON javob qaytarmadi. " +
+      "HTTP: " +
+      response.status +
+      ". Cloudflare funksiyasini tekshiring."
+    );
+  }
+
+  const result = await response.json();
+
+  if (!response.ok || !result.success) {
+    throw new Error(
+      result.error ||
+      "Serverda xatolik yuz berdi. HTTP: " +
+      response.status
+    );
+  }
+
+  return result;
+}
+
+async function apiRequest(action, body, signal) {
+  const response = await fetch(
+    "/api/multipart?action=" +
+    encodeURIComponent(action),
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body),
+      cache: "no-store",
+      signal
+    }
+  );
+
+  return parseResponse(response);
+}
+
+async function addFacebookVideo() {
+  const url = urlInput.value.trim();
+
+  if (!validFacebookURL(url)) {
+    throw new Error(
+      "Facebook havolasini to‘g‘ri kiriting. " +
+      "Reel, share/r, share/v yoki watch havolasi bo‘lishi kerak."
+    );
+  }
+
+  const response = await fetch("/api/videos", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-store"
+    },
+    body: JSON.stringify({
+      platform: "facebook",
+      password: password.value,
+      url,
+      title_uz: titleInput.value.trim(),
+      thumbnail: thumbnailInput.value.trim()
+    }),
+    cache: "no-store"
+  });
+
+  await parseResponse(response);
+
+  showMessage(
+    "✅ Facebook videosi muvaffaqiyatli saqlandi!\n" +
+    "F1 CINEMA’da ko‘rinishi uchun video " +
+    "tasdiqlangan bo‘lishi kerak.",
+    "success"
+  );
+
+  urlInput.value = "";
+  titleInput.value = "";
+  thumbnailInput.value = "";
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function uploadBinaryPart(
+  upload,
+  adminPassword,
+  partNumber,
+  blob,
+  totalParts
+) {
+  let lastError = null;
+
+  for (
+    let attempt = 1;
+    attempt <= MAX_RETRIES;
+    attempt++
+  ) {
+    if (cancelRequested) {
+      throw new Error("Yuklash bekor qilindi.");
+    }
+
+    const controller = new AbortController();
+    activeController = controller;
+
+    try {
+      setProgress(
+        ((partNumber - 1) / totalParts) * 100,
+        "📦 " +
+        partNumber +
+        "/" +
+        totalParts +
+        " qism yuborilmoqda..." +
+        (
+          attempt > 1
+            ? "\n🔄 Qayta urinish: " +
+              attempt +
+              "/" +
+              MAX_RETRIES
+            : ""
+        )
       );
 
-      if (file.size > MAX_SIZE) {
-        showMessage(
-          "❌ Video 1 GB dan katta. " +
-          "Kichikroq video tanlang.",
-          "error"
-        );
-      }
-    });
-
-    function validFacebookURL(value) {
-      try {
-        const url = new URL(value);
-
-        const hosts = [
-          "facebook.com",
-          "www.facebook.com",
-          "m.facebook.com",
-          "web.facebook.com"
-        ];
-
-        if (
-          url.protocol !== "https:" ||
-          !hosts.includes(url.hostname.toLowerCase())
-        ) {
-          return false;
-        }
-
-        return (
-          /^\/(?:reel|reels)\/[A-Za-z0-9_-]+\/?$/i
-            .test(url.pathname) ||
-          /^\/share\/r\/[A-Za-z0-9_-]+\/?$/i
-            .test(url.pathname)
-        );
-
-      } catch {
-        return false;
-      }
-    }
-
-    async function parseResponse(response) {
-      const contentType =
-        response.headers.get("content-type") || "";
-
-      if (!contentType.includes("application/json")) {
-        throw new Error(
-          "Server JSON javob qaytarmadi. " +
-          "HTTP: " + response.status +
-          ". Cloudflare funksiyasini tekshiring."
-        );
-      }
-
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(
-          result.error ||
-          "Serverda xatolik yuz berdi. " +
-          "HTTP: " + response.status
-        );
-      }
-
-      return result;
-    }
-
-    async function apiRequest(
-      action,
-      body,
-      signal
-    ) {
       const response = await fetch(
-        "/api/multipart?action=" +
-        encodeURIComponent(action),
+        "/api/multipart?action=part",
         {
           method: "POST",
 
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/octet-stream",
+            "X-Admin-Password": adminPassword,
+            "X-Upload-Key": upload.key,
+            "X-Upload-Id": upload.uploadId,
+            "X-Part-Number": String(partNumber)
           },
 
-          body: JSON.stringify(body),
-
+          body: blob,
           cache: "no-store",
-
-          signal
+          signal: controller.signal
         }
       );
 
-      return parseResponse(response);
-    }
+      const result = await parseResponse(response);
 
-    async function addFacebookVideo() {
-      const url = urlInput.value.trim();
-
-      if (!validFacebookURL(url)) {
-        throw new Error(
-          "Facebook Reels havolasini to‘g‘ri kiriting."
-        );
-      }
-
-      const response = await fetch("/api/videos", {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-          "Cache-Control": "no-store"
-        },
-
-        body: JSON.stringify({
-          platform: "facebook",
-          password: password.value,
-          url,
-          title_uz: titleInput.value.trim(),
-          thumbnail: thumbnailInput.value.trim()
-        })
-      });
-
-      await parseResponse(response);
-
-      showMessage(
-        "✅ Facebook Reels muvaffaqiyatli saqlandi!\n" +
-        "F1 CINEMA yangilangach video ko‘rinadi.",
-        "success"
-      );
-
-      urlInput.value = "";
-      titleInput.value = "";
-      thumbnailInput.value = "";
-    }
-
-    function sleep(ms) {
-      return new Promise(resolve =>
-        setTimeout(resolve, ms)
-      );
-    }
-
-    async function uploadBinaryPart(
-      upload,
-      adminPassword,
-      partNumber,
-      blob,
-      totalParts
-    ) {
-      let lastError = null;
-
-      for (
-        let attempt = 1;
-        attempt <= MAX_RETRIES;
-        attempt++
-      ) {
-        if (cancelRequested) {
-          throw new Error(
-            "Yuklash bekor qilindi."
-          );
-        }
-
-        const controller = new AbortController();
-        activeController = controller;
-
-        try {
-          setProgress(
-            ((partNumber - 1) / totalParts) * 100,
-            "📦 " +
-            partNumber +
-            "/" +
-            totalParts +
-            " qism yuborilmoqda..." +
-            (
-              attempt > 1
-                ? "\n🔄 Qayta urinish: " +
-                  attempt +
-                  "/" +
-                  MAX_RETRIES
-                : ""
-            )
-          );
-
-          // MUHIM:
-          // Base64 ishlatilmaydi.
-          // Video qismi to‘g‘ridan-to‘g‘ri
-          // binar ma’lumot sifatida yuboriladi.
-
-          const response = await fetch(
-            "/api/multipart?action=part",
-            {
-              method: "POST",
-
-              headers: {
-                "Content-Type":
-                  "application/octet-stream",
-
-                "X-Admin-Password":
-                  adminPassword,
-
-                "X-Upload-Key":
-                  upload.key,
-
-                "X-Upload-Id":
-                  upload.uploadId,
-
-                "X-Part-Number":
-                  String(partNumber)
-              },
-
-              body: blob,
-
-              cache: "no-store",
-
-              signal: controller.signal
-            }
-          );
-
-          const result = await parseResponse(
-            response
-          );
-
-          return {
-            partNumber: Number(
-              result.partNumber
-            ),
-            etag: result.etag
-          };
-
-        } catch (error) {
-          lastError = error;
-
-          if (cancelRequested) {
-            throw new Error(
-              "Yuklash bekor qilindi."
-            );
-          }
-
-          if (attempt < MAX_RETRIES) {
-            await sleep(attempt * 1500);
-          }
-
-        } finally {
-          if (activeController === controller) {
-            activeController = null;
-          }
-        }
-      }
-
-      throw lastError || new Error(
-        "Video qismini yuklab bo‘lmadi."
-      );
-    }
-
-    async function abortMultipart(
-      upload,
-      adminPassword
-    ) {
-      if (!upload) return false;
-
-      try {
-        await apiRequest("abort", {
-          password: adminPassword,
-          key: upload.key,
-          uploadId: upload.uploadId
-        });
-
-        return true;
-
-      } catch (error) {
-        console.warn(
-          "Yuklashni bekor qilishda xatolik:",
-          error
-        );
-
-        return false;
-      }
-    }
-
-    async function uploadOwnVideo() {
-      const file = videoFile.files[0];
-
-      if (!file) {
-        throw new Error(
-          "Avval telefoningizdan video tanlang."
-        );
-      }
-
-      const extensionMatch =
-        /\.([a-z0-9]+)$/i.exec(file.name);
-
-      const extension = extensionMatch
-        ? extensionMatch[1].toLowerCase()
-        : "";
-
-      if (!["mp4", "webm"].includes(extension)) {
-        throw new Error(
-          "Faqat MP4 yoki WebM video yuklang."
-        );
-      }
-
-      if (
-        file.size <= 0 ||
-        file.size > MAX_SIZE
-      ) {
-        throw new Error(
-          "Video hajmi 1 GB dan oshmasligi kerak."
-        );
-      }
-
-      const adminPassword = password.value;
-      const videoTitle = titleInput.value.trim();
-      const thumbnail = thumbnailInput.value.trim();
-      const ratio = aspectRatio.value;
-
-      cancelRequested = false;
-      currentUpload = null;
-
-      setProgress(
-        0,
-        "🔐 Yuklash tayyorlanmoqda..."
-      );
-
-      // 1. R2 multipart yuklashni boshlash.
-
-      const init = await apiRequest("init", {
-        password: adminPassword,
-        extension,
-        size: file.size,
-        title_uz: videoTitle,
-        thumbnail,
-        aspect_ratio: ratio
-      });
-
-      if (cancelRequested) {
-        await abortMultipart(
-          init,
-          adminPassword
-        );
-
-        throw new Error(
-          "Yuklash bekor qilindi."
-        );
-      }
-
-      currentUpload = {
-        key: init.key,
-        uploadId: init.uploadId
+      return {
+        partNumber: Number(result.partNumber),
+        etag: result.etag
       };
 
-      const partSize = Number(
-        init.partSize
-      );
-
-      if (
-        !Number.isInteger(partSize) ||
-        partSize !== DEFAULT_PART_SIZE
-      ) {
-        throw new Error(
-          "Server qism hajmi mos kelmadi. " +
-          "multipart.js faylini tekshiring."
-        );
-      }
-
-      const totalParts = Math.ceil(
-        file.size / partSize
-      );
-
-      if (
-        totalParts < 1 ||
-        totalParts > Number(init.maxParts || 205)
-      ) {
-        throw new Error(
-          "Video qismlari soni chegaradan oshdi."
-        );
-      }
-
-      const parts = [];
-
-      // 2. Har bir qismni binar yuborish.
-
-      for (
-        let index = 0;
-        index < totalParts;
-        index++
-      ) {
-        if (cancelRequested) {
-          throw new Error(
-            "Yuklash bekor qilindi."
-          );
-        }
-
-        const start = index * partSize;
-
-        const end = Math.min(
-          start + partSize,
-          file.size
-        );
-
-        const blob = file.slice(
-          start,
-          end
-        );
-
-        const uploadedPart =
-          await uploadBinaryPart(
-            currentUpload,
-            adminPassword,
-            index + 1,
-            blob,
-            totalParts
-          );
-
-        parts.push(uploadedPart);
-
-        setProgress(
-          ((index + 1) / totalParts) * 100,
-          "✅ " +
-          (index + 1) +
-          "/" +
-          totalParts +
-          " qism yuklandi"
-        );
-      }
+    } catch (error) {
+      lastError = error;
 
       if (cancelRequested) {
-        throw new Error(
-          "Yuklash bekor qilindi."
-        );
+        throw new Error("Yuklash bekor qilindi.");
       }
 
-      // 3. R2 qismlarini birlashtirish
-      // va GitHub ro‘yxatiga yozish.
+      if (attempt < MAX_RETRIES) {
+        await sleep(attempt * 1500);
+      }
 
-      setProgress(
-        100,
-        "🔄 Video birlashtirilmoqda va " +
-        "GitHub ro‘yxatiga saqlanmoqda..."
-      );
+    } finally {
+      if (activeController === controller) {
+        activeController = null;
+      }
+    }
+  }
 
-      const result = await apiRequest(
-        "complete",
-        {
-          password: adminPassword,
-          key: currentUpload.key,
-          uploadId: currentUpload.uploadId,
-          parts,
-          title_uz: videoTitle,
-          thumbnail,
-          aspect_ratio: ratio
-        }
-      );
+  throw lastError ||
+    new Error("Video qismini yuklab bo‘lmadi.");
+}
 
-      currentUpload = null;
+async function abortMultipart(upload, adminPassword) {
+  if (!upload) return false;
 
-      showMessage(
-        "✅ Video muvaffaqiyatli yuklandi!\n" +
-        "📹 " + videoTitle + "\n" +
-        "🎬 Video F1 CINEMA ro‘yxatiga qo‘shildi. " +
-        "Sayt yangilangach ko‘rinadi.",
-        "success"
-      );
+  try {
+    await apiRequest("abort", {
+      password: adminPassword,
+      key: upload.key,
+      uploadId: upload.uploadId
+    });
 
-      videoFile.value = "";
-      titleInput.value = "";
-      thumbnailInput.value = "";
+    return true;
 
-      clearPreview();
+  } catch (error) {
+    console.warn(
+      "Yuklashni bekor qilishda xatolik:",
+      error
+    );
 
-      return result;
+    return false;
+  }
+}
+
+async function uploadOwnVideo() {
+  const file = videoFile.files[0];
+
+  if (!file) {
+    throw new Error(
+      "Avval telefoningizdan video tanlang."
+    );
+  }
+
+  const extensionMatch =
+    /\.([a-z0-9]+)$/i.exec(file.name);
+
+  const extension = extensionMatch
+    ? extensionMatch[1].toLowerCase()
+    : "";
+
+  if (!["mp4", "webm"].includes(extension)) {
+    throw new Error(
+      "Faqat MP4 yoki WebM video yuklang."
+    );
+  }
+
+  if (file.size <= 0 || file.size > MAX_SIZE) {
+    throw new Error(
+      "Video hajmi 1 GB dan oshmasligi kerak."
+    );
+  }
+
+  const adminPassword = password.value;
+  const videoTitle = titleInput.value.trim();
+  const thumbnail = thumbnailInput.value.trim();
+  const ratio = aspectRatio.value;
+
+  cancelRequested = false;
+  currentUpload = null;
+
+  setProgress(0, "🔐 Yuklash tayyorlanmoqda...");
+
+  // 1. R2 multipart yuklashni boshlash.
+
+  const init = await apiRequest("init", {
+    password: adminPassword,
+    extension,
+    size: file.size,
+    title_uz: videoTitle,
+    thumbnail,
+    aspect_ratio: ratio
+  });
+
+  if (cancelRequested) {
+    await abortMultipart(init, adminPassword);
+
+    throw new Error("Yuklash bekor qilindi.");
+  }
+
+  currentUpload = {
+    key: init.key,
+    uploadId: init.uploadId
+  };
+
+  const partSize = Number(init.partSize);
+
+  if (
+    !Number.isInteger(partSize) ||
+    partSize !== DEFAULT_PART_SIZE
+  ) {
+    throw new Error(
+      "Server qism hajmi mos kelmadi. " +
+      "multipart.js faylini tekshiring."
+    );
+  }
+
+  const totalParts = Math.ceil(
+    file.size / partSize
+  );
+
+  if (
+    totalParts < 1 ||
+    totalParts > Number(init.maxParts || 205)
+  ) {
+    throw new Error(
+      "Video qismlari soni chegaradan oshdi."
+    );
+  }
+
+  const parts = [];
+
+  // 2. Har bir qismni binar yuborish.
+
+  for (
+    let index = 0;
+    index < totalParts;
+    index++
+  ) {
+    if (cancelRequested) {
+      throw new Error("Yuklash bekor qilindi.");
     }
 
-    cancelBtn.addEventListener(
-      "click",
-      () => {
-        if (!uploading) return;
+    const start = index * partSize;
+    const end = Math.min(
+      start + partSize,
+      file.size
+    );
 
-        cancelRequested = true;
+    const blob = file.slice(start, end);
 
-        cancelBtn.disabled = true;
+    const uploadedPart = await uploadBinaryPart(
+      currentUpload,
+      adminPassword,
+      index + 1,
+      blob,
+      totalParts
+    );
 
-        cancelBtn.textContent =
-          "⏳ Bekor qilinmoqda...";
+    parts.push(uploadedPart);
 
-        if (activeController) {
-          activeController.abort();
-        }
+    setProgress(
+      ((index + 1) / totalParts) * 100,
+      "✅ " +
+      (index + 1) +
+      "/" +
+      totalParts +
+      " qism yuklandi"
+    );
+  }
 
-        showMessage(
-          "⏳ Yuklash bekor qilinmoqda..."
+  if (cancelRequested) {
+    throw new Error("Yuklash bekor qilindi.");
+  }
+
+  // 3. R2 qismlarini birlashtirish
+  // va GitHub ro‘yxatiga yozish.
+
+  setProgress(
+    100,
+    "🔄 Video birlashtirilmoqda va " +
+    "GitHub ro‘yxatiga saqlanmoqda..."
+  );
+
+  const result = await apiRequest(
+    "complete",
+    {
+      password: adminPassword,
+      key: currentUpload.key,
+      uploadId: currentUpload.uploadId,
+      parts,
+      title_uz: videoTitle,
+      thumbnail,
+      aspect_ratio: ratio
+    }
+  );
+
+  currentUpload = null;
+
+  showMessage(
+    "✅ Video muvaffaqiyatli yuklandi!\n" +
+    "📹 " +
+    videoTitle +
+    "\n🎬 Video F1 CINEMA ro‘yxatiga qo‘shildi.",
+    "success"
+  );
+
+  videoFile.value = "";
+  titleInput.value = "";
+  thumbnailInput.value = "";
+
+  clearPreview();
+
+  return result;
+}
+
+cancelBtn.addEventListener("click", () => {
+  if (!uploading) return;
+
+  cancelRequested = true;
+  cancelBtn.disabled = true;
+
+  cancelBtn.textContent =
+    "⏳ Bekor qilinmoqda...";
+
+  if (activeController) {
+    activeController.abort();
+  }
+
+  showMessage(
+    "⏳ Yuklash bekor qilinmoqda..."
+  );
+});
+
+window.addEventListener("beforeunload", event => {
+  if (!uploading) return;
+
+  event.preventDefault();
+  event.returnValue = "";
+});
+
+form.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (uploading) return;
+
+  showMessage("");
+
+  const isUpload = platform.value === "upload";
+
+  uploading = true;
+  cancelRequested = false;
+
+  button.disabled = true;
+  platform.disabled = true;
+  videoFile.disabled = true;
+
+  cancelBtn.classList.toggle("hidden", !isUpload);
+  cancelBtn.disabled = false;
+
+  cancelBtn.textContent =
+    "✕ Yuklashni bekor qilish";
+
+  button.textContent = isUpload
+    ? "⏳ Video yuklanmoqda..."
+    : "⏳ Saqlanmoqda...";
+
+  try {
+    if (isUpload) {
+      await uploadOwnVideo();
+    } else {
+      await addFacebookVideo();
+    }
+
+  } catch (error) {
+    const wasCancelled = cancelRequested;
+
+    if (currentUpload) {
+      const unfinishedUpload = currentUpload;
+      currentUpload = null;
+
+      // Faqat foydalanuvchi bekor qilganda
+      // R2 multipart tozalanadi.
+      if (wasCancelled) {
+        await abortMultipart(
+          unfinishedUpload,
+          password.value
         );
       }
+    }
+
+    showMessage(
+      wasCancelled
+        ? "⚠️ Yuklash bekor qilindi."
+        : "❌ " + error.message,
+
+      wasCancelled ? "" : "error"
     );
 
-    window.addEventListener(
-      "beforeunload",
-      event => {
-        if (!uploading) return;
+  } finally {
+    uploading = false;
+    activeController = null;
 
-        event.preventDefault();
-        event.returnValue = "";
-      }
-    );
+    button.disabled = false;
+    platform.disabled = false;
+    videoFile.disabled = false;
 
-    form.addEventListener(
-      "submit",
-      async event => {
-        event.preventDefault();
+    cancelBtn.classList.add("hidden");
 
-        if (uploading) return;
-
-        showMessage("");
-
-        const isUpload =
-          platform.value === "upload";
-
-        uploading = true;
-        cancelRequested = false;
-
-        button.disabled = true;
-        platform.disabled = true;
-        videoFile.disabled = true;
-
-        cancelBtn.classList.toggle(
-          "hidden",
-          !isUpload
-        );
-
-        cancelBtn.disabled = false;
-
-        cancelBtn.textContent =
-          "✕ Yuklashni bekor qilish";
-
-        button.textContent = isUpload
-          ? "⏳ Video yuklanmoqda..."
-          : "⏳ Saqlanmoqda...";
-
-        try {
-          if (isUpload) {
-            await uploadOwnVideo();
-          } else {
-            await addFacebookVideo();
-          }
-
-        } catch (error) {
-          const wasCancelled =
-            cancelRequested;
-
-          if (currentUpload) {
-            const unfinishedUpload =
-              currentUpload;
-
-            currentUpload = null;
-
-            // Faqat foydalanuvchi bekor
-            // qilganda R2 multipart tozalanadi.
-            if (wasCancelled) {
-              await abortMultipart(
-                unfinishedUpload,
-                password.value
-              );
-            }
-          }
-
-          showMessage(
-            wasCancelled
-              ? "⚠️ Yuklash bekor qilindi."
-              : "❌ " + error.message,
-
-            wasCancelled ? "" : "error"
-          );
-
-        } finally {
-          uploading = false;
-          activeController = null;
-
-          button.disabled = false;
-          platform.disabled = false;
-          videoFile.disabled = false;
-
-          cancelBtn.classList.add("hidden");
-
-          button.textContent =
-            platform.value === "upload"
-              ? "⬆️ VIDEO YUKLASH"
-              : "➕ VIDEO QO‘SHISH";
-        }
-      }
-    );
-  </script>
+    button.textContent =
+      platform.value === "upload"
+        ? "⬆️ VIDEO YUKLASH"
+        : "➕ VIDEO QO‘SHISH";
+  }
+});
+</script>
 
 </body>
 </html>
