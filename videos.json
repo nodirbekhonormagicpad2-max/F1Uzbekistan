@@ -1,6 +1,14 @@
 {
-  "updated_at": "2026-10-25T09:57:34.913595+00:00",
+  "updated_at": "2026-10-25T10:26:00.925079+00:00",
   "videos": [
+    {
+      "id": "6cMEEqclPcA",
+      "title": "The Knockout Game  Anatomy of a Championship Pole",
+      "channel": "Chethan",
+      "published": "2026-10-25T10:10:36Z",
+      "thumbnail": "https://i.ytimg.com/vi/6cMEEqclPcA/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=6cMEEqclPcA"
+    },
     {
       "id": "y9d79ZjJC-s",
       "title": "2026 United States Grand Prix | Best Qualifying Highlights &amp; Fastest Laps",
@@ -130,14 +138,6 @@
       "url": "https://www.youtube.com/watch?v=OZiA2RVySJg"
     },
     {
-      "id": "c8kYlo6r27Q",
-      "title": "2026 F1 US Grand Prix Qualifying Watchalong",
-      "channel": "P1 with Matt & Tommy",
-      "published": "2026-10-24T22:20:22Z",
-      "thumbnail": "https://i.ytimg.com/vi/c8kYlo6r27Q/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=c8kYlo6r27Q"
-    },
-    {
       "id": "2fQx8d2LEgU",
       "title": "The most satisfying overtake you’ll see today 💨🏎️ #f1 #motorsport #racing",
       "channel": "FalcMusics",
@@ -155,7 +155,7 @@
     },
     {
       "id": "UG3Kg0_xRKE",
-      "title": "❗Lewis Hamilton Vs Max Verstappen❗Race F1 Circuit of Americas US Texas #USGP 2026",
+      "title": "Hamilton vs Verstappen at COTA | Racing-Game Simulation",
       "channel": "Conqueror Motorsports",
       "published": "2026-10-23T10:00:33Z",
       "thumbnail": "https://i.ytimg.com/vi/UG3Kg0_xRKE/hqdefault.jpg",
