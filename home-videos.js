@@ -6,16 +6,21 @@
   const ROTATE_MS = 15000;
   const REFRESH_MS = 5 * 60 * 1000;
 
+  const thumbnails = new Map();
+  const thumbnailJobs = new Map();
+
   let videos = [];
   let currentIndex = 0;
   let activeVideo = null;
   let previousOverflow = "";
   let lastFocus = null;
-  let requestId = 0;
+  let renderToken = 0;
+  let modalIndex = 0;
+  let loading = false;
 
-  // =====================================
+  // ==========================================
   // DIZAYN
-  // =====================================
+  // ==========================================
 
   const style = document.createElement("style");
 
@@ -40,44 +45,82 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      margin: 0 0 14px;
-      font-size: clamp(19px, 3vw, 28px);
+      margin: 0 0 16px;
+      font-size: clamp(21px, 4vw, 30px);
       font-weight: 900;
-      letter-spacing: .045em;
     }
 
     #f1-cinema-premium .cp-heading::before {
       content: "";
       display: block;
-      width: 5px;
-      height: 28px;
+      width: 6px;
+      height: 34px;
       background: #e10600;
       border-radius: 4px;
     }
 
-    #f1-cinema-premium .cp-stage {
+    /* GALEREYA OYNASI */
+
+    #f1-cinema-premium .cp-gallery {
       position: relative;
       width: 100%;
-      aspect-ratio: 16 / 9;
       overflow: hidden;
-      background: #101014;
       border: 1px solid #34343c;
-      border-radius: 14px;
-      cursor: pointer;
+      border-radius: 16px;
+      background: #101014;
       box-shadow: 0 12px 35px #0007;
+    }
+
+    #f1-cinema-premium .cp-stage {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 250px;
+      max-height: 75vh;
+      padding: 0;
+      border: 0;
+      background: #101014;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    /*
+      MUHIM:
+      object-fit: contain videoni kesmaydi.
+      Oyna vertikal yoki gorizontal formatga
+      qarab avtomatik moslashadi.
+    */
+
+    #f1-cinema-premium .cp-stage.cp-landscape {
+      aspect-ratio: 16 / 9;
+    }
+
+    #f1-cinema-premium .cp-stage.cp-portrait {
+      aspect-ratio: 9 / 16;
+      width: min(100%, 430px);
+      max-height: 75vh;
+      margin: 0 auto;
+    }
+
+    #f1-cinema-premium .cp-stage.cp-square {
+      aspect-ratio: 1 / 1;
+      width: min(100%, 650px);
+      margin: 0 auto;
     }
 
     #f1-cinema-premium .cp-image {
       display: block;
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      opacity: 1;
-      transition: opacity .45s ease;
+      object-fit: contain;
+      background: #101014;
+      transition: opacity .35s ease;
     }
 
     #f1-cinema-premium .cp-image.cp-fade {
-      opacity: .15;
+      opacity: 0;
     }
 
     #f1-cinema-premium .cp-placeholder {
@@ -85,40 +128,71 @@
       inset: 0;
       display: grid;
       place-items: center;
+      padding: 20px;
       background: radial-gradient(
         circle,
-        #303039,
+        #33333c,
         #101014
       );
-      color: #aaa;
-      font-size: 14px;
+      color: #ccc;
+      font-size: 15px;
       font-weight: 800;
       text-align: center;
-      padding: 20px;
     }
 
     #f1-cinema-premium .cp-shade {
       position: absolute;
-      inset: 25% 0 0;
-      pointer-events: none;
+      inset: 45% 0 0;
       background: linear-gradient(
         transparent,
-        rgba(0, 0, 0, .3) 35%,
-        rgba(0, 0, 0, .95)
+        rgba(0, 0, 0, .35),
+        rgba(0, 0, 0, .9)
       );
+      pointer-events: none;
+    }
+
+    #f1-cinema-premium .cp-play {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: grid;
+      place-items: center;
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: #e10600;
+      color: #fff;
+      font-size: 28px;
+      box-shadow: 0 5px 25px #0009;
+      pointer-events: none;
+    }
+
+    #f1-cinema-premium .cp-counter {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      padding: 8px 13px;
+      border-radius: 25px;
+      background: #000b;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+      pointer-events: none;
     }
 
     #f1-cinema-premium .cp-caption {
       position: absolute;
-      left: clamp(15px, 4%, 45px);
-      bottom: clamp(15px, 5%, 45px);
-      right: 75px;
-      pointer-events: none;
-      font-size: clamp(17px, 3.5vw, 42px);
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      color: #fff;
+      font-size: clamp(17px, 3vw, 29px);
       font-weight: 900;
-      line-height: 1.14;
-      letter-spacing: .025em;
-      text-shadow: 0 3px 15px #000;
+      line-height: 1.25;
+      text-align: left;
+      text-shadow: 0 3px 12px #000;
+      pointer-events: none;
       overflow-wrap: anywhere;
       display: -webkit-box;
       -webkit-line-clamp: 3;
@@ -129,42 +203,71 @@
     #f1-cinema-premium .cp-caption::after {
       content: "";
       display: block;
-      width: clamp(55px, 12vw, 115px);
+      width: 85px;
       height: 4px;
-      margin-top: 12px;
-      background: #e10600;
+      margin-top: 10px;
       border-radius: 4px;
-      box-shadow: 0 0 14px #e1060099;
+      background: #e10600;
     }
 
-    #f1-cinema-premium .cp-play {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+    /* GALEREYA BOSHQARUVI */
+
+    #f1-cinema-premium .cp-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px;
+      background: #17171d;
+    }
+
+    #f1-cinema-premium .cp-arrows {
+      display: flex;
+      gap: 9px;
+    }
+
+    #f1-cinema-premium .cp-arrow {
       display: grid;
       place-items: center;
-      width: clamp(56px, 10vw, 85px);
-      height: clamp(56px, 10vw, 85px);
-      border-radius: 50%;
-      background: #e10600;
+      width: 40px;
+      height: 40px;
+      border: 1px solid #45454f;
+      border-radius: 9px;
+      background: #24242c;
       color: #fff;
-      font-size: clamp(23px, 4vw, 34px);
-      box-shadow: 0 5px 25px #000a;
-      pointer-events: none;
+      font-size: 23px;
+      font-weight: 900;
+      cursor: pointer;
     }
 
-    #f1-cinema-premium .cp-count {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      padding: 7px 11px;
-      border-radius: 20px;
-      background: #000a;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 800;
-      pointer-events: none;
+    #f1-cinema-premium .cp-arrow:hover {
+      border-color: #e10600;
+      background: #e10600;
+    }
+
+    #f1-cinema-premium .cp-dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    #f1-cinema-premium .cp-dot {
+      width: 8px;
+      height: 8px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: #666;
+      cursor: pointer;
+    }
+
+    #f1-cinema-premium .cp-dot.cp-active {
+      width: 21px;
+      border-radius: 6px;
+      background: #e10600;
     }
 
     #f1-cinema-premium .cp-footer {
@@ -172,7 +275,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin-top: 12px;
+      margin-top: 14px;
     }
 
     #f1-cinema-premium .cp-info {
@@ -184,8 +287,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 11px 15px;
-      border-radius: 8px;
+      padding: 11px 14px;
+      border-radius: 9px;
       background: #e10600;
       color: #fff;
       text-decoration: none;
@@ -194,23 +297,17 @@
       white-space: nowrap;
     }
 
-    #f1-cinema-premium .cp-all:hover {
-      background: #b90500;
-    }
-
     #f1-cinema-premium .cp-status {
-      padding: 20px 0;
+      padding: 10px 0;
       color: #aaa;
-      font-size: 13px;
+      font-size: 12px;
     }
 
     #f1-cinema-premium .cp-status:empty {
       display: none;
     }
 
-    /* =====================================
-       KATTA VIDEO OYNASI
-       ===================================== */
+    /* VIDEO OCHILADIGAN OYNA */
 
     #f1-cinema-modal {
       position: fixed;
@@ -219,9 +316,9 @@
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 15px;
-      background: rgba(0, 0, 0, .96);
+      padding: 12px;
       overflow-y: auto;
+      background: rgba(0, 0, 0, .97);
     }
 
     #f1-cinema-modal.cp-open {
@@ -231,8 +328,8 @@
     #f1-cinema-modal .cp-dialog {
       width: min(1000px, 100%);
       margin: auto;
-      padding: 14px;
-      border: 1px solid #353535;
+      padding: 13px;
+      border: 1px solid #33343d;
       border-radius: 14px;
       background: #111116;
     }
@@ -247,7 +344,7 @@
 
     #f1-cinema-modal .cp-modaltitle {
       margin: 0;
-      font-size: clamp(14px, 2.5vw, 20px);
+      font-size: clamp(14px, 2.5vw, 19px);
       font-weight: 900;
       line-height: 1.4;
     }
@@ -276,6 +373,12 @@
       width: min(420px, 100%);
       aspect-ratio: 9 / 16;
       max-height: 75vh;
+      margin: 0 auto;
+    }
+
+    #f1-cinema-modal .cp-frame.cp-square {
+      width: min(650px, 100%);
+      aspect-ratio: 1 / 1;
       margin: 0 auto;
     }
 
@@ -310,20 +413,29 @@
     }
 
     @media (max-width: 700px) {
-      #f1-cinema-premium .cp-stage {
+      #f1-cinema-premium .cp-gallery {
         border-radius: 12px;
       }
 
+      #f1-cinema-premium .cp-stage {
+        min-height: 200px;
+      }
+
+      #f1-cinema-premium .cp-stage.cp-portrait {
+        width: min(100%, 340px);
+        max-height: 70vh;
+      }
+
       #f1-cinema-premium .cp-caption {
-        left: 17px;
-        right: 17px;
-        bottom: 17px;
-        font-size: clamp(16px, 4.5vw, 26px);
+        left: 15px;
+        right: 15px;
+        bottom: 15px;
+        font-size: 17px;
       }
 
       #f1-cinema-premium .cp-play {
-        width: 55px;
-        height: 55px;
+        width: 56px;
+        height: 56px;
         font-size: 23px;
       }
 
@@ -332,25 +444,34 @@
       }
 
       #f1-cinema-premium .cp-all {
-        font-size: 11px;
         padding: 10px;
+        font-size: 11px;
+      }
+
+      #f1-cinema-premium .cp-arrow {
+        width: 35px;
+        height: 35px;
+      }
+
+      #f1-cinema-premium .cp-controls {
+        padding: 9px;
       }
 
       #f1-cinema-modal {
-        padding: 8px;
+        padding: 7px;
       }
 
       #f1-cinema-modal .cp-dialog {
-        padding: 10px;
+        padding: 9px;
       }
     }
   `;
 
   document.head.appendChild(style);
 
-  // =====================================
-  // ASOSIY VIDEO GALEREYA
-  // =====================================
+  // ==========================================
+  // ASOSIY BLOK
+  // ==========================================
 
   const root = document.createElement("section");
 
@@ -361,28 +482,53 @@
   );
 
   root.innerHTML = `
-    <h2 class="cp-heading">🎬 F1 CINEMA</h2>
+    <h2 class="cp-heading">
+      🎬 F1 CINEMA
+    </h2>
 
-    <div
-      class="cp-stage"
-      role="button"
-      tabindex="0"
-      aria-label="Videoni tomosha qilish"
-    >
-      <div class="cp-placeholder">
-        Videolar yuklanmoqda...
-      </div>
+    <div class="cp-gallery">
 
-      <img
-        class="cp-image"
-        alt="F1 video muqovasi"
-        style="display:none"
+      <button
+        type="button"
+        class="cp-stage cp-landscape"
+        aria-label="Videoni tomosha qilish"
       >
+        <div class="cp-placeholder">
+          Videolar yuklanmoqda...
+        </div>
 
-      <div class="cp-shade"></div>
-      <div class="cp-caption"></div>
-      <div class="cp-play">▶</div>
-      <div class="cp-count"></div>
+        <img
+          class="cp-image"
+          alt=""
+          style="display:none"
+        >
+
+        <div class="cp-shade"></div>
+
+        <div class="cp-play">▶</div>
+
+        <div class="cp-counter"></div>
+
+        <div class="cp-caption"></div>
+      </button>
+
+      <div class="cp-controls">
+        <div class="cp-arrows">
+          <button
+            type="button"
+            class="cp-arrow cp-prev"
+            aria-label="Oldingi video"
+          >‹</button>
+
+          <button
+            type="button"
+            class="cp-arrow cp-next"
+            aria-label="Keyingi video"
+          >›</button>
+        </div>
+
+        <div class="cp-dots"></div>
+      </div>
     </div>
 
     <div class="cp-footer">
@@ -415,12 +561,16 @@
   const imageElement = root.querySelector(".cp-image");
   const placeholder = root.querySelector(".cp-placeholder");
   const caption = root.querySelector(".cp-caption");
-  const count = root.querySelector(".cp-count");
+  const counter = root.querySelector(".cp-counter");
+  const dots = root.querySelector(".cp-dots");
   const status = root.querySelector(".cp-status");
 
-  // =====================================
+  const previousButton = root.querySelector(".cp-prev");
+  const nextButton = root.querySelector(".cp-next");
+
+  // ==========================================
   // VIDEO MODAL
-  // =====================================
+  // ==========================================
 
   const modal = document.createElement("div");
 
@@ -436,7 +586,6 @@
         <button
           type="button"
           class="cp-close"
-          aria-label="Videoni yopish"
         >
           ✕ Yopish
         </button>
@@ -445,11 +594,17 @@
       <div class="cp-frame"></div>
 
       <div class="cp-navigation">
-        <button type="button" class="cp-nav cp-prev">
+        <button
+          type="button"
+          class="cp-nav cp-modal-prev"
+        >
           ← Oldingi video
         </button>
 
-        <button type="button" class="cp-nav cp-next">
+        <button
+          type="button"
+          class="cp-nav cp-modal-next"
+        >
           Keyingi video →
         </button>
       </div>
@@ -459,14 +614,15 @@
   document.body.appendChild(modal);
 
   const frame = modal.querySelector(".cp-frame");
-  const closeButton = modal.querySelector(".cp-close");
   const modalTitle = modal.querySelector(".cp-modaltitle");
-  const previousButton = modal.querySelector(".cp-prev");
-  const nextButton = modal.querySelector(".cp-next");
+  const closeButton = modal.querySelector(".cp-close");
 
-  // =====================================
+  const modalPrevious = modal.querySelector(".cp-modal-prev");
+  const modalNext = modal.querySelector(".cp-modal-next");
+
+  // ==========================================
   // VIDEO MA'LUMOTLARI
-  // =====================================
+  // ==========================================
 
   function title(video) {
     return String(
@@ -564,22 +720,97 @@
     return "";
   }
 
-  // =====================================
-  // VIDEO MUQOVASINI YARATISH
-  // =====================================
+  // ==========================================
+  // VIDEO FORMATINI ANIQLASH
+  // ==========================================
 
-  function generateThumbnail(video) {
-    return new Promise(resolve => {
-      const url = videoURL(video);
+  function declaredFormat(video) {
+    const ratio = String(
+      video.aspect_ratio ||
+      video.aspectRatio ||
+      ""
+    ).trim();
+
+    if (ratio === "9:16") return "portrait";
+    if (ratio === "16:9") return "landscape";
+    if (ratio === "1:1") return "square";
+
+    const width = Number(
+      video.width ||
+      video.video_width ||
+      video.videoWidth
+    );
+
+    const height = Number(
+      video.height ||
+      video.video_height ||
+      video.videoHeight
+    );
+
+    if (width > 0 && height > 0) {
+      return formatFromDimensions(width, height);
+    }
+
+    return "";
+  }
+
+  function formatFromDimensions(width, height) {
+    if (!width || !height) return "landscape";
+
+    const ratio = width / height;
+
+    if (ratio < 0.85) return "portrait";
+    if (ratio > 1.15) return "landscape";
+
+    return "square";
+  }
+
+  function setFormat(format) {
+    stage.classList.remove(
+      "cp-landscape",
+      "cp-portrait",
+      "cp-square"
+    );
+
+    stage.classList.add(
+      "cp-" + (
+        ["landscape", "portrait", "square"].includes(format)
+          ? format
+          : "landscape"
+      )
+    );
+  }
+
+  // ==========================================
+  // VIDEODAN MUQOVA VA FORMAT OLISH
+  // ==========================================
+
+  function inspectVideo(video) {
+    const url = videoURL(video);
+
+    if (thumbnails.has(url)) {
+      return Promise.resolve(thumbnails.get(url));
+    }
+
+    if (thumbnailJobs.has(url)) {
+      return thumbnailJobs.get(url);
+    }
+
+    const job = new Promise(resolve => {
       const media = document.createElement("video");
 
       let finished = false;
 
+      const result = {
+        thumbnail: "",
+        format: declaredFormat(video) || "landscape"
+      };
+
       const timeout = setTimeout(() => {
-        finish("");
+        finish();
       }, 12000);
 
-      function finish(result) {
+      function finish() {
         if (finished) return;
 
         finished = true;
@@ -589,6 +820,7 @@
         media.removeAttribute("src");
         media.load();
 
+        thumbnails.set(url, result);
         resolve(result);
       }
 
@@ -598,9 +830,14 @@
             !media.videoWidth ||
             !media.videoHeight
           ) {
-            finish("");
+            finish();
             return;
           }
+
+          result.format = formatFromDimensions(
+            media.videoWidth,
+            media.videoHeight
+          );
 
           const canvas = document.createElement("canvas");
 
@@ -622,7 +859,7 @@
           const context = canvas.getContext("2d");
 
           if (!context) {
-            finish("");
+            finish();
             return;
           }
 
@@ -634,11 +871,14 @@
             canvas.height
           );
 
-          finish(
-            canvas.toDataURL("image/jpeg", 0.8)
+          result.thumbnail = canvas.toDataURL(
+            "image/jpeg",
+            0.82
           );
+
+          finish();
         } catch {
-          finish("");
+          finish();
         }
       }
 
@@ -650,21 +890,37 @@
       media.addEventListener(
         "loadedmetadata",
         () => {
+          if (media.videoWidth && media.videoHeight) {
+            result.format = formatFromDimensions(
+              media.videoWidth,
+              media.videoHeight
+            );
+          }
+
           const duration = media.duration;
 
           const second =
             Number.isFinite(duration) && duration > 0
-              ? Math.min(1, Math.max(0, duration - 0.1))
+              ? Math.min(
+                  1,
+                  Math.max(0, duration - 0.1)
+                )
               : 0;
 
           try {
-            media.currentTime = second;
-
-            if (second === 0 && media.readyState >= 2) {
+            if (second > 0) {
+              media.currentTime = second;
+            } else if (media.readyState >= 2) {
               capture();
+            } else {
+              media.addEventListener(
+                "loadeddata",
+                capture,
+                { once: true }
+              );
             }
           } catch {
-            finish("");
+            finish();
           }
         },
         { once: true }
@@ -678,18 +934,60 @@
 
       media.addEventListener(
         "error",
-        () => finish(""),
+        finish,
         { once: true }
       );
 
       media.src = url;
       media.load();
     });
+
+    thumbnailJobs.set(url, job);
+
+    job.finally(() => {
+      thumbnailJobs.delete(url);
+    });
+
+    return job;
   }
 
-  // =====================================
-  // BITTA VIDEONI KO'RSATISH
-  // =====================================
+  // ==========================================
+  // NUQTALAR
+  // ==========================================
+
+  function renderDots() {
+    dots.replaceChildren();
+
+    if (videos.length <= 1) return;
+
+    const maxDots = Math.min(videos.length, 12);
+
+    for (let i = 0; i < maxDots; i++) {
+      const dot = document.createElement("button");
+
+      dot.type = "button";
+      dot.className = "cp-dot";
+
+      if (i === currentIndex % maxDots) {
+        dot.classList.add("cp-active");
+      }
+
+      dot.setAttribute(
+        "aria-label",
+        `${i + 1}-videoga o'tish`
+      );
+
+      dot.addEventListener("click", () => {
+        show(i);
+      });
+
+      dots.appendChild(dot);
+    }
+  }
+
+  // ==========================================
+  // GALEREYADA VIDEONI KO'RSATISH
+  // ==========================================
 
   async function show(index) {
     if (!videos.length) return;
@@ -697,68 +995,93 @@
     const nextIndex =
       (index + videos.length) % videos.length;
 
-    const video = videos[nextIndex];
-    const token = ++requestId;
-
     currentIndex = nextIndex;
 
+    const video = videos[currentIndex];
+    const token = ++renderToken;
+
     caption.textContent = title(video);
-    count.textContent =
+
+    counter.textContent =
       `${currentIndex + 1} / ${videos.length}`;
 
-    imageElement.classList.add("cp-fade");
+    stage.setAttribute(
+      "aria-label",
+      title(video) + " — tomosha qilish"
+    );
 
-    let thumb = thumbnailURL(video);
+    renderDots();
+
+    imageElement.classList.add("cp-fade");
+    imageElement.style.display = "none";
+
+    placeholder.style.display = "grid";
+    placeholder.textContent = "Muqova yuklanmoqda...";
+
+    const knownFormat = declaredFormat(video);
+
+    setFormat(knownFormat || "landscape");
+
+    let info;
+
+    try {
+      info = await inspectVideo(video);
+    } catch {
+      info = {
+        thumbnail: "",
+        format: knownFormat || "landscape"
+      };
+    }
+
+    if (token !== renderToken) return;
+
+    setFormat(info.format || knownFormat || "landscape");
+
+    const thumb = thumbnailURL(video) || info.thumbnail;
 
     if (!thumb) {
-      thumb = await generateThumbnail(video);
+      placeholder.textContent = "🎬 F1 VIDEO";
+      return;
     }
 
-    if (token !== requestId) return;
+    const preload = new Image();
 
-    if (thumb) {
-      const preload = new Image();
+    preload.onload = () => {
+      if (token !== renderToken) return;
 
-      preload.onload = () => {
-        if (token !== requestId) return;
+      imageElement.src = thumb;
+      imageElement.style.display = "block";
 
-        imageElement.src = thumb;
-        imageElement.style.display = "block";
-        placeholder.style.display = "none";
+      placeholder.style.display = "none";
 
-        requestAnimationFrame(() => {
-          imageElement.classList.remove("cp-fade");
-        });
-      };
-
-      preload.onerror = () => {
-        if (token !== requestId) return;
-
-        imageElement.style.display = "none";
-        placeholder.style.display = "grid";
-        placeholder.textContent = "🎬 F1 VIDEO";
-
+      requestAnimationFrame(() => {
         imageElement.classList.remove("cp-fade");
-      };
+      });
+    };
 
-      preload.src = thumb;
-    } else {
-      imageElement.style.display = "none";
+    preload.onerror = () => {
+      if (token !== renderToken) return;
+
       placeholder.style.display = "grid";
       placeholder.textContent = "🎬 F1 VIDEO";
+    };
 
-      imageElement.classList.remove("cp-fade");
-    }
+    preload.src = thumb;
   }
 
-  // =====================================
-  // VIDEO PLEYER
-  // =====================================
+  // ==========================================
+  // PLEYERNI TOZALASH
+  // ==========================================
 
   function destroyPlayer() {
     if (activeVideo) {
       activeVideo.pause();
       activeVideo.removeAttribute("src");
+
+      activeVideo.querySelectorAll("source").forEach(
+        source => source.removeAttribute("src")
+      );
+
       activeVideo.load();
       activeVideo = null;
     }
@@ -766,13 +1089,17 @@
     frame.replaceChildren();
   }
 
+  // ==========================================
+  // VIDEONI KATTA OYNADA OCHISH
+  // ==========================================
+
   function play(index) {
     if (!videos.length) return;
 
-    const selectedIndex =
+    modalIndex =
       (index + videos.length) % videos.length;
 
-    const video = videos[selectedIndex];
+    const video = videos[modalIndex];
 
     if (!modal.classList.contains("cp-open")) {
       lastFocus = document.activeElement;
@@ -783,10 +1110,25 @@
 
     modalTitle.textContent = title(video);
 
-    frame.classList.toggle(
+    const cached = thumbnails.get(videoURL(video));
+
+    const format =
+      cached?.format ||
+      declaredFormat(video) ||
+      "landscape";
+
+    frame.classList.remove(
       "cp-vertical",
-      video.aspect_ratio === "9:16"
+      "cp-square"
     );
+
+    if (format === "portrait") {
+      frame.classList.add("cp-vertical");
+    }
+
+    if (format === "square") {
+      frame.classList.add("cp-square");
+    }
 
     const player = document.createElement("video");
 
@@ -794,6 +1136,29 @@
     player.autoplay = true;
     player.playsInline = true;
     player.preload = "metadata";
+
+    player.addEventListener(
+      "loadedmetadata",
+      () => {
+        const actualFormat = formatFromDimensions(
+          player.videoWidth,
+          player.videoHeight
+        );
+
+        frame.classList.remove(
+          "cp-vertical",
+          "cp-square"
+        );
+
+        if (actualFormat === "portrait") {
+          frame.classList.add("cp-vertical");
+        }
+
+        if (actualFormat === "square") {
+          frame.classList.add("cp-square");
+        }
+      }
+    );
 
     const source = document.createElement("source");
 
@@ -809,7 +1174,6 @@
 
     activeVideo = player;
 
-    modal.dataset.index = String(selectedIndex);
     modal.classList.add("cp-open");
 
     document.body.style.overflow = "hidden";
@@ -836,28 +1200,34 @@
     }
   }
 
-  // =====================================
-  // BOSISH HODISALARI
-  // =====================================
+  // ==========================================
+  // TUGMALAR
+  // ==========================================
 
   stage.addEventListener("click", () => {
     play(currentIndex);
   });
 
-  stage.addEventListener("keydown", event => {
-    if (
-      event.key === "Enter" ||
-      event.key === " "
-    ) {
-      event.preventDefault();
-      play(currentIndex);
-    }
+  previousButton.addEventListener("click", () => {
+    show(currentIndex - 1);
+  });
+
+  nextButton.addEventListener("click", () => {
+    show(currentIndex + 1);
   });
 
   closeButton.addEventListener(
     "click",
     closeModal
   );
+
+  modalPrevious.addEventListener("click", () => {
+    play(modalIndex - 1);
+  });
+
+  modalNext.addEventListener("click", () => {
+    play(modalIndex + 1);
+  });
 
   modal.addEventListener("click", event => {
     if (event.target === modal) {
@@ -874,21 +1244,15 @@
     }
   });
 
-  previousButton.addEventListener("click", () => {
-    const index = Number(modal.dataset.index || 0);
-    play(index - 1);
-  });
-
-  nextButton.addEventListener("click", () => {
-    const index = Number(modal.dataset.index || 0);
-    play(index + 1);
-  });
-
-  // =====================================
-  // VIDEO MA'LUMOTLARINI YUKLASH
-  // =====================================
+  // ==========================================
+  // JSON FAYLDAN VIDEOLARNI O'QISH
+  // ==========================================
 
   async function loadVideos() {
+    if (loading) return;
+
+    loading = true;
+
     try {
       const response = await fetch(
         "./uploaded-videos.json?t=" + Date.now(),
@@ -908,7 +1272,7 @@
 
       const items = Array.isArray(data)
         ? data
-        : Array.isArray(data.videos)
+        : Array.isArray(data?.videos)
           ? data.videos
           : [];
 
@@ -918,20 +1282,27 @@
         ? videoKey(videos[currentIndex])
         : "";
 
+      const oldKeys = videos.map(videoKey).join("|");
+      const newKeys = updated.map(videoKey).join("|");
+
       videos = updated;
 
       if (!videos.length) {
-        requestId++;
+        renderToken++;
+
         status.textContent =
           "Hozircha yuklangan videolar mavjud emas.";
 
         caption.textContent = "";
-        count.textContent = "";
+        counter.textContent = "";
 
         imageElement.style.display = "none";
+
         placeholder.style.display = "grid";
         placeholder.textContent =
           "Hozircha videolar mavjud emas.";
+
+        dots.replaceChildren();
 
         return;
       }
@@ -945,7 +1316,9 @@
       currentIndex =
         foundIndex >= 0 ? foundIndex : 0;
 
-      await show(currentIndex);
+      if (oldKeys !== newKeys || renderToken === 0) {
+        await show(currentIndex);
+      }
 
     } catch (error) {
       console.error(
@@ -955,14 +1328,18 @@
 
       status.textContent =
         "Videolarni yuklashda xatolik yuz berdi.";
+    } finally {
+      loading = false;
     }
   }
 
-  // =====================================
-  // AVTOMATIK ALMASHISH
-  // =====================================
+  // ==========================================
+  // ISHGA TUSHIRISH
+  // ==========================================
 
   loadVideos();
+
+  // Har 15 soniyada keyingi video
 
   setInterval(() => {
     if (
@@ -973,6 +1350,8 @@
       show(currentIndex + 1);
     }
   }, ROTATE_MS);
+
+  // Har 5 daqiqada yangi videolarni tekshirish
 
   setInterval(
     loadVideos,
