@@ -144,21 +144,7 @@ main{padding:32px 12px 28px}.intro{margin-bottom:22px}.player-wrap{padding:3px;b
   </section>
   <!-- GALEREYA -->
   <section id="f1-photo-gallery" aria-label="F1 foto galereya"></section>
-  <!-- KEYINGI SESSIYA -->
-  <section class="next-session" aria-label="Keyingi F1 sessiyasi">
-    <div class="ns-head"><div class="ns-heading">KEYINGI SESSIYA</div></div>
-    <img class="ns-photo" src="https://img.redbull.com/images/q_auto,f_auto/redbullcom/2023/10/27/br6gkvesyfank7ykisoo/f1-meksika-gp" alt="Meksika Gran-prisi — Autódromo Hermanos Rodríguez" loading="lazy">
-    <div class="ns-gp" id="sessionGP">MEKSIKA GRAN-PRISI</div>
-    <div class="ns-title" id="sessionTitle">Tekshirilmoqda...</div>
-    <div class="ns-time-info" id="sessionTimeInfo">Sessiya vaqti yuklanmoqda...</div>
-    <div class="ns-timer">
-      <div class="ns-unit"><div class="ns-number" id="days">00</div><div class="ns-label">KUN</div></div>
-      <div class="ns-unit"><div class="ns-number" id="hours">00</div><div class="ns-label">SOAT</div></div>
-      <div class="ns-unit"><div class="ns-number" id="minutes">00</div><div class="ns-label">DAQIQA</div></div>
-      <div class="ns-unit"><div class="ns-number" id="seconds">00</div><div class="ns-label">SONIYA</div></div>
-    </div>
-  </section>
-  <!-- OXIRGI SESSIYA NATIJALARI -->
+<!-- OXIRGI SESSIYA NATIJALARI -->
   <section class="results-card" aria-label="Oxirgi F1 sessiyasi natijalari">
     <div class="results-head"><h2 class="results-title" id="resultsTitle">🏁 OXIRGI SESSIYA</h2><span class="results-pill">TOP 5</span></div>
     <div class="results-meta" id="resultsMeta">Natijalar tekshirilmoqda...</div>
@@ -174,7 +160,7 @@ main{padding:32px 12px 28px}.intro{margin-bottom:22px}.player-wrap{padding:3px;b
 </main>
 <footer><span>F1 UZBEKISTAN TV</span> · JONLI EFIR</footer>
 
-<!-- SESSIYA TAYMERI: IKKALA JOY UCHUN BITTA MANBA -->
+<!-- PLEYER ICHIDAGI SESSIYA TAYMERI -->
 <script>
 (() => {
   const sessions = [
@@ -194,29 +180,24 @@ main{padding:32px 12px 28px}.intro{margin-bottom:22px}.player-wrap{padding:3px;b
     const now=Date.now();
     const session=sessions.find(s=>Date.parse(s.date)>now);
     if(!session){
-      el('sessionGP').textContent='F1 TAQVIMI';
-      el('sessionTitle').textContent='Keyingi Gran-pri jadvali kutilmoqda';
-      el('sessionTimeInfo').textContent='Yangi sessiya sanasi hali kiritilmagan.';
       el('tvGP').textContent='F1 TAQVIMI';
       el('tvSession').textContent='KEYINGI SESSIYA KUTILMOQDA';
       el('tvDate').textContent='Yangi sessiya sanasi hali kiritilmagan.';
-      ['days','hours','minutes','seconds','tvDays','tvHours','tvMinutes','tvSeconds'].forEach(id=>el(id).textContent='--');
+      ['tvDays','tvHours','tvMinutes','tvSeconds'].forEach(id=>el(id).textContent='--');
       return;
     }
     const target=new Date(session.date);
     const diff=Math.max(0,target.getTime()-now);
     const time='📅 '+formatLocal(target)+' — Toshkent vaqti';
-    el('sessionGP').textContent=el('tvGP').textContent=session.gp;
-    el('sessionTitle').textContent=session.name;
+    el('tvGP').textContent=session.gp;
     el('tvSession').textContent=session.name.toLocaleUpperCase('uz-UZ');
-    el('sessionTimeInfo').textContent=el('tvDate').textContent=time;
+    el('tvDate').textContent=time;
     const values=[
       pad(Math.floor(diff/86400000)),
       pad(Math.floor((diff%86400000)/3600000)),
       pad(Math.floor((diff%3600000)/60000)),
       pad(Math.floor((diff%60000)/1000))
     ];
-    ['days','hours','minutes','seconds'].forEach((id,i)=>el(id).textContent=values[i]);
     ['tvDays','tvHours','tvMinutes','tvSeconds'].forEach((id,i)=>el(id).textContent=values[i]);
   }
   update();
