@@ -5,18 +5,21 @@
 
   const ROTATE_MS = 15000;
   const REFRESH_MS = 5 * 60 * 1000;
+  const THUMB_TIMEOUT = 10000;
 
-  const thumbnails = new Map();
+  const thumbnailCache = new Map();
   const thumbnailJobs = new Map();
+  const formatCache = new Map();
 
   let videos = [];
   let currentIndex = 0;
+  let modalIndex = 0;
   let activeVideo = null;
+  let previewVideo = null;
+  let renderToken = 0;
+  let loading = false;
   let previousOverflow = "";
   let lastFocus = null;
-  let renderToken = 0;
-  let modalIndex = 0;
-  let loading = false;
 
   // ==========================================
   // DIZAYN
@@ -52,17 +55,14 @@
 
     #f1-cinema-premium .cp-heading::before {
       content: "";
-      display: block;
       width: 6px;
       height: 34px;
       background: #e10600;
       border-radius: 4px;
+      flex-shrink: 0;
     }
 
-    /* GALEREYA OYNASI */
-
     #f1-cinema-premium .cp-gallery {
-      position: relative;
       width: 100%;
       overflow: hidden;
       border: 1px solid #34343c;
@@ -71,56 +71,65 @@
       box-shadow: 0 12px 35px #0007;
     }
 
-    #f1-cinema-premium .cp-stage {
-      position: relative;
+    #f1-cinema-premium .cp-stage-wrap {
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       width: 100%;
-      min-height: 250px;
-      max-height: 75vh;
-      padding: 0;
-      border: 0;
       background: #101014;
-      cursor: pointer;
-      overflow: hidden;
     }
 
-    /*
-      MUHIM:
-      object-fit: contain videoni kesmaydi.
-      Oyna vertikal yoki gorizontal formatga
-      qarab avtomatik moslashadi.
-    */
+    #f1-cinema-premium .cp-stage {
+      position: relative;
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      min-height: 200px;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+      background: #101014;
+      color: #fff;
+      cursor: pointer;
+    }
 
     #f1-cinema-premium .cp-stage.cp-landscape {
+      width: 100%;
       aspect-ratio: 16 / 9;
     }
 
     #f1-cinema-premium .cp-stage.cp-portrait {
-      aspect-ratio: 9 / 16;
       width: min(100%, 430px);
+      aspect-ratio: 9 / 16;
       max-height: 75vh;
-      margin: 0 auto;
     }
 
     #f1-cinema-premium .cp-stage.cp-square {
-      aspect-ratio: 1 / 1;
       width: min(100%, 650px);
-      margin: 0 auto;
+      aspect-ratio: 1 / 1;
     }
 
-    #f1-cinema-premium .cp-image {
+    #f1-cinema-premium .cp-media {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #101014;
+      overflow: hidden;
+    }
+
+    #f1-cinema-premium .cp-image,
+    #f1-cinema-premium .cp-preview-video {
       display: block;
       width: 100%;
       height: 100%;
       object-fit: contain;
       background: #101014;
-      transition: opacity .35s ease;
     }
 
-    #f1-cinema-premium .cp-image.cp-fade {
-      opacity: 0;
+    #f1-cinema-premium .cp-preview-video {
+      pointer-events: none;
     }
 
     #f1-cinema-premium .cp-placeholder {
@@ -131,11 +140,11 @@
       padding: 20px;
       background: radial-gradient(
         circle,
-        #33333c,
+        #303039,
         #101014
       );
-      color: #ccc;
-      font-size: 15px;
+      color: #bbb;
+      font-size: 14px;
       font-weight: 800;
       text-align: center;
     }
@@ -146,7 +155,7 @@
       background: linear-gradient(
         transparent,
         rgba(0, 0, 0, .35),
-        rgba(0, 0, 0, .9)
+        rgba(0, 0, 0, .88)
       );
       pointer-events: none;
     }
@@ -210,8 +219,6 @@
       background: #e10600;
     }
 
-    /* GALEREYA BOSHQARUVI */
-
     #f1-cinema-premium .cp-controls {
       display: flex;
       align-items: center;
@@ -247,8 +254,8 @@
 
     #f1-cinema-premium .cp-dots {
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       flex-wrap: wrap;
       gap: 6px;
       min-width: 0;
@@ -307,7 +314,7 @@
       display: none;
     }
 
-    /* VIDEO OCHILADIGAN OYNA */
+    /* KATTA VIDEO OYNASI */
 
     #f1-cinema-modal {
       position: fixed;
@@ -417,10 +424,6 @@
         border-radius: 12px;
       }
 
-      #f1-cinema-premium .cp-stage {
-        min-height: 200px;
-      }
-
       #f1-cinema-premium .cp-stage.cp-portrait {
         width: min(100%, 340px);
         max-height: 70vh;
@@ -482,35 +485,27 @@
   );
 
   root.innerHTML = `
-    <h2 class="cp-heading">
-      🎬 F1 CINEMA
-    </h2>
+    <h2 class="cp-heading">🎬 F1 CINEMA</h2>
 
     <div class="cp-gallery">
-
-      <button
-        type="button"
-        class="cp-stage cp-landscape"
-        aria-label="Videoni tomosha qilish"
-      >
-        <div class="cp-placeholder">
-          Videolar yuklanmoqda...
-        </div>
-
-        <img
-          class="cp-image"
-          alt=""
-          style="display:none"
+      <div class="cp-stage-wrap">
+        <button
+          type="button"
+          class="cp-stage cp-landscape"
+          aria-label="Videoni tomosha qilish"
         >
+          <div class="cp-media">
+            <div class="cp-placeholder">
+              Videolar yuklanmoqda...
+            </div>
+          </div>
 
-        <div class="cp-shade"></div>
-
-        <div class="cp-play">▶</div>
-
-        <div class="cp-counter"></div>
-
-        <div class="cp-caption"></div>
-      </button>
+          <div class="cp-shade"></div>
+          <div class="cp-play">▶</div>
+          <div class="cp-counter"></div>
+          <div class="cp-caption"></div>
+        </button>
+      </div>
 
       <div class="cp-controls">
         <div class="cp-arrows">
@@ -544,9 +539,7 @@
     <div class="cp-status" role="status"></div>
   `;
 
-  const target = document.querySelector(
-    ".calendar-section"
-  );
+  const target = document.querySelector(".calendar-section");
 
   if (target) {
     target.before(root);
@@ -558,8 +551,7 @@
   }
 
   const stage = root.querySelector(".cp-stage");
-  const imageElement = root.querySelector(".cp-image");
-  const placeholder = root.querySelector(".cp-placeholder");
+  const mediaBox = root.querySelector(".cp-media");
   const caption = root.querySelector(".cp-caption");
   const counter = root.querySelector(".cp-counter");
   const dots = root.querySelector(".cp-dots");
@@ -583,10 +575,7 @@
       <div class="cp-modalhead">
         <h3 class="cp-modaltitle"></h3>
 
-        <button
-          type="button"
-          class="cp-close"
-        >
+        <button type="button" class="cp-close">
           ✕ Yopish
         </button>
       </div>
@@ -594,17 +583,11 @@
       <div class="cp-frame"></div>
 
       <div class="cp-navigation">
-        <button
-          type="button"
-          class="cp-nav cp-modal-prev"
-        >
+        <button type="button" class="cp-nav cp-modal-prev">
           ← Oldingi video
         </button>
 
-        <button
-          type="button"
-          class="cp-nav cp-modal-next"
-        >
+        <button type="button" class="cp-nav cp-modal-next">
           Keyingi video →
         </button>
       </div>
@@ -616,7 +599,6 @@
   const frame = modal.querySelector(".cp-frame");
   const modalTitle = modal.querySelector(".cp-modaltitle");
   const closeButton = modal.querySelector(".cp-close");
-
   const modalPrevious = modal.querySelector(".cp-modal-prev");
   const modalNext = modal.querySelector(".cp-modal-next");
 
@@ -724,6 +706,17 @@
   // VIDEO FORMATINI ANIQLASH
   // ==========================================
 
+  function formatFromDimensions(width, height) {
+    if (!width || !height) return "landscape";
+
+    const ratio = width / height;
+
+    if (ratio < 0.85) return "portrait";
+    if (ratio > 1.15) return "landscape";
+
+    return "square";
+  }
+
   function declaredFormat(video) {
     const ratio = String(
       video.aspect_ratio ||
@@ -754,15 +747,12 @@
     return "";
   }
 
-  function formatFromDimensions(width, height) {
-    if (!width || !height) return "landscape";
-
-    const ratio = width / height;
-
-    if (ratio < 0.85) return "portrait";
-    if (ratio > 1.15) return "landscape";
-
-    return "square";
+  function getFormat(video) {
+    return (
+      formatCache.get(videoURL(video)) ||
+      declaredFormat(video) ||
+      "landscape"
+    );
   }
 
   function setFormat(format) {
@@ -782,14 +772,14 @@
   }
 
   // ==========================================
-  // VIDEODAN MUQOVA VA FORMAT OLISH
+  // MUQOVANI TEKSHIRISH
   // ==========================================
 
   function inspectVideo(video) {
     const url = videoURL(video);
 
-    if (thumbnails.has(url)) {
-      return Promise.resolve(thumbnails.get(url));
+    if (thumbnailCache.has(url)) {
+      return Promise.resolve(thumbnailCache.get(url));
     }
 
     if (thumbnailJobs.has(url)) {
@@ -799,41 +789,94 @@
     const job = new Promise(resolve => {
       const media = document.createElement("video");
 
-      let finished = false;
-
       const result = {
         thumbnail: "",
-        format: declaredFormat(video) || "landscape"
+        format: getFormat(video)
       };
 
-      const timeout = setTimeout(() => {
-        finish();
-      }, 12000);
+      let finished = false;
+      let attempt = 0;
+      let waitingForFrame = false;
+
+      const positions = [1, 3, 5];
+
+      const timer = setTimeout(
+        finish,
+        THUMB_TIMEOUT
+      );
+
+      function cleanup() {
+        media.pause();
+        media.removeAttribute("src");
+        media.load();
+      }
 
       function finish() {
         if (finished) return;
 
         finished = true;
-        clearTimeout(timeout);
+        clearTimeout(timer);
 
-        media.pause();
-        media.removeAttribute("src");
-        media.load();
+        cleanup();
 
-        thumbnails.set(url, result);
+        if (result.thumbnail) {
+          thumbnailCache.set(url, result);
+        }
+
+        formatCache.set(url, result.format);
+
         resolve(result);
       }
 
-      function capture() {
+      function seekNext() {
+        if (finished) return;
+
+        if (attempt >= positions.length) {
+          finish();
+          return;
+        }
+
+        const duration = media.duration;
+
+        let second = positions[attempt++];
+
+        if (Number.isFinite(duration) && duration > 0) {
+          second = Math.min(
+            second,
+            Math.max(0, duration - 0.1)
+          );
+        }
+
+        waitingForFrame = true;
+
         try {
           if (
-            !media.videoWidth ||
-            !media.videoHeight
+            Math.abs(media.currentTime - second) < 0.05 &&
+            media.readyState >= 2
           ) {
-            finish();
-            return;
+            capture();
+          } else {
+            media.currentTime = second;
           }
+        } catch {
+          finish();
+        }
+      }
 
+      function capture() {
+        if (finished || !waitingForFrame) return;
+
+        if (
+          !media.videoWidth ||
+          !media.videoHeight ||
+          media.readyState < 2
+        ) {
+          return;
+        }
+
+        waitingForFrame = false;
+
+        try {
           result.format = formatFromDimensions(
             media.videoWidth,
             media.videoHeight
@@ -856,14 +899,16 @@
             Math.round(media.videoHeight * scale)
           );
 
-          const context = canvas.getContext("2d");
+          const ctx = canvas.getContext("2d", {
+            willReadFrequently: true
+          });
 
-          if (!context) {
+          if (!ctx) {
             finish();
             return;
           }
 
-          context.drawImage(
+          ctx.drawImage(
             media,
             0,
             0,
@@ -871,13 +916,67 @@
             canvas.height
           );
 
+          const sample = document.createElement("canvas");
+
+          sample.width = 16;
+          sample.height = 16;
+
+          const sampleCtx = sample.getContext("2d", {
+            willReadFrequently: true
+          });
+
+          if (!sampleCtx) {
+            finish();
+            return;
+          }
+
+          sampleCtx.drawImage(
+            canvas,
+            0,
+            0,
+            16,
+            16
+          );
+
+          const pixels = sampleCtx.getImageData(
+            0,
+            0,
+            16,
+            16
+          ).data;
+
+          let brightness = 0;
+
+          for (let i = 0; i < pixels.length; i += 4) {
+            brightness +=
+              pixels[i] * 0.299 +
+              pixels[i + 1] * 0.587 +
+              pixels[i + 2] * 0.114;
+          }
+
+          brightness /= pixels.length / 4;
+
+          if (
+            brightness < 12 &&
+            attempt < positions.length
+          ) {
+            seekNext();
+            return;
+          }
+
           result.thumbnail = canvas.toDataURL(
             "image/jpeg",
             0.82
           );
 
           finish();
-        } catch {
+
+        } catch (error) {
+          console.warn(
+            "F1 CINEMA: kadr olinmadi",
+            error
+          );
+
           finish();
         }
       }
@@ -895,42 +994,22 @@
               media.videoWidth,
               media.videoHeight
             );
+
+            formatCache.set(url, result.format);
           }
 
-          const duration = media.duration;
-
-          const second =
-            Number.isFinite(duration) && duration > 0
-              ? Math.min(
-                  1,
-                  Math.max(0, duration - 0.1)
-                )
-              : 0;
-
-          try {
-            if (second > 0) {
-              media.currentTime = second;
-            } else if (media.readyState >= 2) {
-              capture();
-            } else {
-              media.addEventListener(
-                "loadeddata",
-                capture,
-                { once: true }
-              );
-            }
-          } catch {
-            finish();
-          }
+          seekNext();
         },
         { once: true }
       );
 
-      media.addEventListener(
-        "seeked",
-        capture,
-        { once: true }
-      );
+      media.addEventListener("seeked", () => {
+        if (media.readyState >= 2) {
+          capture();
+        }
+      });
+
+      media.addEventListener("loadeddata", capture);
 
       media.addEventListener(
         "error",
@@ -952,7 +1031,155 @@
   }
 
   // ==========================================
-  // NUQTALAR
+  // ESKI MUQOVANI TOZALASH
+  // ==========================================
+
+  function clearPreview() {
+    if (previewVideo) {
+      previewVideo.pause();
+      previewVideo.removeAttribute("src");
+      previewVideo.load();
+      previewVideo = null;
+    }
+
+    mediaBox.replaceChildren();
+  }
+
+  function showPlaceholder(message) {
+    clearPreview();
+
+    const placeholder = document.createElement("div");
+
+    placeholder.className = "cp-placeholder";
+    placeholder.textContent = message;
+
+    mediaBox.appendChild(placeholder);
+  }
+
+  // ==========================================
+  // RASM MUQOVASINI KO'RSATISH
+  // ==========================================
+
+  function showImage(src, token, onFailure) {
+    const image = new Image();
+
+    image.onload = () => {
+      if (token !== renderToken) return;
+
+      clearPreview();
+
+      image.className = "cp-image";
+      image.alt = "";
+
+      mediaBox.appendChild(image);
+    };
+
+    image.onerror = () => {
+      if (token !== renderToken) return;
+
+      if (typeof onFailure === "function") {
+        onFailure();
+      }
+    };
+
+    image.src = src;
+  }
+
+  // ==========================================
+  // ZAXIRA: VIDEO KADRINI KO'RSATISH
+  // ==========================================
+
+  function showVideoPreview(video, token) {
+    if (token !== renderToken) return;
+
+    clearPreview();
+
+    const preview = document.createElement("video");
+
+    preview.className = "cp-preview-video";
+    preview.muted = true;
+    preview.defaultMuted = true;
+    preview.playsInline = true;
+    preview.preload = "auto";
+    preview.autoplay = false;
+    preview.controls = false;
+    preview.loop = false;
+
+    preview.setAttribute("muted", "");
+    preview.setAttribute("playsinline", "");
+
+    let frameReady = false;
+
+    const fallbackTimer = setTimeout(() => {
+      if (
+        token !== renderToken ||
+        frameReady
+      ) {
+        return;
+      }
+
+      showPlaceholder("🎬 F1 VIDEO");
+    }, 10000);
+
+    function ready() {
+      if (token !== renderToken) return;
+
+      frameReady = true;
+      clearTimeout(fallbackTimer);
+    }
+
+    preview.addEventListener(
+      "loadedmetadata",
+      () => {
+        if (token !== renderToken) return;
+
+        if (preview.videoWidth && preview.videoHeight) {
+          const format = formatFromDimensions(
+            preview.videoWidth,
+            preview.videoHeight
+          );
+
+          formatCache.set(videoURL(video), format);
+          setFormat(format);
+        }
+
+        const duration = preview.duration;
+
+        const second =
+          Number.isFinite(duration) && duration > 0
+            ? Math.min(1, Math.max(0, duration - 0.1))
+            : 0;
+
+        try {
+          preview.currentTime = second;
+        } catch {
+          // Brauzer ruxsat bermasa, birinchi kadr qoladi.
+        }
+      }
+    );
+
+    preview.addEventListener("seeked", ready);
+    preview.addEventListener("loadeddata", ready);
+
+    preview.addEventListener("error", () => {
+      clearTimeout(fallbackTimer);
+
+      if (token === renderToken) {
+        showPlaceholder("🎬 F1 VIDEO");
+      }
+    });
+
+    preview.src = videoURL(video);
+
+    previewVideo = preview;
+
+    mediaBox.appendChild(preview);
+
+    preview.load();
+  }
+
+  // ==========================================
+  // GALEREYA NUQTALARI
   // ==========================================
 
   function renderDots() {
@@ -960,15 +1187,13 @@
 
     if (videos.length <= 1) return;
 
-    const maxDots = Math.min(videos.length, 12);
-
-    for (let i = 0; i < maxDots; i++) {
+    for (let i = 0; i < videos.length; i++) {
       const dot = document.createElement("button");
 
       dot.type = "button";
       dot.className = "cp-dot";
 
-      if (i === currentIndex % maxDots) {
+      if (i === currentIndex) {
         dot.classList.add("cp-active");
       }
 
@@ -992,10 +1217,8 @@
   async function show(index) {
     if (!videos.length) return;
 
-    const nextIndex =
+    currentIndex =
       (index + videos.length) % videos.length;
-
-    currentIndex = nextIndex;
 
     const video = videos[currentIndex];
     const token = ++renderToken;
@@ -1010,18 +1233,44 @@
       title(video) + " — tomosha qilish"
     );
 
+    setFormat(getFormat(video));
     renderDots();
 
-    imageElement.classList.add("cp-fade");
-    imageElement.style.display = "none";
+    showPlaceholder("Muqova yuklanmoqda...");
 
-    placeholder.style.display = "grid";
-    placeholder.textContent = "Muqova yuklanmoqda...";
+    // Avval tayyor muqovani ko'rsatamiz.
+    const suppliedThumb = thumbnailURL(video);
 
-    const knownFormat = declaredFormat(video);
+    if (suppliedThumb) {
+      showImage(suppliedThumb, token, async () => {
+        const info = await inspectVideo(video);
 
-    setFormat(knownFormat || "landscape");
+        if (token !== renderToken) return;
 
+        setFormat(info.format);
+
+        if (info.thumbnail) {
+          showImage(
+            info.thumbnail,
+            token,
+            () => showVideoPreview(video, token)
+          );
+        } else {
+          showVideoPreview(video, token);
+        }
+      });
+
+      // Muqova tayyor bo'lsa ham formatni aniqlaymiz.
+      inspectVideo(video).then(info => {
+        if (token === renderToken) {
+          setFormat(info.format);
+        }
+      });
+
+      return;
+    }
+
+    // Muqova yo'q bo'lsa, videodan kadr olamiz.
     let info;
 
     try {
@@ -1029,48 +1278,27 @@
     } catch {
       info = {
         thumbnail: "",
-        format: knownFormat || "landscape"
+        format: getFormat(video)
       };
     }
 
     if (token !== renderToken) return;
 
-    setFormat(info.format || knownFormat || "landscape");
+    setFormat(info.format);
 
-    const thumb = thumbnailURL(video) || info.thumbnail;
-
-    if (!thumb) {
-      placeholder.textContent = "🎬 F1 VIDEO";
-      return;
+    if (info.thumbnail) {
+      showImage(
+        info.thumbnail,
+        token,
+        () => showVideoPreview(video, token)
+      );
+    } else {
+      showVideoPreview(video, token);
     }
-
-    const preload = new Image();
-
-    preload.onload = () => {
-      if (token !== renderToken) return;
-
-      imageElement.src = thumb;
-      imageElement.style.display = "block";
-
-      placeholder.style.display = "none";
-
-      requestAnimationFrame(() => {
-        imageElement.classList.remove("cp-fade");
-      });
-    };
-
-    preload.onerror = () => {
-      if (token !== renderToken) return;
-
-      placeholder.style.display = "grid";
-      placeholder.textContent = "🎬 F1 VIDEO";
-    };
-
-    preload.src = thumb;
   }
 
   // ==========================================
-  // PLEYERNI TOZALASH
+  // VIDEO PLEYER
   // ==========================================
 
   function destroyPlayer() {
@@ -1089,10 +1317,6 @@
     frame.replaceChildren();
   }
 
-  // ==========================================
-  // VIDEONI KATTA OYNADA OCHISH
-  // ==========================================
-
   function play(index) {
     if (!videos.length) return;
 
@@ -1110,12 +1334,7 @@
 
     modalTitle.textContent = title(video);
 
-    const cached = thumbnails.get(videoURL(video));
-
-    const format =
-      cached?.format ||
-      declaredFormat(video) ||
-      "landscape";
+    const format = getFormat(video);
 
     frame.classList.remove(
       "cp-vertical",
@@ -1143,6 +1362,11 @@
         const actualFormat = formatFromDimensions(
           player.videoWidth,
           player.videoHeight
+        );
+
+        formatCache.set(
+          videoURL(video),
+          actualFormat
         );
 
         frame.classList.remove(
@@ -1184,9 +1408,7 @@
   }
 
   function closeModal() {
-    if (!modal.classList.contains("cp-open")) {
-      return;
-    }
+    if (!modal.classList.contains("cp-open")) return;
 
     modal.classList.remove("cp-open");
 
@@ -1245,7 +1467,7 @@
   });
 
   // ==========================================
-  // JSON FAYLDAN VIDEOLARNI O'QISH
+  // VIDEO JSON FAYLINI YUKLASH
   // ==========================================
 
   async function loadVideos() {
@@ -1296,11 +1518,9 @@
         caption.textContent = "";
         counter.textContent = "";
 
-        imageElement.style.display = "none";
-
-        placeholder.style.display = "grid";
-        placeholder.textContent =
-          "Hozircha videolar mavjud emas.";
+        showPlaceholder(
+          "Hozircha videolar mavjud emas."
+        );
 
         dots.replaceChildren();
 
@@ -1316,7 +1536,10 @@
       currentIndex =
         foundIndex >= 0 ? foundIndex : 0;
 
-      if (oldKeys !== newKeys || renderToken === 0) {
+      if (
+        oldKeys !== newKeys ||
+        renderToken === 0
+      ) {
         await show(currentIndex);
       }
 
@@ -1339,8 +1562,7 @@
 
   loadVideos();
 
-  // Har 15 soniyada keyingi video
-
+  // Har 15 soniyada almashadi.
   setInterval(() => {
     if (
       videos.length > 1 &&
@@ -1351,8 +1573,7 @@
     }
   }, ROTATE_MS);
 
-  // Har 5 daqiqada yangi videolarni tekshirish
-
+  // Har 5 daqiqada yangi videolar tekshiriladi.
   setInterval(
     loadVideos,
     REFRESH_MS
