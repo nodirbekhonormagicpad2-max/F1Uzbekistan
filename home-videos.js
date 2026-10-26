@@ -3,25 +3,19 @@
 
   if (document.getElementById("f1-cinema-premium")) return;
 
-  const ROTATE_MS = 15 * 60 * 1000;
+  const ROTATE_MS = 15000;
   const REFRESH_MS = 5 * 60 * 1000;
-  const PAGE_SIZE = 4;
-
-  const thumbnails = new Map();
-  const thumbnailJobs = new Map();
 
   let videos = [];
-  let page = 0;
-  let lastRotation = Date.now();
-  let activePlayer = null;
-  let plyrPromise = null;
-  let playToken = 0;
+  let currentIndex = 0;
+  let activeVideo = null;
   let previousOverflow = "";
   let lastFocus = null;
+  let requestId = 0;
 
-  // ==============================
+  // =====================================
   // DIZAYN
-  // ==============================
+  // =====================================
 
   const style = document.createElement("style");
 
@@ -38,126 +32,109 @@
     }
 
     #f1-cinema-premium {
-      margin: 22px 0;
+      width: 100%;
+      margin: 24px 0;
     }
 
-    #f1-cinema-premium .cp-shell {
-      background: linear-gradient(140deg, #1b1b22, #0d0d11 70%);
-      border: 1px solid #34343c;
-      border-radius: 17px;
-      padding: 18px;
-      overflow: hidden;
-    }
-
-    #f1-cinema-premium .cp-top {
+    #f1-cinema-premium .cp-heading {
       display: flex;
-      justify-content: space-between;
       align-items: center;
       gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    #f1-cinema-premium .cp-logo {
-      font-size: clamp(22px, 4vw, 32px);
+      margin: 0 0 14px;
+      font-size: clamp(19px, 3vw, 28px);
       font-weight: 900;
-      margin: 0;
+      letter-spacing: .045em;
     }
 
-    #f1-cinema-premium .cp-logo span {
-      color: #ff3838;
-    }
-
-    #f1-cinema-premium .cp-sub {
-      color: #aaa;
-      font-size: 11px;
-      margin-top: 6px;
-    }
-
-    #f1-cinema-premium .cp-all {
-      background: #e10600;
-      color: #fff;
-      text-decoration: none;
-      padding: 10px 12px;
-      border-radius: 9px;
-      font-size: 12px;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    #f1-cinema-premium .cp-sectionhead {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    #f1-cinema-premium .cp-rowtitle {
-      font-size: 17px;
-      font-weight: 900;
-      margin: 0;
-    }
-
-    #f1-cinema-premium .cp-timer {
-      font-size: 11px;
-      color: #aaa;
-      text-align: right;
-    }
-
-    #f1-cinema-premium .cp-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    #f1-cinema-premium .cp-card {
-      background: #111116;
-      border: 1px solid #363641;
-      border-radius: 14px;
-      overflow: hidden;
-      min-width: 0;
-    }
-
-    #f1-cinema-premium .cp-card:hover {
-      border-color: #e10600;
-    }
-
-    #f1-cinema-premium .cp-thumb {
+    #f1-cinema-premium .cp-heading::before {
+      content: "";
       display: block;
+      width: 5px;
+      height: 28px;
+      background: #e10600;
+      border-radius: 4px;
+    }
+
+    #f1-cinema-premium .cp-stage {
+      position: relative;
       width: 100%;
       aspect-ratio: 16 / 9;
-      position: relative;
-      padding: 0;
-      border: 0;
-      background: #191920;
-      cursor: pointer;
       overflow: hidden;
+      background: #101014;
+      border: 1px solid #34343c;
+      border-radius: 14px;
+      cursor: pointer;
+      box-shadow: 0 12px 35px #0007;
     }
 
-    #f1-cinema-premium .cp-thumb img {
+    #f1-cinema-premium .cp-image {
+      display: block;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: block;
+      opacity: 1;
+      transition: opacity .45s ease;
     }
 
-    #f1-cinema-premium .cp-cover {
-      width: 100%;
-      height: 100%;
+    #f1-cinema-premium .cp-image.cp-fade {
+      opacity: .15;
+    }
+
+    #f1-cinema-premium .cp-placeholder {
+      position: absolute;
+      inset: 0;
       display: grid;
       place-items: center;
-      background: radial-gradient(circle, #383842, #101014);
-      font-size: 36px;
-      font-weight: 900;
-      color: #fff;
+      background: radial-gradient(
+        circle,
+        #303039,
+        #101014
+      );
+      color: #aaa;
+      font-size: 14px;
+      font-weight: 800;
+      text-align: center;
+      padding: 20px;
     }
 
-    #f1-cinema-premium .cp-cover.cp-loading {
-      font-size: 12px;
-      font-weight: 700;
-      color: #aaa;
-      text-align: center;
-      padding: 12px;
+    #f1-cinema-premium .cp-shade {
+      position: absolute;
+      inset: 25% 0 0;
+      pointer-events: none;
+      background: linear-gradient(
+        transparent,
+        rgba(0, 0, 0, .3) 35%,
+        rgba(0, 0, 0, .95)
+      );
+    }
+
+    #f1-cinema-premium .cp-caption {
+      position: absolute;
+      left: clamp(15px, 4%, 45px);
+      bottom: clamp(15px, 5%, 45px);
+      right: 75px;
+      pointer-events: none;
+      font-size: clamp(17px, 3.5vw, 42px);
+      font-weight: 900;
+      line-height: 1.14;
+      letter-spacing: .025em;
+      text-shadow: 0 3px 15px #000;
+      overflow-wrap: anywhere;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    #f1-cinema-premium .cp-caption::after {
+      content: "";
+      display: block;
+      width: clamp(55px, 12vw, 115px);
+      height: 4px;
+      margin-top: 12px;
+      background: #e10600;
+      border-radius: 4px;
+      box-shadow: 0 0 14px #e1060099;
     }
 
     #f1-cinema-premium .cp-play {
@@ -165,79 +142,86 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: #e10600;
       display: grid;
       place-items: center;
+      width: clamp(56px, 10vw, 85px);
+      height: clamp(56px, 10vw, 85px);
+      border-radius: 50%;
+      background: #e10600;
       color: #fff;
-      font-size: 20px;
-      box-shadow: 0 4px 20px #0009;
+      font-size: clamp(23px, 4vw, 34px);
+      box-shadow: 0 5px 25px #000a;
       pointer-events: none;
     }
 
-    #f1-cinema-premium .cp-cardbody {
-      padding: 13px;
-    }
-
-    #f1-cinema-premium .cp-platform {
-      color: #b7b7c0;
-      font-size: 11px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    #f1-cinema-premium .cp-platform::before {
-      content: "";
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      margin-right: 6px;
-      border-radius: 50%;
-      background: #e10600;
-    }
-
-    #f1-cinema-premium .cp-cardtitle {
-      font-size: 15px;
+    #f1-cinema-premium .cp-count {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      padding: 7px 11px;
+      border-radius: 20px;
+      background: #000a;
+      color: #fff;
+      font-size: 12px;
       font-weight: 800;
-      line-height: 1.45;
-      min-height: 43px;
-      margin: 0;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+      pointer-events: none;
     }
 
-    #f1-cinema-premium .cp-cardmeta {
+    #f1-cinema-premium .cp-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    #f1-cinema-premium .cp-info {
       color: #aaa;
-      font-size: 11px;
-      margin-top: 10px;
+      font-size: 12px;
+    }
+
+    #f1-cinema-premium .cp-all {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 15px;
+      border-radius: 8px;
+      background: #e10600;
+      color: #fff;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    #f1-cinema-premium .cp-all:hover {
+      background: #b90500;
     }
 
     #f1-cinema-premium .cp-status {
-      font-size: 12px;
+      padding: 20px 0;
       color: #aaa;
-      padding: 12px 0;
+      font-size: 13px;
     }
 
     #f1-cinema-premium .cp-status:empty {
       display: none;
     }
 
-    /* VIDEO OYNASI */
+    /* =====================================
+       KATTA VIDEO OYNASI
+       ===================================== */
 
     #f1-cinema-modal {
       position: fixed;
       inset: 0;
       z-index: 999999;
       display: none;
-      align-items: flex-start;
+      align-items: center;
       justify-content: center;
+      padding: 15px;
+      background: rgba(0, 0, 0, .96);
       overflow-y: auto;
-      background: rgba(0, 0, 0, 0.96);
-      padding: 12px;
     }
 
     #f1-cinema-modal.cp-open {
@@ -245,11 +229,11 @@
     }
 
     #f1-cinema-modal .cp-dialog {
-      width: min(960px, 100%);
+      width: min(1000px, 100%);
       margin: auto;
-      padding: 12px;
-      border: 1px solid #33343d;
-      border-radius: 13px;
+      padding: 14px;
+      border: 1px solid #353535;
+      border-radius: 14px;
       background: #111116;
     }
 
@@ -258,22 +242,24 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     #f1-cinema-modal .cp-modaltitle {
-      font-size: 14px;
-      font-weight: 900;
       margin: 0;
+      font-size: clamp(14px, 2.5vw, 20px);
+      font-weight: 900;
       line-height: 1.4;
     }
 
     #f1-cinema-modal .cp-close {
-      background: #e10600;
-      color: #fff;
+      flex-shrink: 0;
+      padding: 10px 13px;
       border: 0;
       border-radius: 8px;
-      padding: 10px 13px;
+      background: #e10600;
+      color: #fff;
+      font-size: 13px;
       font-weight: 900;
       cursor: pointer;
     }
@@ -281,9 +267,9 @@
     #f1-cinema-modal .cp-frame {
       width: 100%;
       aspect-ratio: 16 / 9;
-      background: #000;
-      border-radius: 9px;
       overflow: hidden;
+      border-radius: 9px;
+      background: #000;
     }
 
     #f1-cinema-modal .cp-frame.cp-vertical {
@@ -297,187 +283,119 @@
       display: block;
       width: 100%;
       height: 100%;
-      border: 0;
       object-fit: contain;
       background: #000;
     }
 
-    /* PLYR */
-
-    #f1-cinema-modal .plyr {
-      width: 100%;
-      height: 100%;
-      --plyr-color-main: #e10600;
-    }
-
-    #f1-cinema-modal .plyr__video-wrapper {
-      height: 100%;
-      background: #000;
-    }
-
-    #f1-cinema-modal .cp-nexttitle {
-      margin: 15px 0 9px;
-      font-size: 13px;
-      font-weight: 900;
-    }
-
-    #f1-cinema-modal .cp-nextlist {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 9px;
-    }
-
-    #f1-cinema-modal .cp-next {
+    #f1-cinema-modal .cp-navigation {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      min-width: 0;
-      padding: 7px;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    #f1-cinema-modal .cp-nav {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #393944;
+      border-radius: 8px;
       background: #22222a;
       color: #fff;
-      border: 1px solid #393944;
-      border-radius: 9px;
-      text-align: left;
+      font-size: 12px;
+      font-weight: 800;
       cursor: pointer;
     }
 
-    #f1-cinema-modal .cp-next img,
-    #f1-cinema-modal .cp-next-icon {
-      width: 90px;
-      aspect-ratio: 16 / 9;
-      flex-shrink: 0;
-      border-radius: 5px;
-      object-fit: cover;
-    }
-
-    #f1-cinema-modal .cp-next-icon {
-      display: grid;
-      place-items: center;
-      background: #111;
-      font-size: 24px;
-    }
-
-    #f1-cinema-modal .cp-next span {
-      font-size: 11px;
-      line-height: 1.35;
-      font-weight: 800;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+    #f1-cinema-modal .cp-nav:hover {
+      border-color: #e10600;
     }
 
     @media (max-width: 700px) {
-      #f1-cinema-premium {
-        margin: 18px 0;
+      #f1-cinema-premium .cp-stage {
+        border-radius: 12px;
       }
 
-      #f1-cinema-premium .cp-shell {
-        padding: 11px;
-        border-radius: 13px;
+      #f1-cinema-premium .cp-caption {
+        left: 17px;
+        right: 17px;
+        bottom: 17px;
+        font-size: clamp(16px, 4.5vw, 26px);
       }
 
-      #f1-cinema-premium .cp-logo {
-        font-size: 22px;
+      #f1-cinema-premium .cp-play {
+        width: 55px;
+        height: 55px;
+        font-size: 23px;
       }
 
-      #f1-cinema-premium .cp-sub {
+      #f1-cinema-premium .cp-info {
         font-size: 10px;
       }
 
       #f1-cinema-premium .cp-all {
-        font-size: 10px;
-        padding: 9px 10px;
+        font-size: 11px;
+        padding: 10px;
       }
 
-      #f1-cinema-premium .cp-grid {
-        gap: 10px;
+      #f1-cinema-modal {
+        padding: 8px;
       }
 
-      #f1-cinema-premium .cp-cardbody {
-        padding: 9px;
-      }
-
-      #f1-cinema-premium .cp-cardtitle {
-        font-size: 12px;
-        min-height: 35px;
-      }
-
-      #f1-cinema-premium .cp-platform,
-      #f1-cinema-premium .cp-cardmeta {
-        font-size: 10px;
-      }
-
-      #f1-cinema-premium .cp-play {
-        width: 39px;
-        height: 39px;
-        font-size: 16px;
-      }
-
-      #f1-cinema-premium .cp-rowtitle {
-        font-size: 14px;
-      }
-
-      #f1-cinema-premium .cp-timer {
-        font-size: 10px;
-      }
-
-      #f1-cinema-modal .cp-nextlist {
-        grid-template-columns: 1fr;
-      }
-
-      #f1-cinema-modal .cp-next img,
-      #f1-cinema-modal .cp-next-icon {
-        width: 100px;
+      #f1-cinema-modal .cp-dialog {
+        padding: 10px;
       }
     }
   `;
 
-  document.head.append(style);
+  document.head.appendChild(style);
 
-  // ==============================
-  // ASOSIY BLOK
-  // ==============================
+  // =====================================
+  // ASOSIY VIDEO GALEREYA
+  // =====================================
 
   const root = document.createElement("section");
 
   root.id = "f1-cinema-premium";
   root.setAttribute(
     "aria-label",
-    "F1 Cinema video markazi"
+    "F1 Cinema video galereyasi"
   );
 
   root.innerHTML = `
-    <div class="cp-shell">
-      <div class="cp-top">
-        <div>
-          <h2 class="cp-logo">
-            🎬 F1 <span>CINEMA</span>
-          </h2>
-          <div class="cp-sub">
-            F1 Uzbekistan TV · Premium video markazi
-          </div>
-        </div>
-        <a class="cp-all" href="./videos.html">
-          Barcha videolar →
-        </a>
+    <h2 class="cp-heading">🎬 F1 CINEMA</h2>
+
+    <div
+      class="cp-stage"
+      role="button"
+      tabindex="0"
+      aria-label="Videoni tomosha qilish"
+    >
+      <div class="cp-placeholder">
+        Videolar yuklanmoqda...
       </div>
 
-      <div class="cp-sectionhead">
-        <h3 class="cp-rowtitle">
-          🔥 Eng qiziqarli videolar
-        </h3>
-        <div class="cp-timer">
-          Har 15 daqiqada almashadi
-        </div>
-      </div>
+      <img
+        class="cp-image"
+        alt="F1 video muqovasi"
+        style="display:none"
+      >
 
-      <div class="cp-grid"></div>
-
-      <div class="cp-status" role="status">
-        Videolar yuklanmoqda…
-      </div>
+      <div class="cp-shade"></div>
+      <div class="cp-caption"></div>
+      <div class="cp-play">▶</div>
+      <div class="cp-count"></div>
     </div>
+
+    <div class="cp-footer">
+      <span class="cp-info">
+        Videolar har 15 soniyada almashadi
+      </span>
+
+      <a class="cp-all" href="./videos.html">
+        Barcha videolar →
+      </a>
+    </div>
+
+    <div class="cp-status" role="status"></div>
   `;
 
   const target = document.querySelector(
@@ -490,12 +408,19 @@
     (
       document.querySelector("main") ||
       document.body
-    ).append(root);
+    ).appendChild(root);
   }
 
-  // ==============================
-  // MODAL
-  // ==============================
+  const stage = root.querySelector(".cp-stage");
+  const imageElement = root.querySelector(".cp-image");
+  const placeholder = root.querySelector(".cp-placeholder");
+  const caption = root.querySelector(".cp-caption");
+  const count = root.querySelector(".cp-count");
+  const status = root.querySelector(".cp-status");
+
+  // =====================================
+  // VIDEO MODAL
+  // =====================================
 
   const modal = document.createElement("div");
 
@@ -507,80 +432,41 @@
     <div class="cp-dialog">
       <div class="cp-modalhead">
         <h3 class="cp-modaltitle"></h3>
-        <button type="button" class="cp-close">
+
+        <button
+          type="button"
+          class="cp-close"
+          aria-label="Videoni yopish"
+        >
           ✕ Yopish
         </button>
       </div>
 
       <div class="cp-frame"></div>
 
-      <h4 class="cp-nexttitle">
-        ▶ Keyingi videolar
-      </h4>
+      <div class="cp-navigation">
+        <button type="button" class="cp-nav cp-prev">
+          ← Oldingi video
+        </button>
 
-      <div class="cp-nextlist"></div>
+        <button type="button" class="cp-nav cp-next">
+          Keyingi video →
+        </button>
+      </div>
     </div>
   `;
 
-  document.body.append(modal);
-
-  const grid = root.querySelector(".cp-grid");
-  const status = root.querySelector(".cp-status");
+  document.body.appendChild(modal);
 
   const frame = modal.querySelector(".cp-frame");
   const closeButton = modal.querySelector(".cp-close");
+  const modalTitle = modal.querySelector(".cp-modaltitle");
+  const previousButton = modal.querySelector(".cp-prev");
+  const nextButton = modal.querySelector(".cp-next");
 
-  const nextList = modal.querySelector(
-    ".cp-nextlist"
-  );
-
-  // ==============================
-  // PLYR.JS YUKLASH
-  // ==============================
-
-  function loadPlyr() {
-    if (typeof window.Plyr === "function") {
-      return Promise.resolve(true);
-    }
-
-    if (plyrPromise) {
-      return plyrPromise;
-    }
-
-    plyrPromise = new Promise(resolve => {
-      if (!document.getElementById("f1-plyr-css")) {
-        const link = document.createElement("link");
-
-        link.id = "f1-plyr-css";
-        link.rel = "stylesheet";
-        link.href =
-          "https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css";
-
-        document.head.append(link);
-      }
-
-      const script = document.createElement("script");
-
-      script.src =
-        "https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.polyfilled.min.js";
-
-      script.async = true;
-
-      script.onload = () => {
-        resolve(typeof window.Plyr === "function");
-      };
-
-      script.onerror = () => resolve(false);
-
-      document.head.append(script);
-    });
-
-    return plyrPromise;
-  }
-
-  // ==============================
+  // =====================================
   // VIDEO MA'LUMOTLARI
-  // ==============================
+  // =====================================
 
   function title(video) {
     return String(
@@ -592,6 +478,16 @@
 
   function videoURL(video) {
     return String(
+      video.video_url ||
+      video.videoUrl ||
+      video.url ||
+      ""
+    );
+  }
+
+  function videoKey(video) {
+    return String(
+      video.id ||
       video.video_url ||
       video.videoUrl ||
       video.url ||
@@ -620,82 +516,78 @@
         url.protocol === "https:" &&
         /\.(mp4|webm)$/i.test(url.pathname)
       );
-
     } catch {
       return false;
     }
   }
 
-  function videoKey(video) {
-    return String(
-      video.id ||
-      video.url ||
-      video.video_url ||
-      ""
-    );
+  function normalize(items) {
+    if (!Array.isArray(items)) return [];
+
+    const seen = new Set();
+
+    return items.filter(video => {
+      if (
+        !video ||
+        typeof video !== "object" ||
+        !validUploadURL(video)
+      ) {
+        return false;
+      }
+
+      const key = videoKey(video);
+
+      if (seen.has(key)) return false;
+
+      seen.add(key);
+      return true;
+    });
   }
 
-  // ==============================
-  // MUQOVA
-  // ==============================
-
-  function image(video) {
+  function thumbnailURL(video) {
     const value =
       video.thumbnail ||
       video.thumbnail_url ||
-      video.thumbnailUrl;
+      video.thumbnailUrl ||
+      "";
+
+    if (typeof value !== "string") return "";
 
     if (
-      typeof value === "string" &&
-      (
-        /^https:\/\//i.test(value) ||
-        /^\.\//.test(value) ||
-        /^\//.test(value)
-      )
+      /^https:\/\//i.test(value) ||
+      value.startsWith("./") ||
+      value.startsWith("/")
     ) {
       return value;
     }
 
-    return thumbnails.get(videoURL(video)) || "";
+    return "";
   }
 
-  // MP4/WebM videodan muqova yaratish
+  // =====================================
+  // VIDEO MUQOVASINI YARATISH
+  // =====================================
 
   function generateThumbnail(video) {
-    const url = videoURL(video);
-
-    if (!validUploadURL(video)) {
-      return Promise.resolve("");
-    }
-
-    if (thumbnails.has(url)) {
-      return Promise.resolve(thumbnails.get(url));
-    }
-
-    if (thumbnailJobs.has(url)) {
-      return thumbnailJobs.get(url);
-    }
-
-    const job = new Promise(resolve => {
+    return new Promise(resolve => {
+      const url = videoURL(video);
       const media = document.createElement("video");
 
       let finished = false;
-      let timeout = null;
+
+      const timeout = setTimeout(() => {
+        finish("");
+      }, 12000);
 
       function finish(result) {
         if (finished) return;
 
         finished = true;
-
         clearTimeout(timeout);
 
         media.pause();
         media.removeAttribute("src");
         media.load();
-
-        if (result) {
-          thumbnails.set(url, result);
-        }
 
         resolve(result);
       }
@@ -710,9 +602,7 @@
             return;
           }
 
-          const canvas = document.createElement(
-            "canvas"
-          );
+          const canvas = document.createElement("canvas");
 
           const scale = Math.min(
             1,
@@ -745,9 +635,8 @@
           );
 
           finish(
-            canvas.toDataURL("image/jpeg", 0.78)
+            canvas.toDataURL("image/jpeg", 0.8)
           );
-
         } catch {
           finish("");
         }
@@ -764,16 +653,16 @@
           const duration = media.duration;
 
           const second =
-            Number.isFinite(duration) &&
-            duration > 0
-              ? Math.min(
-                  1,
-                  Math.max(0, duration - 0.1)
-                )
-              : 1;
+            Number.isFinite(duration) && duration > 0
+              ? Math.min(1, Math.max(0, duration - 0.1))
+              : 0;
 
           try {
             media.currentTime = second;
+
+            if (second === 0 && media.readyState >= 2) {
+              capture();
+            }
           } catch {
             finish("");
           }
@@ -783,17 +672,7 @@
 
       media.addEventListener(
         "seeked",
-        () => {
-          if (media.readyState >= 2) {
-            capture();
-          } else {
-            media.addEventListener(
-              "loadeddata",
-              capture,
-              { once: true }
-            );
-          }
-        },
+        capture,
         { once: true }
       );
 
@@ -803,279 +682,118 @@
         { once: true }
       );
 
-      timeout = setTimeout(
-        () => finish(""),
-        15000
-      );
-
       media.src = url;
       media.load();
     });
-
-    thumbnailJobs.set(url, job);
-
-    job.finally(() => {
-      thumbnailJobs.delete(url);
-    });
-
-    return job;
   }
 
-  // ==============================
-  // FAQAT YUKLANGAN VIDEOLAR
-  // ==============================
+  // =====================================
+  // BITTA VIDEONI KO'RSATISH
+  // =====================================
 
-  function normalize(items) {
-    const seen = new Set();
+  async function show(index) {
+    if (!videos.length) return;
 
-    return items.filter(video => {
-      if (!video || typeof video !== "object") {
-        return false;
-      }
+    const nextIndex =
+      (index + videos.length) % videos.length;
 
-      if (!validUploadURL(video)) {
-        return false;
-      }
+    const video = videos[nextIndex];
+    const token = ++requestId;
 
-      const key = videoKey(video);
+    currentIndex = nextIndex;
 
-      if (seen.has(key)) {
-        return false;
-      }
+    caption.textContent = title(video);
+    count.textContent =
+      `${currentIndex + 1} / ${videos.length}`;
 
-      seen.add(key);
+    imageElement.classList.add("cp-fade");
 
-      return true;
-    });
-  }
-
-  function meta(video) {
-    const parts = [];
-
-    if (video.channel || video.author) {
-      parts.push(
-        String(video.channel || video.author)
-      );
-    }
-
-    const published =
-      video.published ||
-      video.publishedAt;
-
-    if (published) {
-      const date = new Date(published);
-
-      if (!Number.isNaN(date.getTime())) {
-        parts.push(
-          date.toLocaleDateString("uz-UZ")
-        );
-      }
-    }
-
-    return parts.join(" · ") || "F1 Uzbekistan TV";
-  }
-
-  // ==============================
-  // VIDEO KARTASI
-  // ==============================
-
-  function setThumbnail(button, src) {
-    if (!button.isConnected || !src) return;
-
-    const cover = button.querySelector(".cp-cover");
-
-    if (!cover) return;
-
-    const img = document.createElement("img");
-
-    img.src = src;
-    img.alt = "";
-    img.loading = "lazy";
-
-    cover.replaceWith(img);
-  }
-
-  function card(video) {
-    const article = document.createElement("article");
-
-    article.className = "cp-card";
-
-    const button = document.createElement("button");
-
-    button.type = "button";
-    button.className = "cp-thumb";
-
-    button.setAttribute(
-      "aria-label",
-      title(video) + " — tomosha qilish"
-    );
-
-    const thumb = image(video);
-
-    if (thumb) {
-      const img = document.createElement("img");
-
-      img.src = thumb;
-      img.alt = "";
-      img.loading = "lazy";
-
-      button.append(img);
-
-    } else {
-      const cover = document.createElement("div");
-
-      cover.className = "cp-cover cp-loading";
-      cover.textContent = "Muqova tayyorlanmoqda…";
-
-      button.append(cover);
-    }
-
-    const playIcon = document.createElement("span");
-
-    playIcon.className = "cp-play";
-    playIcon.textContent = "▶";
-
-    button.append(playIcon);
-
-    button.addEventListener(
-      "click",
-      () => play(video)
-    );
-
-    const body = document.createElement("div");
-
-    body.className = "cp-cardbody";
-
-    const source = document.createElement("div");
-
-    source.className = "cp-platform";
-    source.textContent = "F1 Uzbekistan TV";
-
-    const heading = document.createElement("p");
-
-    heading.className = "cp-cardtitle";
-    heading.textContent = title(video);
-
-    const small = document.createElement("div");
-
-    small.className = "cp-cardmeta";
-    small.textContent = meta(video);
-
-    body.append(source, heading, small);
-
-    article.append(button, body);
+    let thumb = thumbnailURL(video);
 
     if (!thumb) {
-      generateThumbnail(video).then(result => {
-        if (result) {
-          setThumbnail(button, result);
-        } else {
-          const cover = button.querySelector(
-            ".cp-cover"
-          );
-
-          if (cover) {
-            cover.classList.remove("cp-loading");
-            cover.textContent = "🎬";
-          }
-        }
-      });
+      thumb = await generateThumbnail(video);
     }
 
-    return article;
+    if (token !== requestId) return;
+
+    if (thumb) {
+      const preload = new Image();
+
+      preload.onload = () => {
+        if (token !== requestId) return;
+
+        imageElement.src = thumb;
+        imageElement.style.display = "block";
+        placeholder.style.display = "none";
+
+        requestAnimationFrame(() => {
+          imageElement.classList.remove("cp-fade");
+        });
+      };
+
+      preload.onerror = () => {
+        if (token !== requestId) return;
+
+        imageElement.style.display = "none";
+        placeholder.style.display = "grid";
+        placeholder.textContent = "🎬 F1 VIDEO";
+
+        imageElement.classList.remove("cp-fade");
+      };
+
+      preload.src = thumb;
+    } else {
+      imageElement.style.display = "none";
+      placeholder.style.display = "grid";
+      placeholder.textContent = "🎬 F1 VIDEO";
+
+      imageElement.classList.remove("cp-fade");
+    }
   }
 
-  // ==============================
-  // PLEYERNI TOZALASH
-  // ==============================
+  // =====================================
+  // VIDEO PLEYER
+  // =====================================
 
   function destroyPlayer() {
-    if (activePlayer) {
-      try {
-        activePlayer.pause();
-        activePlayer.destroy();
-      } catch (error) {
-        console.warn("Plyr:", error);
-      }
-
-      activePlayer = null;
-    }
-
-    const nativeVideo = frame.querySelector("video");
-
-    if (nativeVideo) {
-      nativeVideo.pause();
-      nativeVideo.removeAttribute("src");
-
-      nativeVideo.querySelectorAll("source").forEach(
-        source => source.removeAttribute("src")
-      );
-
-      nativeVideo.load();
+    if (activeVideo) {
+      activeVideo.pause();
+      activeVideo.removeAttribute("src");
+      activeVideo.load();
+      activeVideo = null;
     }
 
     frame.replaceChildren();
   }
 
-  function closeModal() {
-    playToken++;
+  function play(index) {
+    if (!videos.length) return;
 
-    if (!modal.classList.contains("cp-open")) {
-      return;
-    }
+    const selectedIndex =
+      (index + videos.length) % videos.length;
 
-    modal.classList.remove("cp-open");
-
-    destroyPlayer();
-
-    frame.classList.remove("cp-vertical");
-
-    document.body.style.overflow =
-      previousOverflow;
-
-    if (lastFocus && lastFocus.isConnected) {
-      lastFocus.focus();
-    }
-  }
-
-  // ==============================
-  // VIDEO OCHISH
-  // ==============================
-
-  async function play(video) {
-    const token = ++playToken;
+    const video = videos[selectedIndex];
 
     if (!modal.classList.contains("cp-open")) {
       lastFocus = document.activeElement;
-
-      previousOverflow =
-        document.body.style.overflow;
+      previousOverflow = document.body.style.overflow;
     }
-
-    modal.querySelector(
-      ".cp-modaltitle"
-    ).textContent = title(video);
 
     destroyPlayer();
 
-    const isVertical =
-      video.aspect_ratio === "9:16";
+    modalTitle.textContent = title(video);
 
     frame.classList.toggle(
       "cp-vertical",
-      isVertical
+      video.aspect_ratio === "9:16"
     );
-
-    modal.classList.add("cp-open");
-
-    document.body.style.overflow = "hidden";
 
     const player = document.createElement("video");
 
     player.controls = true;
+    player.autoplay = true;
     player.playsInline = true;
     player.preload = "metadata";
-    player.autoplay = true;
 
     const source = document.createElement("source");
 
@@ -1086,151 +804,55 @@
         ? "video/webm"
         : "video/mp4";
 
-    player.append(source);
+    player.appendChild(source);
+    frame.appendChild(player);
 
-    frame.append(player);
+    activeVideo = player;
 
-    const available = await loadPlyr();
+    modal.dataset.index = String(selectedIndex);
+    modal.classList.add("cp-open");
 
-    if (
-      token !== playToken ||
-      !modal.classList.contains("cp-open") ||
-      !player.isConnected
-    ) {
-      return;
-    }
+    document.body.style.overflow = "hidden";
 
-    if (available) {
-      try {
-        activePlayer = new window.Plyr(player, {
-          autoplay: true,
-          clickToPlay: true,
-
-          ratio: isVertical
-            ? "9:16"
-            : "16:9",
-
-          controls: [
-            "play-large",
-            "play",
-            "progress",
-            "current-time",
-            "mute",
-            "volume",
-            "settings",
-            "pip",
-            "fullscreen"
-          ],
-
-          settings: [
-            "speed",
-            "loop"
-          ],
-
-          fullscreen: {
-            enabled: true,
-            fallback: true,
-            iosNative: true
-          },
-
-          storage: {
-            enabled: false
-          }
-        });
-
-        const result = activePlayer.play();
-
-        if (
-          result &&
-          typeof result.catch === "function"
-        ) {
-          result.catch(() => {});
-        }
-
-      } catch (error) {
-        console.warn(
-          "Plyr ishga tushmadi:",
-          error
-        );
-
-        activePlayer = null;
-
-        player.controls = true;
-        player.play().catch(() => {});
-      }
-
-    } else {
-      player.play().catch(() => {});
-    }
-
-    // KEYINGI VIDEOLAR
-
-    nextList.replaceChildren();
-
-    const others = videos
-      .filter(
-        item => videoKey(item) !== videoKey(video)
-      )
-      .slice(0, 6);
-
-    for (const item of others) {
-      const button = document.createElement("button");
-
-      button.type = "button";
-      button.className = "cp-next";
-
-      const thumb = image(item);
-
-      if (thumb) {
-        const img = document.createElement("img");
-
-        img.src = thumb;
-        img.alt = "";
-        img.loading = "lazy";
-
-        button.append(img);
-
-      } else {
-        const icon = document.createElement("div");
-
-        icon.className = "cp-next-icon";
-        icon.textContent = "▶";
-
-        button.append(icon);
-
-        generateThumbnail(item).then(result => {
-          if (result && button.isConnected) {
-            const img = document.createElement("img");
-
-            img.src = result;
-            img.alt = "";
-            img.loading = "lazy";
-
-            icon.replaceWith(img);
-          }
-        });
-      }
-
-      const label = document.createElement("span");
-
-      label.textContent = title(item);
-
-      button.append(label);
-
-      button.addEventListener(
-        "click",
-        () => play(item)
-      );
-
-      nextList.append(button);
-    }
+    player.play().catch(() => {});
 
     closeButton.focus();
   }
 
-  // ==============================
-  // MODALNI YOPISH
-  // ==============================
+  function closeModal() {
+    if (!modal.classList.contains("cp-open")) {
+      return;
+    }
+
+    modal.classList.remove("cp-open");
+
+    destroyPlayer();
+
+    document.body.style.overflow =
+      previousOverflow;
+
+    if (lastFocus && lastFocus.isConnected) {
+      lastFocus.focus();
+    }
+  }
+
+  // =====================================
+  // BOSISH HODISALARI
+  // =====================================
+
+  stage.addEventListener("click", () => {
+    play(currentIndex);
+  });
+
+  stage.addEventListener("keydown", event => {
+    if (
+      event.key === "Enter" ||
+      event.key === " "
+    ) {
+      event.preventDefault();
+      play(currentIndex);
+    }
+  });
 
   closeButton.addEventListener(
     "click",
@@ -1252,64 +874,24 @@
     }
   });
 
-  // ==============================
-  // KARTALARNI KO'RSATISH
-  // ==============================
+  previousButton.addEventListener("click", () => {
+    const index = Number(modal.dataset.index || 0);
+    play(index - 1);
+  });
 
-  function renderPage() {
-    grid.replaceChildren();
+  nextButton.addEventListener("click", () => {
+    const index = Number(modal.dataset.index || 0);
+    play(index + 1);
+  });
 
-    if (!videos.length) {
-      status.textContent =
-        "Hozircha yuklangan videolar mavjud emas.";
+  // =====================================
+  // VIDEO MA'LUMOTLARINI YUKLASH
+  // =====================================
 
-      return;
-    }
-
-    status.textContent = "";
-
-    const totalPages = Math.ceil(
-      videos.length / PAGE_SIZE
-    );
-
-    if (page >= totalPages) {
-      page = 0;
-    }
-
-    const start = page * PAGE_SIZE;
-
-    const selected = videos.slice(
-      start,
-      start + PAGE_SIZE
-    );
-
-    for (const video of selected) {
-      grid.append(card(video));
-    }
-  }
-
-  function rotate() {
-    const totalPages = Math.ceil(
-      videos.length / PAGE_SIZE
-    );
-
-    if (totalPages <= 1) return;
-
-    page = (page + 1) % totalPages;
-
-    lastRotation = Date.now();
-
-    renderPage();
-  }
-
-  // ==============================
-  // JSON FAYLNI O'QISH
-  // ==============================
-
-  async function readVideos(filename) {
+  async function loadVideos() {
     try {
       const response = await fetch(
-        "./" + filename + "?t=" + Date.now(),
+        "./uploaded-videos.json?t=" + Date.now(),
         {
           cache: "no-store"
         }
@@ -1317,85 +899,84 @@
 
       if (!response.ok) {
         throw new Error(
-          filename + " HTTP " + response.status
+          "uploaded-videos.json HTTP " +
+          response.status
         );
       }
 
       const data = await response.json();
 
-      if (Array.isArray(data)) {
-        return data;
+      const items = Array.isArray(data)
+        ? data
+        : Array.isArray(data.videos)
+          ? data.videos
+          : [];
+
+      const updated = normalize(items);
+
+      const previousKey = videos[currentIndex]
+        ? videoKey(videos[currentIndex])
+        : "";
+
+      videos = updated;
+
+      if (!videos.length) {
+        requestId++;
+        status.textContent =
+          "Hozircha yuklangan videolar mavjud emas.";
+
+        caption.textContent = "";
+        count.textContent = "";
+
+        imageElement.style.display = "none";
+        placeholder.style.display = "grid";
+        placeholder.textContent =
+          "Hozircha videolar mavjud emas.";
+
+        return;
       }
 
-      if (
-        data &&
-        Array.isArray(data.videos)
-      ) {
-        return data.videos;
-      }
+      status.textContent = "";
 
-      return [];
+      const foundIndex = videos.findIndex(
+        video => videoKey(video) === previousKey
+      );
+
+      currentIndex =
+        foundIndex >= 0 ? foundIndex : 0;
+
+      await show(currentIndex);
 
     } catch (error) {
-      console.warn(
-        "F1 CINEMA:",
-        filename,
+      console.error(
+        "F1 CINEMA yuklash xatosi:",
         error
       );
 
-      return null;
+      status.textContent =
+        "Videolarni yuklashda xatolik yuz berdi.";
     }
   }
 
-  // ==============================
-  // FAQAT MP4 / WEBM YUKLASH
-  // ==============================
+  // =====================================
+  // AVTOMATIK ALMASHISH
+  // =====================================
 
-  async function load() {
-    const uploadedVideos = await readVideos(
-      "uploaded-videos.json"
-    );
-
-    const previousFirst =
-      videos[0]
-        ? videoKey(videos[0])
-        : "";
-
-    if (uploadedVideos !== null) {
-      videos = normalize(uploadedVideos);
-    }
-
-    const newFirst =
-      videos[0]
-        ? videoKey(videos[0])
-        : "";
-
-    if (newFirst !== previousFirst) {
-      page = 0;
-      lastRotation = Date.now();
-    }
-
-    renderPage();
-  }
-
-  // ==============================
-  // ISHGA TUSHIRISH
-  // ==============================
-
-  load();
-
-  setInterval(
-    load,
-    REFRESH_MS
-  );
+  loadVideos();
 
   setInterval(() => {
     if (
-      Date.now() - lastRotation >= ROTATE_MS
+      videos.length > 1 &&
+      !modal.classList.contains("cp-open") &&
+      !document.hidden
     ) {
-      rotate();
-      lastRotation = Date.now();
+      show(currentIndex + 1);
     }
-  }, 30000);
+  }, ROTATE_MS);
+
+  setInterval(
+    loadVideos,
+    REFRESH_MS
+  );
 
 })();
