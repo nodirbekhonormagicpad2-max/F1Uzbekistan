@@ -44,11 +44,14 @@
     box-shadow:0 12px 35px #0007;
   }
 
+  /* ASOSIY SURAT — OYNANI TO‘LIQ EGALLAYDI */
+
   #f1-photo-gallery .fpg-image {
     display:block;
     width:100%;
     height:100%;
-    object-fit:contain;
+    object-fit:cover;
+    object-position:center;
     opacity:1;
     transition:opacity .4s ease;
   }
@@ -99,7 +102,7 @@
     position:fixed;
     inset:0;
     z-index:2147483647;
-    background:#000e;
+    background:rgba(0,0,0,.94);
     display:none;
     align-items:center;
     justify-content:center;
@@ -110,7 +113,10 @@
     display:flex;
   }
 
+  /* KATTALASHTIRILGAN SURAT TO‘LIQ KO‘RINADI */
+
   #fpg-viewer img {
+    display:block;
     max-width:100%;
     max-height:92vh;
     object-fit:contain;
@@ -131,6 +137,7 @@
     color:#fff;
     font-size:clamp(18px,4vw,36px);
     font-weight:900;
+    line-height:1.2;
     text-shadow:0 3px 12px #000;
     pointer-events:none;
     overflow-wrap:anywhere;
@@ -145,6 +152,7 @@
     margin-top:12px;
     background:#e10600;
     border-radius:3px;
+    box-shadow:0 0 14px #e1060099;
   }
 
   /* YOPISH TUGMASI */
@@ -153,6 +161,7 @@
     position:absolute;
     top:15px;
     right:15px;
+    z-index:2;
     background:#e10600;
     border:0;
     color:white;
@@ -161,6 +170,24 @@
     height:46px;
     border-radius:50%;
     cursor:pointer;
+  }
+
+  @media(max-width:700px) {
+    #f1-photo-gallery .fpg-stage {
+      border-radius:12px;
+    }
+
+    #f1-photo-gallery .fpg-caption {
+      font-size:clamp(16px,4.5vw,26px);
+      bottom:17px;
+      left:17px;
+      right:17px;
+    }
+
+    #fpg-viewer .fpg-viewer-caption {
+      font-size:clamp(18px,5vw,26px);
+      padding:60px 20px 28px;
+    }
   }
   `;
 
@@ -265,8 +292,6 @@
 
     viewerImg.src = p.url;
     viewerImg.alt = p.title_uz;
-
-    /* SARLAVHANI KATTALASHTIRILGAN OYNADA KO‘RSATISH */
 
     viewerCaption.textContent = p.title_uz;
 
