@@ -8,8 +8,12 @@
 <title>F1 Uzbekistan TV — Jonli efir</title>
 <meta name="description" content="F1 Uzbekistan TV — jonli efir, F1 yangiliklari, videolar, galereya va poyga natijalari.">
 
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 :root{
   --red:#e10600;
@@ -19,7 +23,13 @@
 
 body{
   margin:0;
-  background:radial-gradient(ellipse at 50% 0%,#35100e 0%,transparent 42%),var(--bg);
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      #35100e 0%,
+      transparent 42%
+    ),
+    var(--bg);
   color:#fff;
   font-family:Arial,Helvetica,sans-serif;
   min-height:100vh;
@@ -81,7 +91,9 @@ header{
   flex-shrink:0;
 }
 
-.header-telegram:hover{background:#b90500}
+.header-telegram:hover{
+  background:#b90500;
+}
 
 main{
   width:min(1060px,100%);
@@ -102,15 +114,24 @@ h1{
   font-weight:900;
 }
 
-h1 span{color:var(--red)}
+h1 span{
+  color:var(--red);
+}
 
-/* JONLI EFIR */
+/* =========================
+   JONLI EFIR
+========================= */
 
 .player-wrap{
   padding:5px;
   border:1px solid #373737;
   border-radius:14px;
-  background:linear-gradient(135deg,#41110f,#151515 45%);
+  background:
+    linear-gradient(
+      135deg,
+      #41110f,
+      #151515 45%
+    );
   box-shadow:0 20px 65px #0009;
 }
 
@@ -136,7 +157,8 @@ h1 span{color:var(--red)}
     #141414;
 }
 
-.tv-top,.tv-bottom{
+.tv-top,
+.tv-bottom{
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -226,16 +248,25 @@ h1 span{color:var(--red)}
   font-weight:800;
 }
 
-.tv-bottom span:last-child{color:#ff5b55}
+.tv-bottom span:last-child{
+  color:#ff5b55;
+}
 
-/* CHAT */
+/* =========================
+   CHAT
+========================= */
 
 .chat{
   margin-top:32px;
   padding:22px;
   border:1px solid #303030;
   border-radius:12px;
-  background:linear-gradient(110deg,#171717,#101010);
+  background:
+    linear-gradient(
+      110deg,
+      #171717,
+      #101010
+    );
 }
 
 .chat h2{
@@ -266,7 +297,9 @@ h1 span{color:var(--red)}
   border-bottom:1px solid #1d1d1d;
 }
 
-.chat-message:last-child{border-bottom:0}
+.chat-message:last-child{
+  border-bottom:0;
+}
 
 .chat-name{
   color:#ff514c;
@@ -307,7 +340,9 @@ h1 span{color:var(--red)}
   font:inherit;
 }
 
-.chat-form input:focus{border-color:var(--red)}
+.chat-form input:focus{
+  border-color:var(--red);
+}
 
 .chat-form button{
   min-height:44px;
@@ -333,7 +368,13 @@ h1 span{color:var(--red)}
   font-size:11px;
 }
 
-.chat-status.error{color:#ff514c}
+.chat-status.error{
+  color:#ff514c;
+}
+
+/* =========================
+   FOTO GALEREYA
+========================= */
 
 #f1-photo-gallery{
   margin-top:22px;
@@ -341,16 +382,24 @@ h1 span{color:var(--red)}
   min-width:0;
 }
 
-/* POYGA NATIJALARI */
+/* =========================
+   YANGI POYGA NATIJALARI
+========================= */
 
 .results-card{
-  margin-top:22px;
-  padding:18px;
-  border:1px solid #333;
-  border-top:4px solid var(--red);
-  border-radius:18px;
-  background:linear-gradient(145deg,#19191d,#0c0c10);
-  box-shadow:0 12px 35px #0007;
+  margin-top:24px;
+  padding:20px;
+  border:1px solid #34343c;
+  border-top:5px solid var(--red);
+  border-radius:22px;
+  background:
+    linear-gradient(
+      145deg,
+      #1a1a20,
+      #0d0d12 70%
+    );
+  box-shadow:
+    0 15px 40px #0008;
 }
 
 .results-head{
@@ -367,7 +416,7 @@ h1 span{color:var(--red)}
 }
 
 .results-pill{
-  padding:8px 13px;
+  padding:10px 16px;
   border:1px solid #e1060080;
   border-radius:30px;
   background:#e1060015;
@@ -378,34 +427,61 @@ h1 span{color:var(--red)}
 }
 
 .results-meta{
-  margin:10px 0 18px;
+  margin:12px 0 20px;
   color:#aaa;
-  font-size:13px;
+  font-size:14px;
 }
 
 .results-list{
   display:grid;
-  gap:9px;
+  gap:11px;
 }
 
+/* HAR BIR POYGACHI KARTASI */
+
 .results-row{
+  --team:#777;
+  --team-bg:#25252b;
+
   position:relative;
   display:grid;
-  grid-template-columns:32px 80px minmax(0,1fr) auto;
+  grid-template-columns:
+    42px
+    108px
+    minmax(0,1fr)
+    auto;
   align-items:center;
-  gap:12px;
-  min-height:100px;
-  padding:7px 14px 7px 0;
+  gap:13px;
+
+  min-height:126px;
+  padding:8px 16px 8px 0;
+
   overflow:hidden;
+
   border:1px solid #34343c;
-  border-left:6px solid var(--team,#777);
-  border-radius:12px;
+  border-left:7px solid var(--team);
+  border-radius:16px;
+
   background:
-    linear-gradient(110deg,var(--team-bg,#24242b),#101014 75%);
+    linear-gradient(
+      105deg,
+      var(--team-bg),
+      #111116 78%
+    );
+
+  transition:
+    border-color .2s ease,
+    transform .2s ease;
+}
+
+.results-row:hover{
+  border-top-color:#5b5b66;
+  border-right-color:#5b5b66;
+  border-bottom-color:#5b5b66;
 }
 
 .results-pos{
-  font-size:23px;
+  font-size:28px;
   font-weight:900;
   text-align:center;
 }
@@ -414,70 +490,116 @@ h1 span{color:var(--red)}
   color:#ffd44d;
 }
 
+/* RASM BLOKI */
+
+.results-photo-box{
+  position:relative;
+  width:108px;
+  height:108px;
+  align-self:center;
+  overflow:hidden;
+  border-radius:13px;
+
+  background:
+    linear-gradient(
+      145deg,
+      var(--team-bg),
+      #ffffff12
+    );
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
 .results-portrait{
-  width:80px;
-  height:90px;
   display:block;
-  align-self:end;
-  object-fit:contain;
-  object-position:center bottom;
-  border-radius:8px;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center 24%;
+  border-radius:13px;
 }
 
 .results-portrait-fallback{
   display:grid;
   place-items:center;
-  width:80px;
-  height:85px;
-  border-radius:9px;
-  background:#ffffff12;
-  font-size:22px;
+  width:100%;
+  height:100%;
+  color:#fff;
+  font-size:25px;
   font-weight:900;
+  background:#ffffff0d;
 }
+
+/* POYGACHI MA'LUMOTI */
 
 .results-driver{
   min-width:0;
 }
 
 .results-name{
-  font-size:clamp(12px,2.5vw,17px);
+  font-size:clamp(13px,2.5vw,19px);
   font-weight:900;
+  line-height:1.35;
   overflow-wrap:anywhere;
-}
-
-.results-team{
-  margin-top:5px;
-  color:#bbb;
-  font-size:12px;
 }
 
 .results-flag{
   margin-right:5px;
 }
 
+.results-team{
+  margin-top:7px;
+  color:#bcbcc5;
+  font-size:13px;
+}
+
+.results-code{
+  display:inline-block;
+  margin-top:9px;
+  padding:4px 7px;
+  border-radius:5px;
+  background:#ffffff10;
+  color:#ddd;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1px;
+}
+
+/* VAQT */
+
 .results-time{
-  font-size:clamp(11px,2.3vw,16px);
+  font-size:clamp(12px,2vw,17px);
   font-weight:900;
   white-space:nowrap;
   font-variant-numeric:tabular-nums;
   text-align:right;
 }
 
+.results-row:first-child .results-time{
+  color:#fff;
+}
+
+/* TUGMA */
+
 .results-toggle{
   width:100%;
-  margin-top:16px;
-  padding:15px;
-  border:1px solid #444;
-  border-radius:12px;
+  margin-top:20px;
+  padding:18px;
+  border:1px solid #4a4a50;
+  border-radius:15px;
   background:#141418;
   color:#fff;
-  font-size:14px;
+  font-size:16px;
   font-weight:900;
   cursor:pointer;
+  transition:.2s;
 }
 
 .results-toggle:hover{
   border-color:var(--red);
+  background:#1c1113;
 }
 
 .results-note{
@@ -492,7 +614,9 @@ h1 span{color:var(--red)}
   font-size:13px;
 }
 
-/* TAQVIM */
+/* =========================
+   TAQVIM
+========================= */
 
 .calendar-section{
   margin-top:20px;
@@ -536,20 +660,59 @@ footer span{
   font-weight:bold;
 }
 
-/* TELEFON */
+/* =========================
+   TELEFON
+========================= */
 
 @media(max-width:700px){
-  header{min-height:65px;padding:0 13px}
-  .brand{gap:9px}
-  .logo{font-size:21px;padding:8px 9px}
-  .brand-name{font-size:12px;letter-spacing:.5px}
-  .brand-sub{font-size:8px;letter-spacing:2px}
-  .header-telegram{min-height:40px;padding:0 12px;font-size:11px;letter-spacing:.3px}
 
-  main{padding:32px 12px 28px}
-  .intro{margin-bottom:22px}
-  .player-wrap{padding:3px;border-radius:9px}
-  .player{border-radius:6px}
+  header{
+    min-height:65px;
+    padding:0 13px;
+  }
+
+  .brand{
+    gap:9px;
+  }
+
+  .logo{
+    font-size:21px;
+    padding:8px 9px;
+  }
+
+  .brand-name{
+    font-size:12px;
+    letter-spacing:.5px;
+  }
+
+  .brand-sub{
+    font-size:8px;
+    letter-spacing:2px;
+  }
+
+  .header-telegram{
+    min-height:40px;
+    padding:0 12px;
+    font-size:11px;
+    letter-spacing:.3px;
+  }
+
+  main{
+    padding:32px 12px 28px;
+  }
+
+  .intro{
+    margin-bottom:22px;
+  }
+
+  .player-wrap{
+    padding:3px;
+    border-radius:9px;
+  }
+
+  .player{
+    border-radius:6px;
+  }
 
   .f1-tv-countdown{
     min-height:320px;
@@ -557,16 +720,44 @@ footer span{
     padding:12px;
   }
 
-  .tv-badge{padding:7px;font-size:9px}
-  .tv-f1{font-size:11px}
-  .tv-heading{letter-spacing:1px}
-  .tv-timer{gap:5px;margin:20px auto}
-  .tv-box{padding:14px 3px;border-radius:8px}
-  .tv-bottom{font-size:8px}
+  .tv-badge{
+    padding:7px;
+    font-size:9px;
+  }
 
-  .chat-form{grid-template-columns:1fr}
-  .chat-form button{width:100%}
-  .chat-messages{height:280px}
+  .tv-f1{
+    font-size:11px;
+  }
+
+  .tv-heading{
+    letter-spacing:1px;
+  }
+
+  .tv-timer{
+    gap:5px;
+    margin:20px auto;
+  }
+
+  .tv-box{
+    padding:14px 3px;
+    border-radius:8px;
+  }
+
+  .tv-bottom{
+    font-size:8px;
+  }
+
+  .chat-form{
+    grid-template-columns:1fr;
+  }
+
+  .chat-form button{
+    width:100%;
+  }
+
+  .chat-messages{
+    height:280px;
+  }
 
   .calendar-btn{
     min-height:65px;
@@ -576,57 +767,143 @@ footer span{
 }
 
 @media(max-width:600px){
-  .results-card{padding:12px}
 
-  .results-row{
-    grid-template-columns:22px 65px minmax(0,1fr) auto;
-    gap:7px;
-    min-height:82px;
-    padding:5px 8px 5px 0;
+  .results-card{
+    padding:13px;
+    border-radius:19px;
   }
 
-  .results-pos{font-size:17px}
+  .results-meta{
+    font-size:12px;
+  }
+
+  .results-list{
+    gap:9px;
+  }
+
+  .results-row{
+    grid-template-columns:
+      24px
+      78px
+      minmax(0,1fr)
+      auto;
+
+    gap:8px;
+    min-height:96px;
+    padding:7px 10px 7px 0;
+    border-left-width:6px;
+    border-radius:13px;
+  }
+
+  .results-pos{
+    font-size:19px;
+  }
+
+  .results-photo-box{
+    width:78px;
+    height:82px;
+    border-radius:10px;
+  }
 
   .results-portrait{
-    width:65px;
-    height:75px;
+    border-radius:10px;
   }
 
   .results-portrait-fallback{
-    width:65px;
-    height:70px;
-    font-size:17px;
+    font-size:19px;
   }
 
-  .results-name{font-size:11px}
-  .results-team{font-size:10px}
-  .results-time{font-size:10px}
+  .results-name{
+    font-size:12px;
+  }
+
+  .results-team{
+    font-size:11px;
+    margin-top:5px;
+  }
+
+  .results-code{
+    font-size:9px;
+    margin-top:6px;
+    padding:3px 5px;
+  }
+
+  .results-time{
+    font-size:11px;
+  }
+
+  .results-toggle{
+    font-size:14px;
+    padding:16px;
+  }
 }
 
 @media(max-width:380px){
-  header{padding:0 8px}
-  .brand{gap:6px}
-  .logo{font-size:18px;padding:7px}
-  .brand-name{font-size:10px}
-  .brand-sub{display:none}
-  .header-telegram{padding:0 8px;font-size:10px}
+
+  header{
+    padding:0 8px;
+  }
+
+  .brand{
+    gap:6px;
+  }
+
+  .logo{
+    font-size:18px;
+    padding:7px;
+  }
+
+  .brand-name{
+    font-size:10px;
+  }
+
+  .brand-sub{
+    display:none;
+  }
+
+  .header-telegram{
+    padding:0 8px;
+    font-size:10px;
+  }
 
   .results-row{
-    grid-template-columns:20px 54px minmax(0,1fr) auto;
+    grid-template-columns:
+      20px
+      62px
+      minmax(0,1fr)
+      auto;
+
     gap:5px;
+    padding-right:7px;
   }
 
-  .results-portrait{
-    width:54px;
-    height:67px;
+  .results-photo-box{
+    width:62px;
+    height:72px;
   }
 
-  .results-portrait-fallback{
-    width:54px;
-    height:65px;
+  .results-name{
+    font-size:10px;
   }
 
-  .results-time{font-size:9px}
+  .results-team{
+    font-size:9px;
+  }
+
+  .results-time{
+    font-size:9px;
+  }
+
+  .results-code{
+    font-size:8px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .results-row,
+  .results-toggle{
+    transition:none;
+  }
 }
 </style>
 </head>
@@ -636,9 +913,15 @@ footer span{
 <header>
   <div class="brand">
     <div class="logo">F1</div>
+
     <div>
-      <div class="brand-name">F1 UZBEKISTAN TV</div>
-      <div class="brand-sub">JONLI EFIR</div>
+      <div class="brand-name">
+        F1 UZBEKISTAN TV
+      </div>
+
+      <div class="brand-sub">
+        JONLI EFIR
+      </div>
     </div>
   </div>
 
@@ -647,31 +930,62 @@ footer span{
     href="https://t.me/F1_Uzbekistan"
     target="_blank"
     rel="noopener noreferrer"
-  >TELEGRAM ↗</a>
+  >
+    TELEGRAM ↗
+  </a>
 </header>
 
 <main>
 
   <section class="intro">
-    <h1><span>Jonli efir</span></h1>
+    <h1>
+      <span>Jonli efir</span>
+    </h1>
   </section>
 
-  <!-- JONLI EFIR KUTISH EKRANI -->
+  <!-- =====================
+       JONLI EFIR
+  ====================== -->
 
-  <section class="player-wrap" aria-label="F1 Uzbekistan TV efir boshlanishigacha">
+  <section
+    class="player-wrap"
+    aria-label="F1 Uzbekistan TV efir boshlanishigacha"
+  >
+
     <div class="player f1-tv-countdown">
 
       <div class="tv-top">
-        <span class="tv-badge">● F1 UZBEKISTAN TV</span>
-        <span class="tv-f1">FORMULA 1</span>
+        <span class="tv-badge">
+          ● F1 UZBEKISTAN TV
+        </span>
+
+        <span class="tv-f1">
+          FORMULA 1
+        </span>
       </div>
 
       <div class="tv-center">
-        <div class="tv-heading">EFIR BOSHLANISHIGA</div>
-        <div class="tv-session" id="tvSession">AMALIYOT 1</div>
-        <div class="tv-gp" id="tvGP">MEKSIKA GRAN-PRISI</div>
+
+        <div class="tv-heading">
+          EFIR BOSHLANISHIGA
+        </div>
+
+        <div
+          class="tv-session"
+          id="tvSession"
+        >
+          AMALIYOT 1
+        </div>
+
+        <div
+          class="tv-gp"
+          id="tvGP"
+        >
+          MEKSIKA GRAN-PRISI
+        </div>
 
         <div class="tv-timer">
+
           <div class="tv-box">
             <strong id="tvDays">00</strong>
             <span>KUN</span>
@@ -691,11 +1005,16 @@ footer span{
             <strong id="tvSeconds">00</strong>
             <span>SONIYA</span>
           </div>
+
         </div>
 
-        <div class="tv-date" id="tvDate">
+        <div
+          class="tv-date"
+          id="tvDate"
+        >
           Sessiya vaqti yuklanmoqda...
         </div>
+
       </div>
 
       <div class="tv-bottom">
@@ -704,11 +1023,15 @@ footer span{
       </div>
 
     </div>
+
   </section>
 
-  <!-- JONLI CHAT -->
+  <!-- =====================
+       JONLI CHAT
+  ====================== -->
 
   <section class="chat">
+
     <h2>💬 Jonli chat</h2>
 
     <div
@@ -716,12 +1039,20 @@ footer span{
       class="chat-messages"
       aria-live="polite"
     >
-      <div id="chatEmpty" class="chat-empty">
-        Hozircha xabarlar yo‘q. Birinchi bo‘lib yozing!
+      <div
+        id="chatEmpty"
+        class="chat-empty"
+      >
+        Hozircha xabarlar yo‘q.
+        Birinchi bo‘lib yozing!
       </div>
     </div>
 
-    <form id="chatForm" class="chat-form">
+    <form
+      id="chatForm"
+      class="chat-form"
+    >
+
       <input
         id="chatName"
         type="text"
@@ -742,36 +1073,59 @@ footer span{
         required
       >
 
-      <button id="chatSend" type="submit">
+      <button
+        id="chatSend"
+        type="submit"
+      >
         Yuborish
       </button>
+
     </form>
 
-    <div id="chatStatus" class="chat-status"></div>
+    <div
+      id="chatStatus"
+      class="chat-status"
+    ></div>
+
   </section>
 
-  <!-- FOTO GALEREYA -->
+  <!-- =====================
+       FOTO GALEREYA
+  ====================== -->
 
   <section
     id="f1-photo-gallery"
     aria-label="F1 foto galereya"
   ></section>
 
-  <!-- POYGA NATIJALARI -->
+  <!-- =====================
+       POYGA NATIJALARI
+  ====================== -->
 
   <section
     class="results-card"
     aria-label="Oxirgi F1 sessiyasi natijalari"
   >
+
     <div class="results-head">
-      <h2 class="results-title" id="resultsTitle">
+
+      <h2
+        class="results-title"
+        id="resultsTitle"
+      >
         🏁 OXIRGI SESSIYA
       </h2>
 
-      <span class="results-pill">TOP 5</span>
+      <span class="results-pill">
+        TOP 5
+      </span>
+
     </div>
 
-    <div class="results-meta" id="resultsMeta">
+    <div
+      class="results-meta"
+      id="resultsMeta"
+    >
       Natijalar tekshirilmoqda...
     </div>
 
@@ -780,7 +1134,9 @@ footer span{
       id="resultsList"
       aria-live="polite"
     >
-      <div class="results-state">Yuklanmoqda...</div>
+      <div class="results-state">
+        Yuklanmoqda...
+      </div>
     </div>
 
     <button
@@ -798,11 +1154,15 @@ footer span{
       id="resultsExtra"
       hidden
     ></div>
+
   </section>
 
-  <!-- TAQVIM -->
+  <!-- =====================
+       TAQVIM
+  ====================== -->
 
   <section class="calendar-section">
+
     <a
       class="calendar-btn"
       href="f1_calendar_fixed.html"
@@ -816,15 +1176,19 @@ footer span{
     >
       🏆 CHEMPIONAT JADVALI
     </a>
+
   </section>
 
 </main>
 
 <footer>
-  <span>F1 UZBEKISTAN TV</span> · JONLI EFIR
+  <span>F1 UZBEKISTAN TV</span>
+  · JONLI EFIR
 </footer>
 
-<!-- JONLI EFIR TAYMERI -->
+<!-- =========================
+     JONLI EFIR TAYMERI
+========================= -->
 
 <script>
 (() => {
@@ -858,23 +1222,29 @@ footer span{
     }
   ];
 
-  const el = id => document.getElementById(id);
+  const el = id =>
+    document.getElementById(id);
 
-  const pad = n => String(n).padStart(2,"0");
+  const pad = n =>
+    String(n).padStart(2,"0");
 
   function formatLocal(date){
-    return new Intl.DateTimeFormat("uz-UZ",{
-      timeZone:"Asia/Tashkent",
-      day:"numeric",
-      month:"long",
-      year:"numeric",
-      hour:"2-digit",
-      minute:"2-digit",
-      hour12:false
-    }).format(date);
+    return new Intl.DateTimeFormat(
+      "uz-UZ",
+      {
+        timeZone:"Asia/Tashkent",
+        day:"numeric",
+        month:"long",
+        year:"numeric",
+        hour:"2-digit",
+        minute:"2-digit",
+        hour12:false
+      }
+    ).format(date);
   }
 
   function update(){
+
     const now = Date.now();
 
     const session = sessions.find(
@@ -882,7 +1252,10 @@ footer span{
     );
 
     if(!session){
-      el("tvGP").textContent = "F1 TAQVIMI";
+
+      el("tvGP").textContent =
+        "F1 TAQVIMI";
+
       el("tvSession").textContent =
         "KEYINGI SESSIYA KUTILMOQDA";
 
@@ -894,27 +1267,43 @@ footer span{
         "tvHours",
         "tvMinutes",
         "tvSeconds"
-      ].forEach(id => el(id).textContent = "--");
+      ].forEach(id => {
+        el(id).textContent = "--";
+      });
 
       return;
     }
 
-    const target = new Date(session.date);
-    const diff = Math.max(0,target.getTime()-now);
+    const target =
+      new Date(session.date);
 
-    el("tvGP").textContent = session.gp;
+    const diff = Math.max(
+      0,
+      target.getTime() - now
+    );
+
+    el("tvGP").textContent =
+      session.gp;
 
     el("tvSession").textContent =
       session.name.toLocaleUpperCase("uz-UZ");
 
     el("tvDate").textContent =
-      "📅 " + formatLocal(target) + " — Toshkent vaqti";
+      "📅 " +
+      formatLocal(target) +
+      " — Toshkent vaqti";
 
     const values = [
-      pad(Math.floor(diff/86400000)),
-      pad(Math.floor((diff%86400000)/3600000)),
-      pad(Math.floor((diff%3600000)/60000)),
-      pad(Math.floor((diff%60000)/1000))
+      pad(Math.floor(diff / 86400000)),
+      pad(Math.floor(
+        (diff % 86400000) / 3600000
+      )),
+      pad(Math.floor(
+        (diff % 3600000) / 60000
+      )),
+      pad(Math.floor(
+        (diff % 60000) / 1000
+      ))
     ];
 
     [
@@ -925,28 +1314,55 @@ footer span{
     ].forEach((id,i) => {
       el(id).textContent = values[i];
     });
+
   }
 
   update();
+
   setInterval(update,1000);
+
 })();
 </script>
 
-<!-- NATIJALAR: 22 TA JPG RASM -->
+<!-- =========================
+     NATIJALAR VA RASMLAR
+========================= -->
 
 <script>
 (() => {
   "use strict";
 
-  const title = document.getElementById("resultsTitle");
-  const meta = document.getElementById("resultsMeta");
-  const list = document.getElementById("resultsList");
-  const toggle = document.getElementById("resultsToggle");
-  const extra = document.getElementById("resultsExtra");
+  const title =
+    document.getElementById("resultsTitle");
+
+  const meta =
+    document.getElementById("resultsMeta");
+
+  const list =
+    document.getElementById("resultsList");
+
+  const toggle =
+    document.getElementById("resultsToggle");
+
+  const extra =
+    document.getElementById("resultsExtra");
 
   let results = [];
   let expanded = false;
   let currentSession = "";
+  let activeSession = "";
+  let lastSignature = "";
+
+  /*
+    RASMLAR:
+    drivers/antonelli.jpg
+    drivers/leclerc.jpg
+    drivers/russell.jpg
+    va boshqalar.
+
+    Rasmlarni bir marta yuklash uchun
+    brauzer keshidan foydalaniladi.
+  */
 
   const colors = {
     "Ferrari":"#e10600",
@@ -1019,10 +1435,9 @@ footer span{
   };
 
   /*
-    HAR BIR POYGACHINING RASMI:
-    drivers/antonelli.jpg
-    drivers/leclerc.jpg
-    va hokazo.
+    22 TA POYGACHI.
+    FAYL NOMLARI AYNAN
+    GITHUB DAGIDEK BO'LISHI KERAK.
   */
 
   const driverData = {
@@ -1121,11 +1536,6 @@ footer span{
       code:"HUL",
       file:"hulkenberg.jpg"
     },
-    HÜLKENBERG:{
-      flag:"🇩🇪",
-      code:"HUL",
-      file:"hulkenberg.jpg"
-    },
     BORTOLETO:{
       flag:"🇧🇷",
       code:"BOR",
@@ -1140,19 +1550,34 @@ footer span{
       flag:"🇲🇽",
       code:"PER",
       file:"perez.jpg"
-    },
-    PÉREZ:{
-      flag:"🇲🇽",
-      code:"PER",
-      file:"perez.jpg"
     }
   };
 
-  function driverInfo(name){
-    const upper = String(name || "").toUpperCase();
+  /*
+    ISMLARNI TO'G'RI ANIQLASH
+  */
 
-    for(const [surname,info] of Object.entries(driverData)){
-      if(upper.includes(surname)){
+  function normalizeName(value){
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g,"")
+      .toUpperCase()
+      .replace(/[^A-Z ]/g," ")
+      .replace(/\s+/g," ")
+      .trim();
+  }
+
+  function driverInfo(name){
+
+    const upper = normalizeName(name);
+
+    for(
+      const [surname,info]
+      of Object.entries(driverData)
+    ){
+      if(
+        upper.split(" ").includes(surname)
+      ){
         return info;
       }
     }
@@ -1164,63 +1589,114 @@ footer span{
     };
   }
 
-  function portraitElement(file,code){
-    const fallback = document.createElement("div");
-    fallback.className = "results-portrait-fallback";
-    fallback.textContent = code;
+  /*
+    RASM YUKLASH:
+    - Birinchi 5 ta darhol
+    - Qolganlari lazy
+    - Xatolik bo'lsa kod chiqadi
+  */
 
-    if(!file){
-      return fallback;
+  function portraitElement(info,index){
+
+    const box =
+      document.createElement("div");
+
+    box.className =
+      "results-photo-box";
+
+    const fallback =
+      document.createElement("div");
+
+    fallback.className =
+      "results-portrait-fallback";
+
+    fallback.textContent =
+      info.code;
+
+    if(!info.file){
+      box.append(fallback);
+      return box;
     }
 
-    const img = document.createElement("img");
-    img.className = "results-portrait";
+    const img =
+      document.createElement("img");
 
-    /*
-      RASMLAR ENDI TASHQI SERVERDAN EMAS,
-      SIZNING GITHUB PAPKANGIZDAN OLINADI.
-    */
+    img.className =
+      "results-portrait";
 
-    img.src = file.startsWith("http")
-      ? file
-      : "./drivers/" + file;
+    img.alt =
+      info.code + " poygachi rasmi";
 
-    img.alt = code + " poygachi rasmi";
-    img.loading = "lazy";
+    img.width = 108;
+    img.height = 108;
+
+    img.decoding = "async";
+
+    img.loading =
+      index < 5 ? "eager" : "lazy";
+
+    if(index < 2){
+      img.fetchPriority = "high";
+    }
 
     img.onerror = () => {
-      if(img.isConnected){
-        img.replaceWith(fallback);
-      }
+      img.remove();
+      box.append(fallback);
     };
 
-    return img;
+    img.src =
+      "./drivers/" + info.file;
+
+    box.append(img);
+
+    return box;
   }
 
+  /*
+    VAQT FORMATLARI
+  */
+
   function lap(value){
+
     const n = Number(value);
 
-    if(!Number.isFinite(n) || n <= 0){
+    if(
+      !Number.isFinite(n) ||
+      n <= 0
+    ){
       return String(value || "—");
     }
 
     return (
       Math.floor(n/60) +
       ":" +
-      (n%60).toFixed(3).padStart(6,"0")
+      (n%60)
+        .toFixed(3)
+        .padStart(6,"0")
     );
   }
 
   function formatRaceSeconds(value){
+
     const n = Number(value);
 
-    if(!Number.isFinite(n) || n <= 0){
+    if(
+      !Number.isFinite(n) ||
+      n <= 0
+    ){
       return "—";
     }
 
-    const hours = Math.floor(n/3600);
-    const minutes = Math.floor((n%3600)/60);
-    const seconds = (n%60).toFixed(3).padStart(6,"0");
+    const hours =
+      Math.floor(n/3600);
+
+    const minutes =
+      Math.floor((n%3600)/60);
+
+    const seconds =
+      (n%60)
+        .toFixed(3)
+        .padStart(6,"0");
 
     if(hours > 0){
       return (
@@ -1235,11 +1711,20 @@ footer span{
     return minutes + ":" + seconds;
   }
 
-  function displayTime(item,first,session){
+  function displayTime(
+    item,
+    first,
+    session
+  ){
+
     const raw = item.time;
 
-    if(item.gap !== undefined && item.gap !== null){
-      const gapText = String(item.gap).trim();
+    if(
+      item.gap !== undefined &&
+      item.gap !== null
+    ){
+      const gapText =
+        String(item.gap).trim();
 
       if(gapText){
         return gapText;
@@ -1253,8 +1738,11 @@ footer span{
       return raw;
     }
 
-    const current = Number(raw);
-    const best = Number(first.time);
+    const current =
+      Number(raw);
+
+    const best =
+      Number(first.time);
 
     if(
       !Number.isFinite(current) ||
@@ -1263,9 +1751,12 @@ footer span{
       return String(raw || "—");
     }
 
-    const isRace = session === "Race" || session === "Sprint";
+    const isRace =
+      session === "Race" ||
+      session === "Sprint";
 
     if(isRace){
+
       if(item === first){
         return formatRaceSeconds(current);
       }
@@ -1275,7 +1766,8 @@ footer span{
         best > 0 &&
         current >= best
       ){
-        return "+" + (current-best).toFixed(3);
+        return "+" +
+          (current-best).toFixed(3);
       }
 
       return String(raw || "—");
@@ -1289,93 +1781,153 @@ footer span{
       Number.isFinite(best) &&
       best > 0
     ){
-      return "+" + (current-best).toFixed(3);
+      return "+" +
+        (current-best).toFixed(3);
     }
 
     return lap(current);
   }
 
-  let activeSession = "";
+  /*
+    BITTA KARTANI YARATISH
+  */
 
-  function render(){
-    list.replaceChildren();
+  function createRow(item,index){
 
-    const shown = expanded
-      ? results
-      : results.slice(0,5);
+    const info =
+      driverInfo(item.name);
 
-    for(const item of shown){
-      const info = driverInfo(item.name);
+    const row =
+      document.createElement("div");
 
-      const row = document.createElement("div");
-      row.className = "results-row";
+    row.className =
+      "results-row";
 
-      row.style.setProperty(
-        "--team",
-        colors[item.team] || "#777"
-      );
+    row.style.setProperty(
+      "--team",
+      colors[item.team] || "#777"
+    );
 
-      row.style.setProperty(
-        "--team-bg",
-        backgrounds[item.team] || "#24242b"
-      );
+    row.style.setProperty(
+      "--team-bg",
+      backgrounds[item.team] || "#24242b"
+    );
 
-      const pos = document.createElement("span");
-      pos.className = "results-pos";
-      pos.textContent = String(item.position ?? "—");
+    const pos =
+      document.createElement("span");
 
-      const portrait = portraitElement(
-        info.file,
-        info.code
-      );
+    pos.className =
+      "results-pos";
 
-      const driver = document.createElement("div");
-      driver.className = "results-driver";
+    pos.textContent =
+      String(item.position ?? "—");
 
-      const name = document.createElement("div");
-      name.className = "results-name";
+    const portrait =
+      portraitElement(info,index);
 
-      const flag = document.createElement("span");
-      flag.className = "results-flag";
-      flag.textContent = info.flag;
+    const driver =
+      document.createElement("div");
 
-      name.append(
-        flag,
-        document.createTextNode(
-          " " + (item.name || "Poygachi")
-        )
-      );
+    driver.className =
+      "results-driver";
 
-      const team = document.createElement("div");
-      team.className = "results-team";
-      team.textContent = item.team || "";
+    const name =
+      document.createElement("div");
 
-      driver.append(name,team);
+    name.className =
+      "results-name";
 
-      const time = document.createElement("span");
-      time.className = "results-time";
+    const flag =
+      document.createElement("span");
 
-      time.textContent = displayTime(
+    flag.className =
+      "results-flag";
+
+    flag.textContent =
+      info.flag;
+
+    name.append(
+      flag,
+      document.createTextNode(
+        " " + (item.name || "Poygachi")
+      )
+    );
+
+    const team =
+      document.createElement("div");
+
+    team.className =
+      "results-team";
+
+    team.textContent =
+      item.team || "";
+
+    const code =
+      document.createElement("span");
+
+    code.className =
+      "results-code";
+
+    code.textContent =
+      info.code;
+
+    driver.append(
+      name,
+      team,
+      code
+    );
+
+    const time =
+      document.createElement("span");
+
+    time.className =
+      "results-time";
+
+    time.textContent =
+      displayTime(
         item,
         results[0],
         activeSession
       );
 
-      row.append(
-        pos,
-        portrait,
-        driver,
-        time
+    row.append(
+      pos,
+      portrait,
+      driver,
+      time
+    );
+
+    return row;
+  }
+
+  /*
+    KARTALARNI CHIZISH
+  */
+
+  function render(){
+
+    const shown = expanded
+      ? results
+      : results.slice(0,5);
+
+    const fragment =
+      document.createDocumentFragment();
+
+    shown.forEach((item,index) => {
+      fragment.append(
+        createRow(item,index)
       );
+    });
 
-      list.append(row);
-    }
+    list.replaceChildren(fragment);
 
-    toggle.hidden = results.length <= 5;
+    toggle.hidden =
+      results.length <= 5;
 
-    toggle.textContent = expanded
-      ? "Yopish ↑"
-      : `Barchasini ko‘rish (${results.length}) ↓`;
+    toggle.textContent =
+      expanded
+        ? "Yopish ↑"
+        : `Barchasini ko‘rish (${results.length}) ↓`;
 
     toggle.setAttribute(
       "aria-expanded",
@@ -1387,29 +1939,95 @@ footer span{
     }
   }
 
+  /*
+    NATIJALARNI QABUL QILISH
+  */
+
   function showSession(data){
+
     if(
       !Array.isArray(data.results) ||
       !data.results.length
     ){
-      throw new Error("Natijalar mavjud emas");
+      throw new Error(
+        "Natijalar mavjud emas"
+      );
     }
 
-    results = data.results
-      .filter(item => item && typeof item === "object")
+    const incoming = data.results
+      .filter(
+        item =>
+          item &&
+          typeof item === "object"
+      )
       .sort(
         (a,b) =>
-          Number(a.position)-Number(b.position)
+          Number(a.position) -
+          Number(b.position)
       );
 
-    if(!results.length){
-      throw new Error("Natijalar bo‘sh");
+    if(!incoming.length){
+      throw new Error(
+        "Natijalar bo‘sh"
+      );
     }
 
-    const session = String(data.session || "");
-    const meeting = String(data.meeting || "");
+    const session =
+      String(data.session || "");
 
+    const meeting =
+      String(data.meeting || "");
+
+    const date = data.date
+      ? new Date(data.date)
+      : null;
+
+    const dateText =
+      date &&
+      !Number.isNaN(date.getTime())
+        ? date.toLocaleDateString(
+            "uz-UZ",
+            {
+              day:"numeric",
+              month:"long",
+              year:"numeric"
+            }
+          )
+        : "";
+
+    /*
+      MUHIM:
+      NATIJA O'ZGARMAGAN BO'LSA,
+      RASMLARNI QAYTA YUKLAMAYMIZ.
+    */
+
+    const signature =
+      JSON.stringify({
+        session,
+        meeting,
+        date:data.date,
+        results:incoming
+      });
+
+    if(signature === lastSignature){
+      return;
+    }
+
+    const newSession =
+      session +
+      "|" +
+      meeting +
+      "|" +
+      dateText;
+
+    if(newSession !== currentSession){
+      expanded = false;
+      currentSession = newSession;
+    }
+
+    results = incoming;
     activeSession = session;
+    lastSignature = signature;
 
     title.textContent =
       "🏁 " +
@@ -1419,42 +2037,33 @@ footer span{
         "POYGA NATIJALARI"
       );
 
-    const date = data.date
-      ? new Date(data.date)
-      : null;
-
-    const dateText =
-      date && !Number.isNaN(date.getTime())
-        ? date.toLocaleDateString("uz-UZ",{
-            day:"numeric",
-            month:"long",
-            year:"numeric"
-          })
-        : "";
-
     meta.textContent = [
       gpNames[meeting] || meeting,
       dateText
-    ].filter(Boolean).join(" · ");
-
-    const newSession =
-      session + "|" + meeting + "|" + dateText;
-
-    if(newSession !== currentSession){
-      expanded = false;
-      currentSession = newSession;
-    }
+    ]
+      .filter(Boolean)
+      .join(" · ");
 
     render();
   }
 
-  toggle.addEventListener("click",() => {
-    expanded = !expanded;
-    render();
-  });
+  /*
+    BARCHASINI KO'RISH
+  */
+
+  toggle.addEventListener(
+    "click",
+    () => {
+
+      expanded = !expanded;
+
+      render();
+
+    }
+  );
 
   /*
-    INTERNET BO'LMASA HAM
+    INTERNET MUAMMOSI BO'LSA
     VAQTINCHALIK NATIJALAR
   */
 
@@ -1496,19 +2105,28 @@ footer span{
     ]
   };
 
+  /*
+    JSON MANBASI
+  */
+
   async function refresh(){
+
     const sources = [
       "./latest-session.json",
       "https://nodirbekhonormagicpad2-max.github.io/F1Uzbekistan/latest-session.json"
     ];
 
     for(const url of sources){
+
       try{
+
         const response = await fetch(
           url +
           (url.includes("?") ? "&" : "?") +
           "t=" + Date.now(),
-          {cache:"no-store"}
+          {
+            cache:"no-store"
+          }
         );
 
         if(!response.ok){
@@ -1517,37 +2135,58 @@ footer span{
           );
         }
 
-        const data = await response.json();
+        const data =
+          await response.json();
 
         showSession(data);
+
         return;
 
       }catch(error){
+
         console.warn(
           "F1 natijalar manbasi:",
           url,
           error
         );
+
       }
+
     }
 
     if(!results.length){
       showSession(savedSession);
     }
+
   }
 
+  /*
+    DASTLABKI YUKLASH
+  */
+
   showSession(savedSession);
+
   refresh();
 
-  // HAR 60 SONIYADA YANGILANADI
-  setInterval(refresh,60000);
+  /*
+    HAR 60 SONIYADA
+    NATIJANI TEKSHIRISH
+  */
+
+  setInterval(
+    refresh,
+    60000
+  );
 
 })();
 </script>
 
-<!-- FIREBASE JONLI CHAT -->
+<!-- =========================
+     FIREBASE JONLI CHAT
+========================= -->
 
 <script type="module">
+
 import {
   initializeApp
 } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
@@ -1577,22 +2216,29 @@ const firebaseConfig = {
   measurementId:"G-PV3CPBLB6H"
 };
 
-const app = initializeApp(firebaseConfig);
+const app =
+  initializeApp(firebaseConfig);
 
 try{
   getAnalytics(app);
 }catch(error){
-  console.warn("Firebase Analytics:",error);
+  console.warn(
+    "Firebase Analytics:",
+    error
+  );
 }
 
-const db = getDatabase(app);
+const db =
+  getDatabase(app);
 
-const messagesRef = ref(db,"messages");
+const messagesRef =
+  ref(db,"messages");
 
-const messagesQuery = query(
-  messagesRef,
-  limitToLast(100)
-);
+const messagesQuery =
+  query(
+    messagesRef,
+    limitToLast(100)
+  );
 
 const chatMessages =
   document.getElementById("chatMessages");
@@ -1616,113 +2262,165 @@ const chatStatus =
   document.getElementById("chatStatus");
 
 try{
+
   const savedName =
-    localStorage.getItem("f1_chat_name");
+    localStorage.getItem(
+      "f1_chat_name"
+    );
 
   if(savedName){
     chatName.value = savedName;
   }
+
 }catch(error){}
 
-const renderedMessages = new Map();
+const renderedMessages =
+  new Map();
 
 let sendCooldown = false;
 
-function setStatus(message,isError=false){
-  chatStatus.textContent = message;
+function setStatus(
+  message,
+  isError = false
+){
 
-  chatStatus.className = isError
-    ? "chat-status error"
-    : "chat-status";
+  chatStatus.textContent =
+    message;
+
+  chatStatus.className =
+    isError
+      ? "chat-status error"
+      : "chat-status";
+
 }
 
 function formatTime(timestamp){
+
   if(!timestamp){
     return "";
   }
 
-  const date = new Date(timestamp);
+  const date =
+    new Date(timestamp);
 
-  if(Number.isNaN(date.getTime())){
+  if(
+    Number.isNaN(date.getTime())
+  ){
     return "";
   }
 
-  return date.toLocaleTimeString("uz-UZ",{
-    hour:"2-digit",
-    minute:"2-digit"
-  });
+  return date.toLocaleTimeString(
+    "uz-UZ",
+    {
+      hour:"2-digit",
+      minute:"2-digit"
+    }
+  );
 }
 
 function scrollChatToBottom(){
+
   chatMessages.scrollTop =
     chatMessages.scrollHeight;
+
 }
 
 function renderMessage(key,data){
-  if(!data || renderedMessages.has(key)){
+
+  if(
+    !data ||
+    renderedMessages.has(key)
+  ){
     return;
   }
 
   const message =
     document.createElement("div");
 
-  message.className = "chat-message";
-  message.dataset.key = key;
+  message.className =
+    "chat-message";
+
+  message.dataset.key =
+    key;
 
   const name =
     document.createElement("span");
 
-  name.className = "chat-name";
+  name.className =
+    "chat-name";
+
   name.textContent =
     data.name || "Foydalanuvchi";
 
   const time =
     document.createElement("span");
 
-  time.className = "chat-time";
+  time.className =
+    "chat-time";
+
   time.textContent =
     formatTime(data.createdAt);
 
   const text =
     document.createElement("div");
 
-  text.className = "chat-text";
-  text.textContent = data.text || "";
+  text.className =
+    "chat-text";
 
-  message.append(name,time,text);
+  text.textContent =
+    data.text || "";
+
+  message.append(
+    name,
+    time,
+    text
+  );
 
   chatMessages.appendChild(message);
 
-  renderedMessages.set(key,message);
+  renderedMessages.set(
+    key,
+    message
+  );
 
-  chatEmpty.style.display = "none";
+  chatEmpty.style.display =
+    "none";
 
   scrollChatToBottom();
 }
 
 function removeMessage(key){
+
   const message =
     renderedMessages.get(key);
 
   if(message){
+
     message.remove();
+
     renderedMessages.delete(key);
+
   }
 
   if(renderedMessages.size === 0){
-    chatEmpty.style.display = "grid";
+    chatEmpty.style.display =
+      "grid";
   }
+
 }
 
 onChildAdded(
   messagesQuery,
   snapshot => {
+
     renderMessage(
       snapshot.key,
       snapshot.val()
     );
+
   },
   error => {
+
     console.error(
       "Chat o‘qish xatosi:",
       error
@@ -1734,75 +2432,104 @@ onChildAdded(
         : "Chatni yuklashda xatolik yuz berdi.",
       true
     );
+
   }
 );
 
 onChildRemoved(
   messagesQuery,
   snapshot => {
-    removeMessage(snapshot.key);
+
+    removeMessage(
+      snapshot.key
+    );
+
   }
 );
 
 chatForm.addEventListener(
   "submit",
   async event => {
+
     event.preventDefault();
 
     if(sendCooldown){
       return;
     }
 
-    const name = chatName.value
-      .trim()
-      .replace(/\s+/g," ");
+    const name =
+      chatName.value
+        .trim()
+        .replace(/\s+/g," ");
 
-    const text = chatText.value
-      .trim()
-      .replace(/\s+/g," ");
+    const text =
+      chatText.value
+        .trim()
+        .replace(/\s+/g," ");
 
-    if(name.length < 1 || name.length > 30){
+    if(
+      name.length < 1 ||
+      name.length > 30
+    ){
+
       setStatus(
         "Ism 1–30 belgidan iborat bo‘lishi kerak.",
         true
       );
 
       chatName.focus();
+
       return;
     }
 
-    if(text.length < 1 || text.length > 500){
+    if(
+      text.length < 1 ||
+      text.length > 500
+    ){
+
       setStatus(
         "Xabar 1–500 belgidan iborat bo‘lishi kerak.",
         true
       );
 
       chatText.focus();
+
       return;
     }
 
     sendCooldown = true;
+
     chatSend.disabled = true;
 
-    setStatus("Yuborilmoqda...");
+    setStatus(
+      "Yuborilmoqda..."
+    );
 
     try{
-      await push(messagesRef,{
-        name,
-        text,
-        createdAt:Date.now()
-      });
+
+      await push(
+        messagesRef,
+        {
+          name,
+          text,
+          createdAt:Date.now()
+        }
+      );
 
       try{
+
         localStorage.setItem(
           "f1_chat_name",
           name
         );
+
       }catch(error){}
 
       chatText.value = "";
 
-      setStatus("Xabar yuborildi.");
+      setStatus(
+        "Xabar yuborildi."
+      );
 
       setTimeout(
         () => setStatus(""),
@@ -1810,6 +2537,7 @@ chatForm.addEventListener(
       );
 
     }catch(error){
+
       console.error(
         "Xabar yuborish xatosi:",
         error
@@ -1823,20 +2551,51 @@ chatForm.addEventListener(
       );
 
     }finally{
-      setTimeout(() => {
-        sendCooldown = false;
-        chatSend.disabled = false;
-      },1000);
+
+      setTimeout(
+        () => {
+
+          sendCooldown = false;
+
+          chatSend.disabled = false;
+
+        },
+        1000
+      );
+
     }
+
   }
 );
+
 </script>
 
-<!-- YANGILIKLAR, VIDEO VA GALEREYA -->
+<!-- =========================
+     YANGILIKLAR
+========================= -->
 
-<script src="./news.js?v=20261025-2" defer></script>
-<script src="./home-videos.js?v=cinema-gallery-20261026-v4" defer></script>
-<script src="./home-gallery.js?v=gallery-pro-5" defer></script>
+<script
+  src="./news.js?v=20261025-2"
+  defer
+></script>
+
+<!-- =========================
+     F1 CINEMA
+========================= -->
+
+<script
+  src="./home-videos.js?v=cinema-gallery-20261026-v4"
+  defer
+></script>
+
+<!-- =========================
+     FOTO GALEREYA
+========================= -->
+
+<script
+  src="./home-gallery.js?v=gallery-pro-5"
+  defer
+></script>
 
 </body>
 </html>
