@@ -4,64 +4,345 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090909">
+
 <title>F1 Uzbekistan TV — Jonli efir</title>
 <meta name="description" content="F1 Uzbekistan TV — jonli efir, F1 yangiliklari, videolar, galereya va poyga natijalari.">
 
 <style>
 *{box-sizing:border-box}
-:root{--red:#e10600;--bg:#090909;--border:#292929}
-body{margin:0;background:radial-gradient(ellipse at 50% 0%,#35100e 0%,transparent 42%),var(--bg);color:#fff;font-family:Arial,Helvetica,sans-serif;min-height:100vh}
-header{min-height:76px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#0c0c0cf0;border-bottom:1px solid var(--border)}
-.brand{display:flex;align-items:center;gap:13px;min-width:0}
-.logo{background:var(--red);padding:9px 12px;border-radius:6px;font-size:25px;font-weight:900;font-style:italic}
-.brand-name{font-size:17px;font-weight:900;letter-spacing:1px}
-.brand-sub{color:#888;font-size:10px;letter-spacing:3px;margin-top:5px}
-.header-telegram{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 30px;background:var(--red);color:#fff;text-decoration:none;font-size:15px;font-weight:900;letter-spacing:1px;white-space:nowrap;flex-shrink:0}
+
+:root{
+  --red:#e10600;
+  --bg:#090909;
+  --border:#292929;
+}
+
+body{
+  margin:0;
+  background:radial-gradient(ellipse at 50% 0%,#35100e 0%,transparent 42%),var(--bg);
+  color:#fff;
+  font-family:Arial,Helvetica,sans-serif;
+  min-height:100vh;
+}
+
+header{
+  min-height:76px;
+  padding:0 5%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  background:#0c0c0cf0;
+  border-bottom:1px solid var(--border);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  min-width:0;
+}
+
+.logo{
+  background:var(--red);
+  padding:9px 12px;
+  border-radius:6px;
+  font-size:25px;
+  font-weight:900;
+  font-style:italic;
+}
+
+.brand-name{
+  font-size:17px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.brand-sub{
+  color:#888;
+  font-size:10px;
+  letter-spacing:3px;
+  margin-top:5px;
+}
+
+.header-telegram{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:50px;
+  padding:0 30px;
+  background:var(--red);
+  color:#fff;
+  text-decoration:none;
+  font-size:15px;
+  font-weight:900;
+  letter-spacing:1px;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+
 .header-telegram:hover{background:#b90500}
-main{width:min(1060px,100%);margin:0 auto;padding:45px 22px 35px}
-.intro{text-align:center;margin-bottom:27px}
-h1{font-size:clamp(28px,5vw,43px);line-height:1.15;letter-spacing:-1px;margin:0;font-weight:900}
+
+main{
+  width:min(1060px,100%);
+  margin:0 auto;
+  padding:45px 22px 35px;
+}
+
+.intro{
+  text-align:center;
+  margin-bottom:27px;
+}
+
+h1{
+  font-size:clamp(28px,5vw,43px);
+  line-height:1.15;
+  letter-spacing:-1px;
+  margin:0;
+  font-weight:900;
+}
+
 h1 span{color:var(--red)}
 
-/* JONLI EFIR TAYMERI */
-.player-wrap{padding:5px;border:1px solid #373737;border-radius:14px;background:linear-gradient(135deg,#41110f,#151515 45%);box-shadow:0 20px 65px #0009}
-.player{position:relative;overflow:hidden;background:#000;border-radius:9px;aspect-ratio:16/9}
-.f1-tv-countdown{min-height:345px;display:flex;flex-direction:column;justify-content:space-between;padding:20px;text-align:center;background:linear-gradient(180deg,#000b,#000b),url("https://img.redbull.com/images/q_auto,f_auto/redbullcom/2023/10/27/br6gkvesyfank7ykisoo/f1-meksika-gp") center/cover no-repeat,#141414}
-.tv-top,.tv-bottom{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.tv-badge{background:var(--red);padding:9px 13px;border-radius:7px;font-size:12px;font-weight:900}
-.tv-f1{font-size:15px;font-weight:900;font-style:italic}
-.tv-center{padding:14px 0;width:100%}
-.tv-heading{font-size:clamp(17px,3vw,35px);font-weight:900;letter-spacing:2px}
-.tv-session{margin-top:15px;font-size:clamp(28px,5vw,60px);font-weight:900;text-transform:uppercase}
-.tv-gp{margin-top:7px;color:#ddd;font-size:clamp(11px,2vw,18px);letter-spacing:3px}
-.tv-timer{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;max-width:680px;margin:25px auto}
-.tv-box{min-width:0;padding:16px 5px;background:#000d;border:1px solid var(--red);border-radius:12px}
-.tv-box strong{display:block;font-size:clamp(25px,5vw,58px);font-weight:900;font-variant-numeric:tabular-nums}
-.tv-box span{display:block;margin-top:7px;color:#bbb;font-size:clamp(9px,1.5vw,13px);font-weight:800}
-.tv-date{color:#eee;font-size:clamp(11px,2vw,15px)}
-.tv-bottom{padding-top:12px;border-top:1px solid #555;color:#ccc;font-size:10px;font-weight:800}
+/* JONLI EFIR */
+
+.player-wrap{
+  padding:5px;
+  border:1px solid #373737;
+  border-radius:14px;
+  background:linear-gradient(135deg,#41110f,#151515 45%);
+  box-shadow:0 20px 65px #0009;
+}
+
+.player{
+  position:relative;
+  overflow:hidden;
+  background:#000;
+  border-radius:9px;
+  aspect-ratio:16/9;
+}
+
+.f1-tv-countdown{
+  min-height:345px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:20px;
+  text-align:center;
+  background:
+    linear-gradient(180deg,#000b,#000b),
+    url("https://img.redbull.com/images/q_auto,f_auto/redbullcom/2023/10/27/br6gkvesyfank7ykisoo/f1-meksika-gp")
+    center/cover no-repeat,
+    #141414;
+}
+
+.tv-top,.tv-bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+
+.tv-badge{
+  background:var(--red);
+  padding:9px 13px;
+  border-radius:7px;
+  font-size:12px;
+  font-weight:900;
+}
+
+.tv-f1{
+  font-size:15px;
+  font-weight:900;
+  font-style:italic;
+}
+
+.tv-center{
+  padding:14px 0;
+  width:100%;
+}
+
+.tv-heading{
+  font-size:clamp(17px,3vw,35px);
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+.tv-session{
+  margin-top:15px;
+  font-size:clamp(28px,5vw,60px);
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.tv-gp{
+  margin-top:7px;
+  color:#ddd;
+  font-size:clamp(11px,2vw,18px);
+  letter-spacing:3px;
+}
+
+.tv-timer{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  max-width:680px;
+  margin:25px auto;
+}
+
+.tv-box{
+  min-width:0;
+  padding:16px 5px;
+  background:#000d;
+  border:1px solid var(--red);
+  border-radius:12px;
+}
+
+.tv-box strong{
+  display:block;
+  font-size:clamp(25px,5vw,58px);
+  font-weight:900;
+  font-variant-numeric:tabular-nums;
+}
+
+.tv-box span{
+  display:block;
+  margin-top:7px;
+  color:#bbb;
+  font-size:clamp(9px,1.5vw,13px);
+  font-weight:800;
+}
+
+.tv-date{
+  color:#eee;
+  font-size:clamp(11px,2vw,15px);
+}
+
+.tv-bottom{
+  padding-top:12px;
+  border-top:1px solid #555;
+  color:#ccc;
+  font-size:10px;
+  font-weight:800;
+}
+
 .tv-bottom span:last-child{color:#ff5b55}
 
 /* CHAT */
-.chat{margin-top:32px;padding:22px;border:1px solid #303030;border-radius:12px;background:linear-gradient(110deg,#171717,#101010)}
-.chat h2{margin:0 0 6px;font-size:20px}
-.chat-messages{height:320px;overflow-y:auto;padding:12px;border:1px solid #292929;border-radius:9px;background:#0b0b0b}
-.chat-empty{height:100%;display:grid;place-items:center;color:#666;font-size:13px;text-align:center}
-.chat-message{padding:9px 0;border-bottom:1px solid #1d1d1d}
-.chat-message:last-child{border-bottom:0}
-.chat-name{color:#ff514c;font-size:12px;font-weight:800}
-.chat-time{margin-left:7px;color:#555;font-size:10px}
-.chat-text{margin-top:4px;color:#eee;font-size:13px;line-height:1.5;overflow-wrap:anywhere}
-.chat-form{display:grid;grid-template-columns:150px 1fr auto;gap:8px;margin-top:12px}
-.chat-form input{width:100%;min-height:44px;padding:10px 12px;border:1px solid #303030;border-radius:7px;outline:none;background:#0d0d0d;color:#fff;font:inherit}
-.chat-form input:focus{border-color:var(--red)}
-.chat-form button{min-height:44px;padding:0 18px;border:0;border-radius:7px;background:var(--red);color:#fff;cursor:pointer;font-size:13px;font-weight:800}
-.chat-form button:disabled{opacity:.55;cursor:not-allowed}
-.chat-status{min-height:18px;margin-top:8px;color:#777;font-size:11px}
-.chat-status.error{color:#ff514c}
-#f1-photo-gallery{margin-top:22px;width:100%;min-width:0}
 
-/* NATIJALAR — POYGACHILAR RASMLARI BILAN */
+.chat{
+  margin-top:32px;
+  padding:22px;
+  border:1px solid #303030;
+  border-radius:12px;
+  background:linear-gradient(110deg,#171717,#101010);
+}
+
+.chat h2{
+  margin:0 0 6px;
+  font-size:20px;
+}
+
+.chat-messages{
+  height:320px;
+  overflow-y:auto;
+  padding:12px;
+  border:1px solid #292929;
+  border-radius:9px;
+  background:#0b0b0b;
+}
+
+.chat-empty{
+  height:100%;
+  display:grid;
+  place-items:center;
+  color:#666;
+  font-size:13px;
+  text-align:center;
+}
+
+.chat-message{
+  padding:9px 0;
+  border-bottom:1px solid #1d1d1d;
+}
+
+.chat-message:last-child{border-bottom:0}
+
+.chat-name{
+  color:#ff514c;
+  font-size:12px;
+  font-weight:800;
+}
+
+.chat-time{
+  margin-left:7px;
+  color:#555;
+  font-size:10px;
+}
+
+.chat-text{
+  margin-top:4px;
+  color:#eee;
+  font-size:13px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+
+.chat-form{
+  display:grid;
+  grid-template-columns:150px 1fr auto;
+  gap:8px;
+  margin-top:12px;
+}
+
+.chat-form input{
+  width:100%;
+  min-height:44px;
+  padding:10px 12px;
+  border:1px solid #303030;
+  border-radius:7px;
+  outline:none;
+  background:#0d0d0d;
+  color:#fff;
+  font:inherit;
+}
+
+.chat-form input:focus{border-color:var(--red)}
+
+.chat-form button{
+  min-height:44px;
+  padding:0 18px;
+  border:0;
+  border-radius:7px;
+  background:var(--red);
+  color:#fff;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:800;
+}
+
+.chat-form button:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+.chat-status{
+  min-height:18px;
+  margin-top:8px;
+  color:#777;
+  font-size:11px;
+}
+
+.chat-status.error{color:#ff514c}
+
+#f1-photo-gallery{
+  margin-top:22px;
+  width:100%;
+  min-width:0;
+}
+
+/* POYGA NATIJALARI */
+
 .results-card{
   margin-top:22px;
   padding:18px;
@@ -71,46 +352,191 @@ h1 span{color:var(--red)}
   background:linear-gradient(145deg,#19191d,#0c0c10);
   box-shadow:0 12px 35px #0007;
 }
-.results-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.results-title{margin:0;font-size:clamp(19px,4vw,29px);font-weight:900}
-.results-pill{padding:8px 13px;border:1px solid #e1060080;border-radius:30px;background:#e1060015;color:#ff6464;font-size:12px;font-weight:900}
-.results-meta{margin:10px 0 18px;color:#aaa;font-size:13px}
-.results-list{display:grid;gap:9px}
+
+.results-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.results-title{
+  margin:0;
+  font-size:clamp(19px,4vw,29px);
+  font-weight:900;
+}
+
+.results-pill{
+  padding:8px 13px;
+  border:1px solid #e1060080;
+  border-radius:30px;
+  background:#e1060015;
+  color:#ff6464;
+  font-size:12px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.results-meta{
+  margin:10px 0 18px;
+  color:#aaa;
+  font-size:13px;
+}
+
+.results-list{
+  display:grid;
+  gap:9px;
+}
+
 .results-row{
   position:relative;
   display:grid;
-  grid-template-columns:32px 76px minmax(0,1fr) 45px auto;
+  grid-template-columns:32px 80px minmax(0,1fr) auto;
   align-items:center;
-  gap:10px;
-  min-height:92px;
-  padding:8px 12px 8px 0;
+  gap:12px;
+  min-height:100px;
+  padding:7px 14px 7px 0;
   overflow:hidden;
   border:1px solid #34343c;
   border-left:6px solid var(--team,#777);
   border-radius:12px;
-  background:linear-gradient(110deg,var(--team-bg,#24242b),#101014 75%);
+  background:
+    linear-gradient(110deg,var(--team-bg,#24242b),#101014 75%);
 }
-.results-pos{font-size:23px;font-weight:900;text-align:center}
-.results-row:first-child .results-pos{color:#ffd44d}
-.results-portrait{width:76px;height:85px;align-self:end;object-fit:contain;object-position:center bottom}
-.results-portrait-fallback{display:grid;place-items:center;width:76px;height:76px;border-radius:9px;background:#ffffff12;font-size:22px;font-weight:900}
-.results-driver{min-width:0}
-.results-name{font-size:clamp(12px,2.5vw,17px);font-weight:900;overflow-wrap:anywhere}
-.results-team{margin-top:5px;color:#bbb;font-size:12px}
-.results-flag{margin-right:5px}
-.results-logo{width:42px;height:42px;object-fit:contain}
-.results-time{font-size:clamp(11px,2.3vw,16px);font-weight:900;white-space:nowrap;font-variant-numeric:tabular-nums}
-.results-toggle{width:100%;margin-top:16px;padding:15px;border:1px solid #444;border-radius:12px;background:#141418;color:#fff;font-size:14px;font-weight:900;cursor:pointer}
-.results-toggle:hover{border-color:var(--red)}
-.results-note{margin-top:8px;color:#999;font-size:11px}
-.results-state{padding:20px;color:#aaa;font-size:13px}
+
+.results-pos{
+  font-size:23px;
+  font-weight:900;
+  text-align:center;
+}
+
+.results-row:first-child .results-pos{
+  color:#ffd44d;
+}
+
+.results-portrait{
+  width:80px;
+  height:90px;
+  display:block;
+  align-self:end;
+  object-fit:contain;
+  object-position:center bottom;
+  border-radius:8px;
+}
+
+.results-portrait-fallback{
+  display:grid;
+  place-items:center;
+  width:80px;
+  height:85px;
+  border-radius:9px;
+  background:#ffffff12;
+  font-size:22px;
+  font-weight:900;
+}
+
+.results-driver{
+  min-width:0;
+}
+
+.results-name{
+  font-size:clamp(12px,2.5vw,17px);
+  font-weight:900;
+  overflow-wrap:anywhere;
+}
+
+.results-team{
+  margin-top:5px;
+  color:#bbb;
+  font-size:12px;
+}
+
+.results-flag{
+  margin-right:5px;
+}
+
+.results-time{
+  font-size:clamp(11px,2.3vw,16px);
+  font-weight:900;
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+  text-align:right;
+}
+
+.results-toggle{
+  width:100%;
+  margin-top:16px;
+  padding:15px;
+  border:1px solid #444;
+  border-radius:12px;
+  background:#141418;
+  color:#fff;
+  font-size:14px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.results-toggle:hover{
+  border-color:var(--red);
+}
+
+.results-note{
+  margin-top:8px;
+  color:#999;
+  font-size:11px;
+}
+
+.results-state{
+  padding:20px;
+  color:#aaa;
+  font-size:13px;
+}
 
 /* TAQVIM */
-.calendar-section{margin-top:20px;display:grid;gap:14px}
-.calendar-btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:70px;padding:18px 20px;border:1px solid var(--red);border-radius:10px;background:var(--red);color:#fff;text-decoration:none;font-size:18px;font-weight:900;letter-spacing:.3px;box-shadow:0 8px 25px #e1060040}
-.calendar-btn:hover{background:#b90500}
-footer{padding:25px 15px 30px;border-top:1px solid #222;text-align:center;color:#777;font-size:11px;letter-spacing:1px}
-footer span{color:var(--red);font-weight:bold}
+
+.calendar-section{
+  margin-top:20px;
+  display:grid;
+  gap:14px;
+}
+
+.calendar-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-height:70px;
+  padding:18px 20px;
+  border:1px solid var(--red);
+  border-radius:10px;
+  background:var(--red);
+  color:#fff;
+  text-decoration:none;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.3px;
+  box-shadow:0 8px 25px #e1060040;
+}
+
+.calendar-btn:hover{
+  background:#b90500;
+}
+
+footer{
+  padding:25px 15px 30px;
+  border-top:1px solid #222;
+  text-align:center;
+  color:#777;
+  font-size:11px;
+  letter-spacing:1px;
+}
+
+footer span{
+  color:var(--red);
+  font-weight:bold;
+}
+
+/* TELEFON */
 
 @media(max-width:700px){
   header{min-height:65px;padding:0 13px}
@@ -119,38 +545,64 @@ footer span{color:var(--red);font-weight:bold}
   .brand-name{font-size:12px;letter-spacing:.5px}
   .brand-sub{font-size:8px;letter-spacing:2px}
   .header-telegram{min-height:40px;padding:0 12px;font-size:11px;letter-spacing:.3px}
+
   main{padding:32px 12px 28px}
   .intro{margin-bottom:22px}
   .player-wrap{padding:3px;border-radius:9px}
   .player{border-radius:6px}
-  .f1-tv-countdown{min-height:320px;aspect-ratio:auto;padding:12px}
+
+  .f1-tv-countdown{
+    min-height:320px;
+    aspect-ratio:auto;
+    padding:12px;
+  }
+
   .tv-badge{padding:7px;font-size:9px}
   .tv-f1{font-size:11px}
   .tv-heading{letter-spacing:1px}
   .tv-timer{gap:5px;margin:20px auto}
   .tv-box{padding:14px 3px;border-radius:8px}
   .tv-bottom{font-size:8px}
+
   .chat-form{grid-template-columns:1fr}
   .chat-form button{width:100%}
   .chat-messages{height:280px}
-  .calendar-btn{min-height:65px;padding:16px 14px;font-size:16px}
+
+  .calendar-btn{
+    min-height:65px;
+    padding:16px 14px;
+    font-size:16px;
+  }
 }
+
 @media(max-width:600px){
   .results-card{padding:12px}
+
   .results-row{
-    grid-template-columns:22px 53px minmax(0,1fr) 25px auto;
-    gap:6px;
-    min-height:73px;
-    padding:5px 7px 5px 0;
+    grid-template-columns:22px 65px minmax(0,1fr) auto;
+    gap:7px;
+    min-height:82px;
+    padding:5px 8px 5px 0;
   }
+
   .results-pos{font-size:17px}
-  .results-portrait{width:53px;height:66px}
-  .results-portrait-fallback{width:53px;height:60px;font-size:17px}
+
+  .results-portrait{
+    width:65px;
+    height:75px;
+  }
+
+  .results-portrait-fallback{
+    width:65px;
+    height:70px;
+    font-size:17px;
+  }
+
   .results-name{font-size:11px}
   .results-team{font-size:10px}
-  .results-logo{width:24px;height:24px}
   .results-time{font-size:10px}
 }
+
 @media(max-width:380px){
   header{padding:0 8px}
   .brand{gap:6px}
@@ -158,6 +610,23 @@ footer span{color:var(--red);font-weight:bold}
   .brand-name{font-size:10px}
   .brand-sub{display:none}
   .header-telegram{padding:0 8px;font-size:10px}
+
+  .results-row{
+    grid-template-columns:20px 54px minmax(0,1fr) auto;
+    gap:5px;
+  }
+
+  .results-portrait{
+    width:54px;
+    height:67px;
+  }
+
+  .results-portrait-fallback{
+    width:54px;
+    height:65px;
+  }
+
+  .results-time{font-size:9px}
 }
 </style>
 </head>
@@ -172,7 +641,13 @@ footer span{color:var(--red);font-weight:bold}
       <div class="brand-sub">JONLI EFIR</div>
     </div>
   </div>
-  <a class="header-telegram" href="https://t.me/F1_Uzbekistan" target="_blank" rel="noopener noreferrer">TELEGRAM ↗</a>
+
+  <a
+    class="header-telegram"
+    href="https://t.me/F1_Uzbekistan"
+    target="_blank"
+    rel="noopener noreferrer"
+  >TELEGRAM ↗</a>
 </header>
 
 <main>
@@ -182,8 +657,10 @@ footer span{color:var(--red);font-weight:bold}
   </section>
 
   <!-- JONLI EFIR KUTISH EKRANI -->
+
   <section class="player-wrap" aria-label="F1 Uzbekistan TV efir boshlanishigacha">
     <div class="player f1-tv-countdown">
+
       <div class="tv-top">
         <span class="tv-badge">● F1 UZBEKISTAN TV</span>
         <span class="tv-f1">FORMULA 1</span>
@@ -195,68 +672,150 @@ footer span{color:var(--red);font-weight:bold}
         <div class="tv-gp" id="tvGP">MEKSIKA GRAN-PRISI</div>
 
         <div class="tv-timer">
-          <div class="tv-box"><strong id="tvDays">00</strong><span>KUN</span></div>
-          <div class="tv-box"><strong id="tvHours">00</strong><span>SOAT</span></div>
-          <div class="tv-box"><strong id="tvMinutes">00</strong><span>DAQIQA</span></div>
-          <div class="tv-box"><strong id="tvSeconds">00</strong><span>SONIYA</span></div>
+          <div class="tv-box">
+            <strong id="tvDays">00</strong>
+            <span>KUN</span>
+          </div>
+
+          <div class="tv-box">
+            <strong id="tvHours">00</strong>
+            <span>SOAT</span>
+          </div>
+
+          <div class="tv-box">
+            <strong id="tvMinutes">00</strong>
+            <span>DAQIQA</span>
+          </div>
+
+          <div class="tv-box">
+            <strong id="tvSeconds">00</strong>
+            <span>SONIYA</span>
+          </div>
         </div>
 
-        <div class="tv-date" id="tvDate">Sessiya vaqti yuklanmoqda...</div>
+        <div class="tv-date" id="tvDate">
+          Sessiya vaqti yuklanmoqda...
+        </div>
       </div>
 
       <div class="tv-bottom">
         <span>🏎️ F1 UZBEKISTAN TV</span>
         <span>● EFIR KUTILMOQDA</span>
       </div>
+
     </div>
   </section>
 
-  <!-- FIREBASE CHAT -->
+  <!-- JONLI CHAT -->
+
   <section class="chat">
     <h2>💬 Jonli chat</h2>
 
-    <div id="chatMessages" class="chat-messages" aria-live="polite">
+    <div
+      id="chatMessages"
+      class="chat-messages"
+      aria-live="polite"
+    >
       <div id="chatEmpty" class="chat-empty">
         Hozircha xabarlar yo‘q. Birinchi bo‘lib yozing!
       </div>
     </div>
 
     <form id="chatForm" class="chat-form">
-      <input id="chatName" type="text" maxlength="30" placeholder="Ismingiz" autocomplete="nickname" aria-label="Ismingiz" required>
-      <input id="chatText" type="text" maxlength="500" placeholder="Xabaringiz..." autocomplete="off" aria-label="Xabaringiz" required>
-      <button id="chatSend" type="submit">Yuborish</button>
+      <input
+        id="chatName"
+        type="text"
+        maxlength="30"
+        placeholder="Ismingiz"
+        autocomplete="nickname"
+        aria-label="Ismingiz"
+        required
+      >
+
+      <input
+        id="chatText"
+        type="text"
+        maxlength="500"
+        placeholder="Xabaringiz..."
+        autocomplete="off"
+        aria-label="Xabaringiz"
+        required
+      >
+
+      <button id="chatSend" type="submit">
+        Yuborish
+      </button>
     </form>
 
     <div id="chatStatus" class="chat-status"></div>
   </section>
 
   <!-- FOTO GALEREYA -->
-  <section id="f1-photo-gallery" aria-label="F1 foto galereya"></section>
 
-  <!-- POYGACHILAR RASMLARI VA NATIJALAR -->
-  <section class="results-card" aria-label="Oxirgi F1 sessiyasi natijalari">
+  <section
+    id="f1-photo-gallery"
+    aria-label="F1 foto galereya"
+  ></section>
+
+  <!-- POYGA NATIJALARI -->
+
+  <section
+    class="results-card"
+    aria-label="Oxirgi F1 sessiyasi natijalari"
+  >
     <div class="results-head">
-      <h2 class="results-title" id="resultsTitle">🏁 OXIRGI SESSIYA</h2>
+      <h2 class="results-title" id="resultsTitle">
+        🏁 OXIRGI SESSIYA
+      </h2>
+
       <span class="results-pill">TOP 5</span>
     </div>
 
-    <div class="results-meta" id="resultsMeta">Natijalar tekshirilmoqda...</div>
+    <div class="results-meta" id="resultsMeta">
+      Natijalar tekshirilmoqda...
+    </div>
 
-    <div class="results-list" id="resultsList" aria-live="polite">
+    <div
+      class="results-list"
+      id="resultsList"
+      aria-live="polite"
+    >
       <div class="results-state">Yuklanmoqda...</div>
     </div>
 
-    <button class="results-toggle" id="resultsToggle" type="button" aria-expanded="false" hidden>
+    <button
+      class="results-toggle"
+      id="resultsToggle"
+      type="button"
+      aria-expanded="false"
+      hidden
+    >
       Barchasini ko‘rish ↓
     </button>
 
-    <div class="results-note" id="resultsExtra" hidden></div>
+    <div
+      class="results-note"
+      id="resultsExtra"
+      hidden
+    ></div>
   </section>
 
-  <!-- TAQVIM VA CHEMPIONAT -->
+  <!-- TAQVIM -->
+
   <section class="calendar-section">
-    <a class="calendar-btn" href="f1_calendar_fixed.html">📅 F1 TAQVIMI 2026–2027</a>
-    <a class="calendar-btn" href="f1_championship.html">🏆 CHEMPIONAT JADVALI</a>
+    <a
+      class="calendar-btn"
+      href="f1_calendar_fixed.html"
+    >
+      📅 F1 TAQVIMI 2026–2027
+    </a>
+
+    <a
+      class="calendar-btn"
+      href="f1_championship.html"
+    >
+      🏆 CHEMPIONAT JADVALI
+    </a>
   </section>
 
 </main>
@@ -265,23 +824,45 @@ footer span{color:var(--red);font-weight:bold}
   <span>F1 UZBEKISTAN TV</span> · JONLI EFIR
 </footer>
 
-<!-- SESSIYA TAYMERI -->
+<!-- JONLI EFIR TAYMERI -->
+
 <script>
 (() => {
   "use strict";
 
   const sessions = [
-    {gp:"MEKSIKA GRAN-PRISI",name:"Amaliyot 1",date:"2026-10-30T18:30:00Z"},
-    {gp:"MEKSIKA GRAN-PRISI",name:"Amaliyot 2",date:"2026-10-30T22:00:00Z"},
-    {gp:"MEKSIKA GRAN-PRISI",name:"Amaliyot 3",date:"2026-10-31T17:30:00Z"},
-    {gp:"MEKSIKA GRAN-PRISI",name:"Saralash",date:"2026-10-31T21:00:00Z"},
-    {gp:"MEKSIKA GRAN-PRISI",name:"Asosiy poyga",date:"2026-11-01T20:00:00Z"}
+    {
+      gp:"MEKSIKA GRAN-PRISI",
+      name:"Amaliyot 1",
+      date:"2026-10-30T18:30:00Z"
+    },
+    {
+      gp:"MEKSIKA GRAN-PRISI",
+      name:"Amaliyot 2",
+      date:"2026-10-30T22:00:00Z"
+    },
+    {
+      gp:"MEKSIKA GRAN-PRISI",
+      name:"Amaliyot 3",
+      date:"2026-10-31T17:30:00Z"
+    },
+    {
+      gp:"MEKSIKA GRAN-PRISI",
+      name:"Saralash",
+      date:"2026-10-31T21:00:00Z"
+    },
+    {
+      gp:"MEKSIKA GRAN-PRISI",
+      name:"Asosiy poyga",
+      date:"2026-11-01T20:00:00Z"
+    }
   ];
 
   const el = id => document.getElementById(id);
+
   const pad = n => String(n).padStart(2,"0");
 
-  function formatLocal(date) {
+  function formatLocal(date){
     return new Intl.DateTimeFormat("uz-UZ",{
       timeZone:"Asia/Tashkent",
       day:"numeric",
@@ -293,18 +874,28 @@ footer span{color:var(--red);font-weight:bold}
     }).format(date);
   }
 
-  function update() {
+  function update(){
     const now = Date.now();
-    const session = sessions.find(s => Date.parse(s.date) > now);
 
-    if (!session) {
+    const session = sessions.find(
+      s => Date.parse(s.date) > now
+    );
+
+    if(!session){
       el("tvGP").textContent = "F1 TAQVIMI";
-      el("tvSession").textContent = "KEYINGI SESSIYA KUTILMOQDA";
-      el("tvDate").textContent = "Yangi sessiya sanasi hali kiritilmagan.";
+      el("tvSession").textContent =
+        "KEYINGI SESSIYA KUTILMOQDA";
 
-      ["tvDays","tvHours","tvMinutes","tvSeconds"].forEach(
-        id => el(id).textContent = "--"
-      );
+      el("tvDate").textContent =
+        "Yangi sessiya sanasi hali kiritilmagan.";
+
+      [
+        "tvDays",
+        "tvHours",
+        "tvMinutes",
+        "tvSeconds"
+      ].forEach(id => el(id).textContent = "--");
+
       return;
     }
 
@@ -312,8 +903,12 @@ footer span{color:var(--red);font-weight:bold}
     const diff = Math.max(0,target.getTime()-now);
 
     el("tvGP").textContent = session.gp;
-    el("tvSession").textContent = session.name.toLocaleUpperCase("uz-UZ");
-    el("tvDate").textContent = "📅 " + formatLocal(target) + " — Toshkent vaqti";
+
+    el("tvSession").textContent =
+      session.name.toLocaleUpperCase("uz-UZ");
+
+    el("tvDate").textContent =
+      "📅 " + formatLocal(target) + " — Toshkent vaqti";
 
     const values = [
       pad(Math.floor(diff/86400000)),
@@ -322,9 +917,14 @@ footer span{color:var(--red);font-weight:bold}
       pad(Math.floor((diff%60000)/1000))
     ];
 
-    ["tvDays","tvHours","tvMinutes","tvSeconds"].forEach(
-      (id,i) => el(id).textContent = values[i]
-    );
+    [
+      "tvDays",
+      "tvHours",
+      "tvMinutes",
+      "tvSeconds"
+    ].forEach((id,i) => {
+      el(id).textContent = values[i];
+    });
   }
 
   update();
@@ -332,7 +932,8 @@ footer span{color:var(--red);font-weight:bold}
 })();
 </script>
 
-<!-- NATIJALAR VA POYGACHILAR RASMLARI -->
+<!-- NATIJALAR: 22 TA JPG RASM -->
+
 <script>
 (() => {
   "use strict";
@@ -356,10 +957,27 @@ footer span{color:var(--red);font-weight:bold}
     "Aston Martin":"#229971",
     "Williams":"#64c4ff",
     "Haas F1 Team":"#b6b6b6",
+    "Haas":"#b6b6b6",
     "Alpine":"#ff87bc",
     "Racing Bulls":"#6c98ff",
     "Audi":"#e43b3b",
     "Cadillac":"#d6ba75"
+  };
+
+  const backgrounds = {
+    "Ferrari":"#361215",
+    "Red Bull Racing":"#14203d",
+    "Red Bull":"#14203d",
+    "McLaren":"#392311",
+    "Mercedes":"#10302d",
+    "Aston Martin":"#12302a",
+    "Williams":"#14283a",
+    "Haas F1 Team":"#28282d",
+    "Haas":"#28282d",
+    "Alpine":"#321e2c",
+    "Racing Bulls":"#17233a",
+    "Audi":"#321a1a",
+    "Cadillac":"#302b1d"
   };
 
   const labels = {
@@ -400,131 +1018,314 @@ footer span{color:var(--red);font-weight:bold}
     "Singapore":"SINGAPUR GRAN-PRISI"
   };
 
+  /*
+    HAR BIR POYGACHINING RASMI:
+    drivers/antonelli.jpg
+    drivers/leclerc.jpg
+    va hokazo.
+  */
+
   const driverData = {
-    ANTONELLI:["🇮🇹","ANT","antonelli"],
-    LECLERC:["🇲🇨","LEC","leclerc"],
-    VERSTAPPEN:["🇳🇱","VER","verstappen"],
-    HAMILTON:["🇬🇧","HAM","hamilton"],
-    NORRIS:["🇬🇧","NOR","norris"],
-    RUSSELL:["🇬🇧","RUS","russell"],
-    PIASTRI:["🇦🇺","PIA","piastri"],
-    SAINZ:["🇪🇸","SAI","sainz"],
-    ALONSO:["🇪🇸","ALO","alonso"],
-    STROLL:["🇨🇦","STR","stroll"],
-    GASLY:["🇫🇷","GAS","gasly"],
-    OCON:["🇫🇷","OCO","ocon"],
-    ALBON:["🇹🇭","ALB","albon"],
-    HULKENBERG:["🇩🇪","HUL","hulkenberg"],
-    HÜLKENBERG:["🇩🇪","HUL","hulkenberg"],
-    BEARMAN:["🇬🇧","BEA","bearman"],
-    HADJAR:["🇫🇷","HAD","hadjar"],
-    LAWSON:["🇳🇿","LAW","lawson"],
-    BORTOLETO:["🇧🇷","BOR","bortoleto"],
-    COLAPINTO:["🇦🇷","COL","colapinto"],
-    BOTTAS:["🇫🇮","BOT","bottas"],
-    PEREZ:["🇲🇽","PER","perez"],
-    PÉREZ:["🇲🇽","PER","perez"]
+    ANTONELLI:{
+      flag:"🇮🇹",
+      code:"ANT",
+      file:"antonelli.jpg"
+    },
+    LECLERC:{
+      flag:"🇲🇨",
+      code:"LEC",
+      file:"leclerc.jpg"
+    },
+    VERSTAPPEN:{
+      flag:"🇳🇱",
+      code:"VER",
+      file:"verstappen.jpg"
+    },
+    HAMILTON:{
+      flag:"🇬🇧",
+      code:"HAM",
+      file:"hamilton.jpg"
+    },
+    NORRIS:{
+      flag:"🇬🇧",
+      code:"NOR",
+      file:"norris.jpg"
+    },
+    RUSSELL:{
+      flag:"🇬🇧",
+      code:"RUS",
+      file:"russell.jpg"
+    },
+    PIASTRI:{
+      flag:"🇦🇺",
+      code:"PIA",
+      file:"piastri.jpg"
+    },
+    SAINZ:{
+      flag:"🇪🇸",
+      code:"SAI",
+      file:"sainz.jpg"
+    },
+    ALBON:{
+      flag:"🇹🇭",
+      code:"ALB",
+      file:"albon.jpg"
+    },
+    ALONSO:{
+      flag:"🇪🇸",
+      code:"ALO",
+      file:"alonso.jpg"
+    },
+    STROLL:{
+      flag:"🇨🇦",
+      code:"STR",
+      file:"stroll.jpg"
+    },
+    GASLY:{
+      flag:"🇫🇷",
+      code:"GAS",
+      file:"gasly.jpg"
+    },
+    COLAPINTO:{
+      flag:"🇦🇷",
+      code:"COL",
+      file:"colapinto.jpg"
+    },
+    OCON:{
+      flag:"🇫🇷",
+      code:"OCO",
+      file:"ocon.jpg"
+    },
+    BEARMAN:{
+      flag:"🇬🇧",
+      code:"BEA",
+      file:"bearman.jpg"
+    },
+    LAWSON:{
+      flag:"🇳🇿",
+      code:"LAW",
+      file:"lawson.jpg"
+    },
+    HADJAR:{
+      flag:"🇫🇷",
+      code:"HAD",
+      file:"hadjar.jpg"
+    },
+    LINDBLAD:{
+      flag:"🇬🇧",
+      code:"LIN",
+      file:"lindblad.jpg"
+    },
+    HULKENBERG:{
+      flag:"🇩🇪",
+      code:"HUL",
+      file:"hulkenberg.jpg"
+    },
+    HÜLKENBERG:{
+      flag:"🇩🇪",
+      code:"HUL",
+      file:"hulkenberg.jpg"
+    },
+    BORTOLETO:{
+      flag:"🇧🇷",
+      code:"BOR",
+      file:"bortoleto.jpg"
+    },
+    BOTTAS:{
+      flag:"🇫🇮",
+      code:"BOT",
+      file:"bottas.jpg"
+    },
+    PEREZ:{
+      flag:"🇲🇽",
+      code:"PER",
+      file:"perez.jpg"
+    },
+    PÉREZ:{
+      flag:"🇲🇽",
+      code:"PER",
+      file:"perez.jpg"
+    }
   };
 
-  function driverInfo(name) {
+  function driverInfo(name){
     const upper = String(name || "").toUpperCase();
 
-    for (const [surname,info] of Object.entries(driverData)) {
-      if (upper.includes(surname)) {
-        return {
-          flag:info[0],
-          code:info[1],
-          portrait:
-            "https://media.formula1.com/image/upload/f_auto,c_limit,w_300,q_auto/fom-website/drivers/2026Drivers/" +
-            info[2]
-        };
+    for(const [surname,info] of Object.entries(driverData)){
+      if(upper.includes(surname)){
+        return info;
       }
     }
 
     return {
       flag:"🏁",
       code:upper.slice(0,3) || "F1",
-      portrait:""
+      file:""
     };
   }
 
-  function portraitElement(src,code) {
+  function portraitElement(file,code){
     const fallback = document.createElement("div");
     fallback.className = "results-portrait-fallback";
     fallback.textContent = code;
 
-    if (!src) return fallback;
+    if(!file){
+      return fallback;
+    }
 
     const img = document.createElement("img");
     img.className = "results-portrait";
-    img.src = src;
-    img.alt = "";
+
+    /*
+      RASMLAR ENDI TASHQI SERVERDAN EMAS,
+      SIZNING GITHUB PAPKANGIZDAN OLINADI.
+    */
+
+    img.src = file.startsWith("http")
+      ? file
+      : "./drivers/" + file;
+
+    img.alt = code + " poygachi rasmi";
     img.loading = "lazy";
 
     img.onerror = () => {
-      if (img.isConnected) img.replaceWith(fallback);
+      if(img.isConnected){
+        img.replaceWith(fallback);
+      }
     };
 
     return img;
   }
 
-  function lap(value) {
+  function lap(value){
     const n = Number(value);
 
-    if (!Number.isFinite(n) || n <= 0) {
+    if(!Number.isFinite(n) || n <= 0){
       return String(value || "—");
     }
 
-    return Math.floor(n/60) + ":" +
-      (n%60).toFixed(3).padStart(6,"0");
+    return (
+      Math.floor(n/60) +
+      ":" +
+      (n%60).toFixed(3).padStart(6,"0")
+    );
   }
 
-  function displayTime(item,first) {
+  function formatRaceSeconds(value){
+    const n = Number(value);
+
+    if(!Number.isFinite(n) || n <= 0){
+      return "—";
+    }
+
+    const hours = Math.floor(n/3600);
+    const minutes = Math.floor((n%3600)/60);
+    const seconds = (n%60).toFixed(3).padStart(6,"0");
+
+    if(hours > 0){
+      return (
+        hours +
+        ":" +
+        String(minutes).padStart(2,"0") +
+        ":" +
+        seconds
+      );
+    }
+
+    return minutes + ":" + seconds;
+  }
+
+  function displayTime(item,first,session){
     const raw = item.time;
 
-    if (typeof raw === "string" && /^[+−-]/.test(raw.trim())) {
+    if(item.gap !== undefined && item.gap !== null){
+      const gapText = String(item.gap).trim();
+
+      if(gapText){
+        return gapText;
+      }
+    }
+
+    if(
+      typeof raw === "string" &&
+      /^[+−-]/.test(raw.trim())
+    ){
       return raw;
     }
 
     const current = Number(raw);
     const best = Number(first.time);
 
-    if (
-      Number.isFinite(current) &&
-      current > 0 &&
-      Number.isFinite(best) &&
-      best > 0
-    ) {
-      if (item === first) return lap(current);
+    if(
+      !Number.isFinite(current) ||
+      current <= 0
+    ){
+      return String(raw || "—");
+    }
 
-      if (current < 1000 && best < 1000) {
+    const isRace = session === "Race" || session === "Sprint";
+
+    if(isRace){
+      if(item === first){
+        return formatRaceSeconds(current);
+      }
+
+      if(
+        Number.isFinite(best) &&
+        best > 0 &&
+        current >= best
+      ){
         return "+" + (current-best).toFixed(3);
       }
 
+      return String(raw || "—");
+    }
+
+    if(item === first){
       return lap(current);
     }
 
-    return String(raw || item.gap || "—");
+    if(
+      Number.isFinite(best) &&
+      best > 0
+    ){
+      return "+" + (current-best).toFixed(3);
+    }
+
+    return lap(current);
   }
 
-  function render() {
+  let activeSession = "";
+
+  function render(){
     list.replaceChildren();
 
-    const shown = expanded ? results : results.slice(0,5);
+    const shown = expanded
+      ? results
+      : results.slice(0,5);
 
-    for (const item of shown) {
+    for(const item of shown){
       const info = driverInfo(item.name);
-      const row = document.createElement("div");
 
+      const row = document.createElement("div");
       row.className = "results-row";
-      row.style.setProperty("--team",colors[item.team] || "#777");
+
+      row.style.setProperty(
+        "--team",
+        colors[item.team] || "#777"
+      );
+
+      row.style.setProperty(
+        "--team-bg",
+        backgrounds[item.team] || "#24242b"
+      );
 
       const pos = document.createElement("span");
       pos.className = "results-pos";
       pos.textContent = String(item.position ?? "—");
 
       const portrait = portraitElement(
-        item.portrait || info.portrait,
+        info.file,
         info.code
       );
 
@@ -536,11 +1337,13 @@ footer span{color:var(--red);font-weight:bold}
 
       const flag = document.createElement("span");
       flag.className = "results-flag";
-      flag.textContent = item.flag || info.flag;
+      flag.textContent = info.flag;
 
       name.append(
         flag,
-        document.createTextNode(" " + (item.name || "Poygachi"))
+        document.createTextNode(
+          " " + (item.name || "Poygachi")
+        )
       );
 
       const team = document.createElement("div");
@@ -549,52 +1352,76 @@ footer span{color:var(--red);font-weight:bold}
 
       driver.append(name,team);
 
-      const teamMark = document.createElement("div");
-      teamMark.className = "results-logo";
-      teamMark.style.display = "grid";
-      teamMark.style.placeItems = "center";
-      teamMark.style.fontSize = "20px";
-      teamMark.textContent = "🏎";
-
       const time = document.createElement("span");
       time.className = "results-time";
-      time.textContent = displayTime(item,results[0]);
 
-      row.append(pos,portrait,driver,teamMark,time);
+      time.textContent = displayTime(
+        item,
+        results[0],
+        activeSession
+      );
+
+      row.append(
+        pos,
+        portrait,
+        driver,
+        time
+      );
+
       list.append(row);
     }
 
     toggle.hidden = results.length <= 5;
+
     toggle.textContent = expanded
       ? "Yopish ↑"
       : `Barchasini ko‘rish (${results.length}) ↓`;
 
-    toggle.setAttribute("aria-expanded",String(expanded));
+    toggle.setAttribute(
+      "aria-expanded",
+      String(expanded)
+    );
 
-    if (extra) extra.hidden = true;
+    if(extra){
+      extra.hidden = true;
+    }
   }
 
-  function showSession(data) {
-    if (!Array.isArray(data.results) || !data.results.length) {
+  function showSession(data){
+    if(
+      !Array.isArray(data.results) ||
+      !data.results.length
+    ){
       throw new Error("Natijalar mavjud emas");
     }
 
     results = data.results
       .filter(item => item && typeof item === "object")
-      .sort((a,b) => Number(a.position)-Number(b.position));
+      .sort(
+        (a,b) =>
+          Number(a.position)-Number(b.position)
+      );
 
-    if (!results.length) {
+    if(!results.length){
       throw new Error("Natijalar bo‘sh");
     }
 
     const session = String(data.session || "");
     const meeting = String(data.meeting || "");
 
+    activeSession = session;
+
     title.textContent =
       "🏁 " +
-      (labels[session] || session.toUpperCase() || "POYGA NATIJALARI");
+      (
+        labels[session] ||
+        session.toUpperCase() ||
+        "POYGA NATIJALARI"
+      );
 
-    const date = data.date ? new Date(data.date) : null;
+    const date = data.date
+      ? new Date(data.date)
+      : null;
 
     const dateText =
       date && !Number.isNaN(date.getTime())
@@ -610,9 +1437,10 @@ footer span{color:var(--red);font-weight:bold}
       dateText
     ].filter(Boolean).join(" · ");
 
-    const newSession = session + "|" + meeting + "|" + dateText;
+    const newSession =
+      session + "|" + meeting + "|" + dateText;
 
-    if (newSession !== currentSession) {
+    if(newSession !== currentSession){
       expanded = false;
       currentSession = newSession;
     }
@@ -625,59 +1453,109 @@ footer span{color:var(--red);font-weight:bold}
     render();
   });
 
+  /*
+    INTERNET BO'LMASA HAM
+    VAQTINCHALIK NATIJALAR
+  */
+
   const savedSession = {
     session:"Practice 1",
     meeting:"United States",
     date:"2026-10-23T18:30:00+00:00",
     results:[
-      {position:1,name:"C LECLERC",team:"Ferrari",time:"96.052"},
-      {position:2,name:"M VERSTAPPEN",team:"Red Bull Racing",time:"96.136"},
-      {position:3,name:"L NORRIS",team:"McLaren",time:"96.297"},
-      {position:4,name:"G RUSSELL",team:"Mercedes",time:"96.378"},
-      {position:5,name:"K ANTONELLI",team:"Mercedes",time:"96.533"}
+      {
+        position:1,
+        name:"C LECLERC",
+        team:"Ferrari",
+        time:"96.052"
+      },
+      {
+        position:2,
+        name:"M VERSTAPPEN",
+        team:"Red Bull Racing",
+        time:"96.136"
+      },
+      {
+        position:3,
+        name:"L NORRIS",
+        team:"McLaren",
+        time:"96.297"
+      },
+      {
+        position:4,
+        name:"G RUSSELL",
+        team:"Mercedes",
+        time:"96.378"
+      },
+      {
+        position:5,
+        name:"K ANTONELLI",
+        team:"Mercedes",
+        time:"96.533"
+      }
     ]
   };
 
-  async function refresh() {
+  async function refresh(){
     const sources = [
       "./latest-session.json",
       "https://nodirbekhonormagicpad2-max.github.io/F1Uzbekistan/latest-session.json"
     ];
 
-    for (const url of sources) {
-      try {
+    for(const url of sources){
+      try{
         const response = await fetch(
-          url + (url.includes("?") ? "&" : "?") + "t=" + Date.now(),
+          url +
+          (url.includes("?") ? "&" : "?") +
+          "t=" + Date.now(),
           {cache:"no-store"}
         );
 
-        if (!response.ok) {
-          throw new Error("HTTP " + response.status);
+        if(!response.ok){
+          throw new Error(
+            "HTTP " + response.status
+          );
         }
 
-        showSession(await response.json());
+        const data = await response.json();
+
+        showSession(data);
         return;
 
-      } catch (error) {
-        console.warn("F1 natijalar manbasi:",url,error);
+      }catch(error){
+        console.warn(
+          "F1 natijalar manbasi:",
+          url,
+          error
+        );
       }
     }
 
-    if (!results.length) {
+    if(!results.length){
       showSession(savedSession);
     }
   }
 
   showSession(savedSession);
   refresh();
+
+  // HAR 60 SONIYADA YANGILANADI
   setInterval(refresh,60000);
+
 })();
 </script>
 
 <!-- FIREBASE JONLI CHAT -->
+
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
-import {getAnalytics} from "https://www.gstatic.com/firebasejs/13.1.0/firebase-analytics.js";
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+
+import {
+  getAnalytics
+} from "https://www.gstatic.com/firebasejs/13.1.0/firebase-analytics.js";
+
 import {
   getDatabase,
   ref,
@@ -701,44 +1579,73 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-try {
+try{
   getAnalytics(app);
-} catch(error) {
+}catch(error){
   console.warn("Firebase Analytics:",error);
 }
 
 const db = getDatabase(app);
+
 const messagesRef = ref(db,"messages");
-const messagesQuery = query(messagesRef,limitToLast(100));
 
-const chatMessages = document.getElementById("chatMessages");
-const chatEmpty = document.getElementById("chatEmpty");
-const chatForm = document.getElementById("chatForm");
-const chatName = document.getElementById("chatName");
-const chatText = document.getElementById("chatText");
-const chatSend = document.getElementById("chatSend");
-const chatStatus = document.getElementById("chatStatus");
+const messagesQuery = query(
+  messagesRef,
+  limitToLast(100)
+);
 
-try {
-  const savedName = localStorage.getItem("f1_chat_name");
-  if (savedName) chatName.value = savedName;
-} catch(error) {}
+const chatMessages =
+  document.getElementById("chatMessages");
+
+const chatEmpty =
+  document.getElementById("chatEmpty");
+
+const chatForm =
+  document.getElementById("chatForm");
+
+const chatName =
+  document.getElementById("chatName");
+
+const chatText =
+  document.getElementById("chatText");
+
+const chatSend =
+  document.getElementById("chatSend");
+
+const chatStatus =
+  document.getElementById("chatStatus");
+
+try{
+  const savedName =
+    localStorage.getItem("f1_chat_name");
+
+  if(savedName){
+    chatName.value = savedName;
+  }
+}catch(error){}
 
 const renderedMessages = new Map();
+
 let sendCooldown = false;
 
-function setStatus(message,isError=false) {
+function setStatus(message,isError=false){
   chatStatus.textContent = message;
+
   chatStatus.className = isError
     ? "chat-status error"
     : "chat-status";
 }
 
-function formatTime(timestamp) {
-  if (!timestamp) return "";
+function formatTime(timestamp){
+  if(!timestamp){
+    return "";
+  }
 
   const date = new Date(timestamp);
-  if (Number.isNaN(date.getTime())) return "";
+
+  if(Number.isNaN(date.getTime())){
+    return "";
+  }
 
   return date.toLocaleTimeString("uz-UZ",{
     hour:"2-digit",
@@ -746,55 +1653,81 @@ function formatTime(timestamp) {
   });
 }
 
-function scrollChatToBottom() {
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+function scrollChatToBottom(){
+  chatMessages.scrollTop =
+    chatMessages.scrollHeight;
 }
 
-function renderMessage(key,data) {
-  if (!data || renderedMessages.has(key)) return;
+function renderMessage(key,data){
+  if(!data || renderedMessages.has(key)){
+    return;
+  }
 
-  const message = document.createElement("div");
+  const message =
+    document.createElement("div");
+
   message.className = "chat-message";
   message.dataset.key = key;
 
-  const name = document.createElement("span");
+  const name =
+    document.createElement("span");
+
   name.className = "chat-name";
-  name.textContent = data.name || "Foydalanuvchi";
+  name.textContent =
+    data.name || "Foydalanuvchi";
 
-  const time = document.createElement("span");
+  const time =
+    document.createElement("span");
+
   time.className = "chat-time";
-  time.textContent = formatTime(data.createdAt);
+  time.textContent =
+    formatTime(data.createdAt);
 
-  const text = document.createElement("div");
+  const text =
+    document.createElement("div");
+
   text.className = "chat-text";
   text.textContent = data.text || "";
 
   message.append(name,time,text);
+
   chatMessages.appendChild(message);
+
   renderedMessages.set(key,message);
 
   chatEmpty.style.display = "none";
+
   scrollChatToBottom();
 }
 
-function removeMessage(key) {
-  const message = renderedMessages.get(key);
+function removeMessage(key){
+  const message =
+    renderedMessages.get(key);
 
-  if (message) {
+  if(message){
     message.remove();
     renderedMessages.delete(key);
   }
 
-  if (renderedMessages.size === 0) {
+  if(renderedMessages.size === 0){
     chatEmpty.style.display = "grid";
   }
 }
 
 onChildAdded(
   messagesQuery,
-  snapshot => renderMessage(snapshot.key,snapshot.val()),
+  snapshot => {
+    renderMessage(
+      snapshot.key,
+      snapshot.val()
+    );
+  },
   error => {
-    console.error("Chat o‘qish xatosi:",error);
+    console.error(
+      "Chat o‘qish xatosi:",
+      error
+    );
+
     setStatus(
       error.code === "PERMISSION_DENIED"
         ? "Firebase Database Rules chatni o‘qishga ruxsat bermayapti."
@@ -806,69 +1739,101 @@ onChildAdded(
 
 onChildRemoved(
   messagesQuery,
-  snapshot => removeMessage(snapshot.key)
+  snapshot => {
+    removeMessage(snapshot.key);
+  }
 );
 
-chatForm.addEventListener("submit",async event => {
-  event.preventDefault();
+chatForm.addEventListener(
+  "submit",
+  async event => {
+    event.preventDefault();
 
-  if (sendCooldown) return;
+    if(sendCooldown){
+      return;
+    }
 
-  const name = chatName.value.trim().replace(/\s+/g," ");
-  const text = chatText.value.trim().replace(/\s+/g," ");
+    const name = chatName.value
+      .trim()
+      .replace(/\s+/g," ");
 
-  if (name.length < 1 || name.length > 30) {
-    setStatus("Ism 1–30 belgidan iborat bo‘lishi kerak.",true);
-    chatName.focus();
-    return;
+    const text = chatText.value
+      .trim()
+      .replace(/\s+/g," ");
+
+    if(name.length < 1 || name.length > 30){
+      setStatus(
+        "Ism 1–30 belgidan iborat bo‘lishi kerak.",
+        true
+      );
+
+      chatName.focus();
+      return;
+    }
+
+    if(text.length < 1 || text.length > 500){
+      setStatus(
+        "Xabar 1–500 belgidan iborat bo‘lishi kerak.",
+        true
+      );
+
+      chatText.focus();
+      return;
+    }
+
+    sendCooldown = true;
+    chatSend.disabled = true;
+
+    setStatus("Yuborilmoqda...");
+
+    try{
+      await push(messagesRef,{
+        name,
+        text,
+        createdAt:Date.now()
+      });
+
+      try{
+        localStorage.setItem(
+          "f1_chat_name",
+          name
+        );
+      }catch(error){}
+
+      chatText.value = "";
+
+      setStatus("Xabar yuborildi.");
+
+      setTimeout(
+        () => setStatus(""),
+        2000
+      );
+
+    }catch(error){
+      console.error(
+        "Xabar yuborish xatosi:",
+        error
+      );
+
+      setStatus(
+        error.code === "PERMISSION_DENIED"
+          ? "Firebase Database Rules xabar yuborishga ruxsat bermayapti."
+          : "Xabar yuborishda xatolik yuz berdi.",
+        true
+      );
+
+    }finally{
+      setTimeout(() => {
+        sendCooldown = false;
+        chatSend.disabled = false;
+      },1000);
+    }
   }
-
-  if (text.length < 1 || text.length > 500) {
-    setStatus("Xabar 1–500 belgidan iborat bo‘lishi kerak.",true);
-    chatText.focus();
-    return;
-  }
-
-  sendCooldown = true;
-  chatSend.disabled = true;
-  setStatus("Yuborilmoqda...");
-
-  try {
-    await push(messagesRef,{
-      name,
-      text,
-      createdAt:Date.now()
-    });
-
-    try {
-      localStorage.setItem("f1_chat_name",name);
-    } catch(error) {}
-
-    chatText.value = "";
-    setStatus("Xabar yuborildi.");
-
-    setTimeout(() => setStatus(""),2000);
-
-  } catch(error) {
-    console.error("Xabar yuborish xatosi:",error);
-
-    setStatus(
-      error.code === "PERMISSION_DENIED"
-        ? "Firebase Database Rules xabar yuborishga ruxsat bermayapti."
-        : "Xabar yuborishda xatolik yuz berdi.",
-      true
-    );
-
-  } finally {
-    setTimeout(() => {
-      sendCooldown = false;
-      chatSend.disabled = false;
-    },1000);
-  }
-});
+);
 </script>
 
 <!-- YANGILIKLAR, VIDEO VA GALEREYA -->
+
 <script src="./news.js?v=20261025-2" defer></script>
 <script src="./home-videos.js?v=cinema-gallery-20261026-v4" defer></script>
 <script src="./home-gallery.js?v=gallery-pro-5" defer></script>
