@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050a12">
+
+<title>LIVE TIMING PRO — F1 Uzbekistan TV</title>
+
+<meta
+  name="description"
+  content="F1 Uzbekistan TV — poyga natijalari, telemetriya, trassa xaritasi va statistika."
+>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+:root{
+  --bg:#050a12;
+  --panel:#0b1420;
+  --panel2:#101c2a;
+  --line:#223247;
+  --cyan:#00d9ff;
+  --red:#e10600;
+  --green:#29e59c;
+  --text:#f5f8fc;
+  --muted:#91a2b5;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(
+      ellipse at 60% 0%,
+      #10314b 0%,
+      transparent 42%
+    ),
+    var(--bg);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+button,
+a{
+  -webkit-tap-highlight-color:transparent;
+}
+
+button{
+  font:inherit;
+}
+
+header{
+  min-height:70px;
+  padding:14px 4%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid var(--line);
+  background:#060b14ee;
+}
+
+.logo{
+  font-size:clamp(16px,3vw,25px);
+  font-weight:900;
+  font-style:italic;
+  letter-spacing:-.5px;
+}
+
+.logo span{
+  color:var(--red);
+}
+
+.home{
+  padding:11px 15px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  color:#fff;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:800;
+}
+
+.home:hover{
+  border-color:var(--cyan);
+}
+
+main{
+  width:min(1450px,100%);
+  margin:auto;
+  padding:20px;
+}
+
+/* HEADER */
+
+.hero{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+
+.hero h1{
+  margin:0 0 8px;
+  font-size:clamp(23px,4vw,38px);
+  font-weight:900;
+}
+
+.hero p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.status{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:11px 15px;
+  border:1px solid #bd3030;
+  border-radius:9px;
+  background:#3b1018;
+  color:#ffb7b7;
+  font-size:12px;
+  font-weight:900;
+}
+
+.dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:#ff4545;
+}
+
+.status.ready{
+  background:#102b25;
+  border-color:#287e63;
+  color:#9bffdb;
+}
+
+.status.ready .dot{
+  background:var(--green);
+}
+
+/* TOP BAR */
+
+.race-bar{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:15px;
+  padding:17px;
+  margin-bottom:18px;
+  border:1px solid var(--line);
+  border-left:4px solid var(--red);
+  border-radius:12px;
+  background:var(--panel);
+}
+
+.race-name{
+  font-size:clamp(15px,2.6vw,22px);
+  font-weight:900;
+}
+
+.race-sub{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.race-info{
+  text-align:right;
+}
+
+.race-info strong{
+  display:block;
+  font-size:18px;
+}
+
+.race-info span{
+  display:block;
+  margin-top:6px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+/* GRID */
+
+.dashboard{
+  display:grid;
+  grid-template-columns:300px minmax(0,1fr) 260px;
+  gap:16px;
+  align-items:start;
+}
+
+.panel{
+  min-width:0;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+  background:var(--panel);
+}
+
+.panel-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:15px;
+  border-bottom:1px solid var(--line);
+  font-size:13px;
+  font-weight:900;
+}
+
+.panel-title small{
+  color:var(--cyan);
+  font-size:10px;
+}
+
+/* DRIVER LIST */
+
+.drivers{
+  padding:7px;
+}
+
+.driver{
+  display:grid;
+  grid-template-columns:27px 35px minmax(0,1fr) auto;
+  align-items:center;
+  gap:8px;
+  padding:10px 7px;
+  margin-bottom:5px;
+  border:1px solid transparent;
+  border-left:3px solid var(--team,#777);
+  border-radius:7px;
+  background:#111e2b;
+  cursor:pointer;
+}
+
+.driver:hover,
+.driver.selected{
+  border-color:var(--cyan);
+  background:#173047;
+}
+
+.position{
+  font-size:15px;
+  font-weight:900;
+  text-align:center;
+}
+
+.driver-photo{
+  width:35px;
+  height:40px;
+  border-radius:6px;
+  object-fit:cover;
+  background:#233448;
+}
+
+.driver-fallback{
+  width:35px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border-radius:6px;
+  background:#233448;
+  font-size:10px;
+  font-weight:900;
+}
+
+.driver-name{
+  min-width:0;
+  font-size:11px;
+  font-weight:900;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.driver-team{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:10px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.driver-time{
+  font-size:11px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.empty{
+  padding:24px 15px;
+  color:var(--muted);
+  text-align:center;
+  font-size:12px;
+  line-height:1.7;
+}
+
+/* TRACK */
+
+.center-column{
+  display:grid;
+  gap:16px;
+}
+
+.track-panel{
+  padding-bottom:14px;
+}
+
+.track-area{
+  position:relative;
+  min-height:360px;
+  padding:15px;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      #10283d,
+      #07111e 65%
+    );
+}
+
+.track-area svg{
+  display:block;
+  width:100%;
+  height:340px;
+}
+
+.track-base{
+  fill:none;
+  stroke:#163c55;
+  stroke-width:27;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.track-glow{
+  fill:none;
+  stroke:#00d9ff;
+  stroke-width:13;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  opacity:.15;
+}
+
+.track-line{
+  fill:none;
+  stroke:#00d9ff;
+  stroke-width:4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-dasharray:12 5;
+  filter:drop-shadow(0 0 7px #00d9ff);
+}
+
+.track-point{
+  fill:#00eaff;
+  stroke:#fff;
+  stroke-width:2;
+}
+
+.track-label{
+  fill:#fff;
+  font-size:14px;
+  font-weight:900;
+}
+
+.track-note{
+  position:absolute;
+  bottom:12px;
+  left:12px;
+  right:12px;
+  padding:9px;
+  border:1px solid #33516a;
+  border-radius:7px;
+  background:#07111edb;
+  color:#b9d4e6;
+  text-align:center;
+  font-size:11px;
+}
+
+.track-bottom{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:0 15px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+/* TELEMETRY */
+
+.telemetry-controls{
+  display:flex;
+  gap:7px;
+  padding:12px;
+  flex-wrap:wrap;
+}
+
+.telemetry-btn{
+  padding:9px 13px;
+  border:1px solid var(--line);
+  border-radius:7px;
+  background:#0d1c2b;
+  color:#a6bbcb;
+  font-size:11px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.telemetry-btn.active{
+  color:var(--cyan);
+  border-color:var(--cyan);
+  background:#0b3040;
+}
+
+.chart-wrap{
+  padding:10px 15px 15px;
+}
+
+.chart-wrap canvas{
+  width:100%;
+  height:210px;
+  display:block;
+}
+
+.chart-caption{
+  margin-top:9px;
+  color:var(--muted);
+  font-size:11px;
+  text-align:center;
+}
+
+/* RIGHT PANELS */
+
+.right-column{
+  display:grid;
+  gap:16px;
+}
+
+.info-content{
+  padding:15px;
+}
+
+.stat{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:11px 0;
+  border-bottom:1px solid #1b2b3b;
+  font-size:12px;
+}
+
+.stat:last-child{
+  border-bottom:0;
+}
+
+.stat span{
+  color:var(--muted);
+}
+
+.stat strong{
+  text-align:right;
+}
+
+.cyan{
+  color:var(--cyan);
+}
+
+.green{
+  color:var(--green);
+}
+
+.purple{
+  color:#c36bff;
+}
+
+.pit-item{
+  padding:11px 0;
+  border-bottom:1px solid #1b2b3b;
+  font-size:12px;
+}
+
+.pit-item:last-child{
+  border-bottom:0;
+}
+
+.pit-item strong{
+  display:block;
+  margin-bottom:5px;
+}
+
+.pit-item span{
+  color:var(--muted);
+  font-size:11px;
+}
+
+.warning{
+  padding:13px;
+  margin:16px 0 0;
+  border:1px solid #755d22;
+  border-radius:10px;
+  background:#2b2411;
+  color:#ffe6a0;
+  font-size:12px;
+  line-height:1.7;
+}
+
+.refresh{
+  width:100%;
+  margin-top:12px;
+  padding:12px;
+  border:1px solid var(--cyan);
+  border-radius:8px;
+  background:#083342;
+  color:#baf5ff;
+  font-size:12px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+footer{
+  margin-top:25px;
+  padding:25px;
+  border-top:1px solid var(--line);
+  text-align:center;
+  color:var(--muted);
+  font-size:11px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+  .dashboard{
+    grid-template-columns:280px minmax(0,1fr);
+  }
+
+  .right-column{
+    grid-column:1/-1;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+
+@media(max-width:700px){
+  header{
+    min-height:60px;
+    padding:12px;
+  }
+
+  main{
+    padding:12px;
+  }
+
+  .dashboard{
+    grid-template-columns:1fr;
+  }
+
+  .center-column{
+    grid-row:1;
+  }
+
+  .right-column{
+    grid-column:auto;
+    grid-template-columns:1fr;
+  }
+
+  .race-bar{
+    grid-template-columns:1fr;
+  }
+
+  .race-info{
+    text-align:left;
+  }
+
+  .track-area{
+    min-height:260px;
+    padding:8px;
+  }
+
+  .track-area svg{
+    height:250px;
+  }
+
+  .hero h1{
+    font-size:24px;
+  }
+
+  .driver{
+    grid-template-columns:30px 40px minmax(0,1fr) auto;
+  }
+
+  .driver-photo,
+  .driver-fallback{
+    width:40px;
+    height:45px;
+  }
+
+  .driver-name{
+    font-size:12px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">
+    <span>F1</span> UZBEKISTAN TV
+  </div>
+
+  <a class="home" href="./index.html">
+    ← BOSH SAHIFA
+  </a>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div>
+      <h1>🏎️ ULTIMATE TELEMETRY</h1>
+      <p>F1 UZBEKISTAN TV · LIVE TIMING PRO</p>
+    </div>
+
+    <div class="status" id="dataStatus">
+      <span class="dot"></span>
+      <span id="statusText">MA'LUMOT YUKLANMOQDA</span>
+    </div>
+  </section>
+
+  <section class="race-bar">
+    <div>
+      <div class="race-name" id="raceName">
+        OXIRGI F1 SESSIYASI
+      </div>
+
+      <div class="race-sub" id="raceSub">
+        Natijalar yuklanmoqda...
+      </div>
+    </div>
+
+    <div class="race-info">
+      <strong id="driverCount">—</strong>
+      <span>POYGACHILAR SONI</span>
+    </div>
+  </section>
+
+  <div class="dashboard">
+
+    <!-- CHAP: NATIJALAR -->
+
+    <section class="panel">
+
+      <div class="panel-title">
+        <span>🏁 NATIJALAR</span>
+        <small id="listMode">OXIRGI SESSIYA</small>
+      </div>
+
+      <div class="drivers" id="driversList">
+        <div class="empty">
+          Natijalar yuklanmoqda...
+        </div>
+      </div>
+
+    </section>
+
+    <!-- MARKAZ -->
+
+    <div class="center-column">
+
+      <!-- TRASSA -->
+
+      <section class="panel track-panel">
+
+        <div class="panel-title">
+          <span>🗺️ TRASSA XARITASI</span>
+          <small>DEMO</small>
+        </div>
+
+        <div class="track-area">
+
+          <svg
+            viewBox="0 0 650 360"
+            role="img"
+            aria-label="Namoyish uchun yaratilgan trassa sxemasi"
+          >
+
+            <defs>
+              <path
+                id="trackPath"
+                d="
+                  M 100 240
+                  L 70 180
+                  Q 60 120 120 95
+                  L 210 75
+                  Q 250 65 265 105
+                  L 280 145
+                  Q 300 180 345 160
+                  L 440 95
+                  Q 495 60 535 110
+                  L 575 160
+                  Q 610 215 550 245
+                  L 480 265
+                  Q 440 275 420 310
+                  L 350 310
+                  Q 300 305 295 270
+                  L 270 230
+                  Q 240 205 210 235
+                  L 165 280
+                  Q 125 305 100 240
+                "
+              />
+            </defs>
+
+            <use href="#trackPath" class="track-base"/>
+            <use href="#trackPath" class="track-glow"/>
+            <use href="#trackPath" class="track-line"/>
+
+            <circle
+              class="track-point"
+              cx="100"
+              cy="240"
+              r="8"
+            />
+
+            <text
+              class="track-label"
+              x="115"
+              y="226"
+            >
+              START
+            </text>
+
+            <text
+              class="track-label"
+              x="280"
+              y="38"
+              fill="#00d9ff"
+            >
+              F1 UZBEKISTAN TV
+            </text>
+
+            <text
+              class="track-label"
+              x="260"
+              y="195"
+              fill="#00d9ff"
+            >
+              TELEMETRY PRO
+            </text>
+
+          </svg>
+
+          <div class="track-note">
+            DEMO XARITA · Haqiqiy trassa koordinatalari hali ulanmagan
+          </div>
+
+        </div>
+
+        <div class="track-bottom">
+          <span>🔵 TRASSA SXEMASI</span>
+          <span>● API ULANISHI KUTILMOQDA</span>
+        </div>
+
+      </section>
+
+      <!-- TELEMETRY -->
+
+      <section class="panel">
+
+        <div class="panel-title">
+          <span>📊 TELEMETRIYA</span>
+          <small>DEMO GRAFIK</small>
+        </div>
+
+        <div class="telemetry-controls">
+
+          <button
+            class="telemetry-btn active"
+            data-mode="speed"
+            type="button"
+          >
+            TEZLIK
+          </button>
+
+          <button
+            class="telemetry-btn"
+            data-mode="throttle"
+            type="button"
+          >
+            GAZ
+          </button>
+
+          <button
+            class="telemetry-btn"
+            data-mode="brake"
+            type="button"
+          >
+            TORMOZ
+          </button>
+
+          <button
+            class="telemetry-btn"
+            data-mode="drs"
+            type="button"
+          >
+            DRS
+          </button>
+
+        </div>
+
+        <div class="chart-wrap">
+          <canvas
+            id="telemetryChart"
+            aria-label="Namoyish telemetriya grafigi"
+          ></canvas>
+
+          <div class="chart-caption" id="chartCaption">
+            Namoyish ma'lumotlari — haqiqiy telemetriya emas
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- O‘NG -->
+
+    <div class="right-column">
+
+      <!-- DRIVER -->
+
+      <section class="panel">
+
+        <div class="panel-title">
+          <span>🏎️ POYGACHI</span>
+          <small>MA'LUMOT</small>
+        </div>
+
+        <div class="info-content">
+
+          <div class="stat">
+            <span>Ism</span>
+            <strong id="selectedName">—</strong>
+          </div>
+
+          <div class="stat">
+            <span>Jamoa</span>
+            <strong id="selectedTeam">—</strong>
+          </div>
+
+          <div class="stat">
+            <span>O‘rin</span>
+            <strong class="cyan" id="selectedPosition">—</strong>
+          </div>
+
+          <div class="stat">
+            <span>Natija</span>
+            <strong class="green" id="selectedTime">—</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- SECTORS -->
+
+      <section class="panel">
+
+        <div class="panel-title">
+          <span>⏱️ SEKTORLAR</span>
+          <small>API KUTILMOQDA</small>
+        </div>
+
+        <div class="info-content">
+
+          <div class="stat">
+            <span>S1</span>
+            <strong class="purple">—</strong>
+          </div>
+
+          <div class="stat">
+            <span>S2</span>
+            <strong class="green">—</strong>
+          </div>
+
+          <div class="stat">
+            <span>S3</span>
+            <strong class="cyan">—</strong>
+          </div>
+
+          <div class="stat">
+            <span>Eng tez aylana</span>
+            <strong>—</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- PIT -->
+
+      <section class="panel">
+
+        <div class="panel-title">
+          <span>🛞 PIT-STOP</span>
+          <small>API KUTILMOQDA</small>
+        </div>
+
+        <div class="info-content">
+
+          <div class="pit-item">
+            <strong>🔴 SOFT</strong>
+            <span>Shinalar statistikasi ulanadi</span>
+          </div>
+
+          <div class="pit-item">
+            <strong>🟡 MEDIUM</strong>
+            <span>Pit-stop strategiyasi ulanadi</span>
+          </div>
+
+          <div class="pit-item">
+            <strong>⚪ HARD</strong>
+            <span>Shina almashinuvi ulanadi</span>
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </div>
+
+  <div class="warning">
+    ⚠️ <strong>Ma'lumot holati:</strong>
+    natijalar saytingizdagi <code>latest-session.json</code>
+    faylidan olinadi. Ular avtomatik tekshiriladi, ammo
+    jonli telemetriya emas. Trassa xaritasi va grafiklar
+    hozircha dizayn namoyishi uchun ishlaydi.
+  </div>
+
+  <button class="refresh" id="refreshButton" type="button">
+    🔄 NATIJALARNI YANGILASH
+  </button>
+
+</main>
+
+<footer>
+  F1 UZBEKISTAN TV © 2026 · ULTIMATE TELEMETRY PRO
+</footer>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = id => document.getElementById(id);
+
+  const teamColors = {
+    "Ferrari":"#e10600",
+    "Mercedes":"#00d9b4",
+    "McLaren":"#ff8700",
+    "Red Bull Racing":"#3671c6",
+    "Red Bull":"#3671c6",
+    "Williams":"#64c4ff",
+    "Aston Martin":"#229971",
+    "Alpine":"#ff87bc",
+    "Racing Bulls":"#6c98ff",
+    "Haas":"#b6b6b6",
+    "Haas F1 Team":"#b6b6b6",
+    "Audi":"#e43b3b",
+    "Cadillac":"#d6ba75"
+  };
+
+  const drivers = {
+    ANTONELLI:"antonelli.jpg",
+    LECLERC:"leclerc.jpg",
+    VERSTAPPEN:"verstappen.jpg",
+    HAMILTON:"hamilton.jpg",
+    NORRIS:"norris.jpg",
+    RUSSELL:"russell.jpg",
+    PIASTRI:"piastri.jpg",
+    SAINZ:"sainz.jpg",
+    ALBON:"albon.jpg",
+    ALONSO:"alonso.jpg",
+    STROLL:"stroll.jpg",
+    GASLY:"gasly.jpg",
+    COLAPINTO:"colapinto.jpg",
+    OCON:"ocon.jpg",
+    BEARMAN:"bearman.jpg",
+    LAWSON:"lawson.jpg",
+    HADJAR:"hadjar.jpg",
+    LINDBLAD:"lindblad.jpg",
+    HULKENBERG:"hulkenberg.jpg",
+    BORTOLETO:"bortoleto.jpg",
+    BOTTAS:"bottas.jpg",
+    PEREZ:"perez.jpg"
+  };
+
+  let currentResults = [];
+  let currentData = null;
+  let selectedDriver = "";
+  let currentMode = "speed";
+
+  function normalize(value){
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g,"")
+      .toUpperCase()
+      .replace(/[^A-Z ]/g," ")
+      .replace(/\s+/g," ")
+      .trim();
+  }
+
+  function getPhoto(name){
+    const words = normalize(name).split(" ");
+
+    for(const [surname,file] of Object.entries(drivers)){
+      if(words.includes(surname)){
+        return "/drivers/" + file +
+          (surname === "RUSSELL" ? "?v=russell-fix-20261027" : "");
+      }
+    }
+
+    return "";
+  }
+
+  function setStatus(message,ready){
+    $("statusText").textContent = message;
+    $("dataStatus").classList.toggle("ready",Boolean(ready));
+  }
+
+  function formatValue(item,first,session){
+    if(item.gap !== undefined &&
+       item.gap !== null &&
+       String(item.gap).trim()){
+      return String(item.gap);
+    }
+
+    const value = Number(item.time);
+    const firstValue = Number(first.time);
+
+    if(!Number.isFinite(value) || value <= 0){
+      return String(item.time || "—");
+    }
+
+    if(item === first){
+      if(session === "Race" || session === "Sprint"){
+        const h = Math.floor(value/3600);
+        const m = Math.floor((value%3600)/60);
+        const s = (value%60).toFixed(3).padStart(6,"0");
+
+        return h
+          ? `${h}:${String(m).padStart(2,"0")}:${s}`
+          : `${m}:${s}`;
+      }
+
+      return Math.floor(value/60) + ":" +
+        (value%60).toFixed(3).padStart(6,"0");
+    }
+
+    if(Number.isFinite(firstValue) && firstValue > 0){
+      return "+" + (value-firstValue).toFixed(3);
+    }
+
+    return String(item.time || "—");
+  }
+
+  function selectDriver(item){
+    selectedDriver = String(item.name || "");
+
+    $("selectedName").textContent = item.name || "—";
+    $("selectedTeam").textContent = item.team || "—";
+    $("selectedPosition").textContent = item.position ?? "—";
+
+    $("selectedTime").textContent = formatValue(
+      item,
+      currentResults[0],
+      currentData?.session || ""
+    );
+
+    document.querySelectorAll(".driver").forEach(row => {
+      row.classList.toggle(
+        "selected",
+        row.dataset.name === selectedDriver
+      );
+    });
+  }
+
+  function createDriverRow(item,index){
+    const row = document.createElement("div");
+
+    row.className = "driver";
+    row.dataset.name = item.name || "";
+    row.tabIndex = 0;
+    row.setAttribute("role","button");
+    row.setAttribute("aria-label",(item.name || "Poygachi") + " ma'lumotlari");
+
+    row.style.setProperty(
+      "--team",
+      teamColors[item.team] || "#777"
+    );
+
+    const position = document.createElement("div");
+    position.className = "position";
+    position.textContent = item.position ?? index+1;
+
+    const photo = getPhoto(item.name);
+
+    const photoBox = document.createElement("div");
+
+    if(photo){
+      const img = document.createElement("img");
+
+      img.className = "driver-photo";
+      img.alt = item.name || "Poygachi";
+      img.loading = index < 5 ? "eager" : "lazy";
+      img.decoding = "async";
+
+      img.onerror = () => {
+        const fallback = document.createElement("div");
+        fallback.className = "driver-fallback";
+        fallback.textContent = "F1";
+        img.replaceWith(fallback);
+      };
+
+      img.src = photo;
+      photoBox.append(img);
+    }else{
+      const fallback = document.createElement("div");
+      fallback.className = "driver-fallback";
+      fallback.textContent = "F1";
+      photoBox.append(fallback);
+    }
+
+    const info = document.createElement("div");
+
+    const name = document.createElement("div");
+    name.className = "driver-name";
+    name.textContent = item.name || "Poygachi";
+
+    const team = document.createElement("div");
+    team.className = "driver-team";
+    team.textContent = item.team || "";
+
+    info.append(name,team);
+
+    const time = document.createElement("div");
+    time.className = "driver-time";
+
+    time.textContent = formatValue(
+      item,
+      currentResults[0],
+      currentData?.session || ""
+    );
+
+    row.append(position,photoBox,info,time);
+
+    row.addEventListener("click",() => selectDriver(item));
+
+    row.addEventListener("keydown",event => {
+      if(event.key === "Enter" || event.key === " "){
+        event.preventDefault();
+        selectDriver(item);
+      }
+    });
+
+    return row;
+  }
+
+  function renderResults(data){
+    if(!data || !Array.isArray(data.results)){
+      throw new Error("Natijalar formati noto‘g‘ri");
+    }
+
+    const sorted = data.results
+      .filter(item => item && typeof item === "object")
+      .sort((a,b) => Number(a.position)-Number(b.position));
+
+    if(!sorted.length){
+      throw new Error("Natijalar bo‘sh");
+    }
+
+    currentData = data;
+    currentResults = sorted;
+
+    const sessionNames = {
+      "Race":"POYGA",
+      "Sprint":"SPRINT",
+      "Qualifying":"SARALASH",
+      "Sprint Qualifying":"SPRINT SARALASHI",
+      "Practice 1":"AMALIYOT 1",
+      "Practice 2":"AMALIYOT 2",
+      "Practice 3":"AMALIYOT 3"
+    };
+
+    const meeting = data.meeting || "F1";
+    const session = sessionNames[data.session] ||
+      data.session || "SESSIYA";
+
+    $("raceName").textContent =
+      "🏁 " + meeting.toUpperCase() + " — " + session;
+
+    let dateText = "";
+
+    if(data.date){
+      const date = new Date(data.date);
+
+      if(!Number.isNaN(date.getTime())){
+        dateText = date.toLocaleDateString("uz-UZ",{
+          day:"numeric",
+          month:"long",
+          year:"numeric"
+        });
+      }
+    }
+
+    $("raceSub").textContent =
+      dateText + " · Oxirgi mavjud sessiya natijalari";
+
+    $("driverCount").textContent = sorted.length;
+    $("listMode").textContent = session;
+
+    const fragment = document.createDocumentFragment();
+
+    sorted.forEach((item,index) => {
+      fragment.append(createDriverRow(item,index));
+    });
+
+    $("driversList").replaceChildren(fragment);
+
+    const previouslySelected = sorted.find(
+      item => item.name === selectedDriver
+    );
+
+    selectDriver(previouslySelected || sorted[0]);
+
+    setStatus("NATIJALAR YUKLANDI",true);
+  }
+
+  async function loadResults(){
+    setStatus("NATIJALAR TEKSHIRILMOQDA",false);
+
+    const sources = [
+      "./latest-session.json",
+      "https://nodirbekhonormagicpad2-max.github.io/F1Uzbekistan/latest-session.json"
+    ];
+
+    for(const source of sources){
+      try{
+        const url = source +
+          (source.includes("?") ? "&" : "?") +
+          "t=" + Date.now();
+
+        const response = await fetch(url,{
+          cache:"no-store"
+        });
+
+        if(!response.ok){
+          throw new Error("HTTP " + response.status);
+        }
+
+        const data = await response.json();
+
+        renderResults(data);
+        return;
+      }catch(error){
+        console.warn("Natijalar manbasi:",source,error);
+      }
+    }
+
+    if(currentResults.length){
+      setStatus("OLDINGI NATIJALAR",false);
+    }else{
+      $("driversList").innerHTML =
+        '<div class="empty">Natijalarni yuklab bo‘lmadi.<br>latest-session.json faylini tekshiring.</div>';
+
+      setStatus("MA'LUMOT MAVJUD EMAS",false);
+    }
+  }
+
+  /*
+    DEMO TELEMETRIYA
+
+    Grafiklar faqat dizayn namoyishi uchun.
+    Haqiqiy tezlik, gaz, tormoz yoki DRS
+    ma'lumotlari sifatida ishlatilmaydi.
+  */
+
+  function demoValue(t,mode){
+    if(mode === "speed"){
+      return 0.57 +
+        0.24*Math.sin(t*10) +
+        0.11*Math.cos(t*23);
+    }
+
+    if(mode === "throttle"){
+      return Math.max(
+        .08,
+        Math.min(1,.6+.37*Math.sin(t*15))
+      );
+    }
+
+    if(mode === "brake"){
+      return Math.max(
+        .04,
+        .8*Math.pow(Math.max(0,Math.sin(t*19)),7)
+      );
+    }
+
+    return Math.sin(t*15) > .3 ? .83 : .15;
+  }
+
+  function drawChart(){
+    const canvas = $("telemetryChart");
+    const context = canvas.getContext("2d");
+
+    if(!context){
+      return;
+    }
+
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+
+    if(!width || !height){
+      return;
+    }
+
+    const dpr = Math.min(window.devicePixelRatio || 1,2);
+
+    canvas.width = Math.round(width*dpr);
+    canvas.height = Math.round(height*dpr);
+
+    context.setTransform(dpr,0,0,dpr,0,0);
+    context.clearRect(0,0,width,height);
+
+    const padding = 20;
+    const graphWidth = width-padding*2;
+    const graphHeight = height-padding*2;
+
+    context.strokeStyle = "#23394d";
+    context.lineWidth = 1;
+
+    for(let i=0;i<=4;i++){
+      const y = padding+(graphHeight/4)*i;
+
+      context.beginPath();
+      context.moveTo(padding,y);
+      context.lineTo(width-padding,y);
+      context.stroke();
+    }
+
+    for(let i=0;i<=8;i++){
+      const x = padding+(graphWidth/8)*i;
+
+      context.beginPath();
+      context.moveTo(x,padding);
+      context.lineTo(x,height-padding);
+      context.stroke();
+    }
+
+    const colors = [
+      {color:"#00d9ff",offset:0},
+      {color:"#d45bff",offset:.04},
+      {color:"#ff9b31",offset:-.035}
+    ];
+
+    colors.forEach(line => {
+      context.beginPath();
+      context.strokeStyle = line.color;
+      context.lineWidth = 2;
+      context.shadowColor = line.color;
+      context.shadowBlur = 5;
+
+      for(let i=0;i<=180;i++){
+        const t = i/180;
+
+        const value = Math.max(
+          0,
+          Math.min(
+            1,
+            demoValue(t+line.offset,currentMode)
+          )
+        );
+
+        const x = padding+t*graphWidth;
+        const y = height-padding-value*graphHeight;
+
+        if(i === 0){
+          context.moveTo(x,y);
+        }else{
+          context.lineTo(x,y);
+        }
+      }
+
+      context.stroke();
+    });
+
+    context.shadowBlur = 0;
+  }
+
+  document.querySelectorAll(".telemetry-btn").forEach(button => {
+    button.addEventListener("click",() => {
+      currentMode = button.dataset.mode;
+
+      document.querySelectorAll(".telemetry-btn").forEach(item => {
+        item.classList.toggle("active",item === button);
+      });
+
+      drawChart();
+    });
+  });
+
+  $("refreshButton").addEventListener("click",loadResults);
+
+  window.addEventListener("resize",drawChart);
+
+  loadResults();
+  drawChart();
+
+  // Mavjud natijalarni har 60 soniyada tekshirish
+  setInterval(loadResults,60000);
+
+})();
+</script>
+
+</body>
+</html>
