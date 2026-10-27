@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T17:17:41.609651+00:00",
+  "updated_at": "2026-10-27T18:09:15.596780+00:00",
   "videos": [
     {
       "id": "8SX77gZycWE",
@@ -50,6 +50,14 @@
       "url": "https://www.youtube.com/watch?v=N1P2YUaxSxE"
     },
     {
+      "id": "40pf162Mr5Y",
+      "title": "Kimi Antonelli: From CRASHES to VICTORY!",
+      "channel": "F1 Documentary Hub",
+      "published": "2026-10-26T12:15:07Z",
+      "thumbnail": "https://i.ytimg.com/vi/40pf162Mr5Y/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=40pf162Mr5Y"
+    },
+    {
       "id": "lRbsfmDVcls",
       "title": "Hülkenberg’s Charge: Azerbaijan GP Qualifying Highlights - Monoposto Career Mode",
       "channel": "Monoposto Cockpit",
@@ -72,6 +80,14 @@
       "published": "2026-10-25T23:34:22Z",
       "thumbnail": "https://i.ytimg.com/vi/YcwVBfiqrXw/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=YcwVBfiqrXw"
+    },
+    {
+      "id": "lf0LaXCLBs4",
+      "title": "F1 Extended Highlights: United States Grand Prix",
+      "channel": "TSN",
+      "published": "2026-10-25T23:23:49Z",
+      "thumbnail": "https://i.ytimg.com/vi/lf0LaXCLBs4/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=lf0LaXCLBs4"
     },
     {
       "id": "u-d_e-7LfCc",
@@ -176,22 +192,6 @@
       "published": "2026-10-24T08:22:38Z",
       "thumbnail": "https://i.ytimg.com/vi/l5WlCWvB_MM/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=l5WlCWvB_MM"
-    },
-    {
-      "id": "r-7-8PrYDqQ",
-      "title": "#5 vs #1: the F1 crash you didn&#39;t see coming 💥 #F1Crashes #Shorts",
-      "channel": "Parga Garage ",
-      "published": "2026-10-24T01:32:40Z",
-      "thumbnail": "https://i.ytimg.com/vi/r-7-8PrYDqQ/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=r-7-8PrYDqQ"
-    },
-    {
-      "id": "UG3Kg0_xRKE",
-      "title": "Hamilton vs Verstappen at COTA | Racing-Game Simulation",
-      "channel": "Conqueror Motorsports",
-      "published": "2026-10-23T10:00:33Z",
-      "thumbnail": "https://i.ytimg.com/vi/UG3Kg0_xRKE/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=UG3Kg0_xRKE"
     }
   ]
 }
