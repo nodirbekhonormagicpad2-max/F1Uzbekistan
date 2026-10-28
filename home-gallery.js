@@ -521,24 +521,7 @@
       viewerMeta.append(dateEl);
     }
 
-    const articleWords =
-      typeof photo.article_uz === "string"
-        ? photo.article_uz
-            .trim()
-            .split(/\s+/)
-            .filter(Boolean).length
-        : 0;
-
-    if (articleWords) {
-      const readEl = document.createElement("span");
-
-      readEl.textContent =
-        "◷ " +
-        Math.max(1, Math.ceil(articleWords / 180)) +
-        " daqiqa o‘qish";
-
-      viewerMeta.append(readEl);
-    }
+    // O‘QISH VAQTI OLIB TASHLANGAN
 
     if (
       typeof photo.source === "string" &&
