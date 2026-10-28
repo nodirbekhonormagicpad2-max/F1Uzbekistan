@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-28T07:51:27.955550+00:00",
+  "updated_at": "2026-10-28T08:44:03.045258+00:00",
   "videos": [
     {
       "id": "Xohu5qXaf9Y",
@@ -26,12 +26,36 @@
       "url": "https://www.youtube.com/watch?v=8SX77gZycWE"
     },
     {
+      "id": "YfP2eWcpK1s",
+      "title": "Verstappen Fires Back at Cota Boss: “He Won’t Be Able to Walk After Five Laps!” #formula1 #f1",
+      "channel": "Formula Focus Racing",
+      "published": "2026-10-27T13:30:23Z",
+      "thumbnail": "https://i.ytimg.com/vi/YfP2eWcpK1s/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=YfP2eWcpK1s"
+    },
+    {
+      "id": "ZJrU9C_67nI",
+      "title": "Lando Norris’s Title Defence Is Over — Five Races Still Remain #f1 #formula1",
+      "channel": "Formula Focus Racing",
+      "published": "2026-10-27T09:30:13Z",
+      "thumbnail": "https://i.ytimg.com/vi/ZJrU9C_67nI/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=ZJrU9C_67nI"
+    },
+    {
       "id": "-_BVv1bcw0E",
       "title": "INSANE F1 RACING!  Last-Lap Battles &amp; Unreal Overtakes! #f1 #motorsport #gameplay #shorts #viral #yt",
       "channel": "F1 Cars Racing ",
       "published": "2026-10-27T08:30:22Z",
       "thumbnail": "https://i.ytimg.com/vi/-_BVv1bcw0E/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=-_BVv1bcw0E"
+    },
+    {
+      "id": "FzvwGIADQ5A",
+      "title": "Race Highlights - 2026 United States Grand Prix",
+      "channel": "AirPlane Gaming",
+      "published": "2026-10-27T07:53:49Z",
+      "thumbnail": "https://i.ytimg.com/vi/FzvwGIADQ5A/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=FzvwGIADQ5A"
     },
     {
       "id": "ivZqzaNIE48",
@@ -42,36 +66,12 @@
       "url": "https://www.youtube.com/watch?v=ivZqzaNIE48"
     },
     {
-      "id": "V2fKBrdevHw",
-      "title": "Close overtake by Kimi. #shorts #f1 #f1shorts",
-      "channel": "VEYLORE",
-      "published": "2026-10-26T23:07:40Z",
-      "thumbnail": "https://i.ytimg.com/vi/V2fKBrdevHw/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=V2fKBrdevHw"
-    },
-    {
       "id": "HJ4Qyb03fAU",
       "title": "F1 2021 (Season) Sao Paulo FP1/Qualifying - Highlights #f12021 #fp1 #qualifying #f1",
       "channel": "ACE REV. Sports",
       "published": "2026-10-26T16:00:00Z",
       "thumbnail": "https://i.ytimg.com/vi/HJ4Qyb03fAU/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=HJ4Qyb03fAU"
-    },
-    {
-      "id": "CMGXt6KzcyI",
-      "title": "POV: Verstappen overtakes Hamilton in the 2021 Abu Dhabi finale 🏎️🔥",
-      "channel": "Apex Rush",
-      "published": "2026-10-26T15:06:07Z",
-      "thumbnail": "https://i.ytimg.com/vi/CMGXt6KzcyI/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=CMGXt6KzcyI"
-    },
-    {
-      "id": "N1P2YUaxSxE",
-      "title": "Monoposto 2026",
-      "channel": "Pole Position Garage",
-      "published": "2026-10-26T12:29:22Z",
-      "thumbnail": "https://i.ytimg.com/vi/N1P2YUaxSxE/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=N1P2YUaxSxE"
     },
     {
       "id": "40pf162Mr5Y",
@@ -170,28 +170,28 @@
       "url": "https://www.youtube.com/watch?v=_9kFQidMd1g"
     },
     {
-      "id": "vBc70C_cNhA",
-      "title": "F1 USA GP 2026 FULL RACE HIGHLIGHTS | INSANE Action at COTA! 🇺🇸🔥 Full Game Simulation Highlights",
-      "channel": "CHANO2K Simulation",
-      "published": "2026-10-25T16:00:08Z",
-      "thumbnail": "https://i.ytimg.com/vi/vBc70C_cNhA/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=vBc70C_cNhA"
-    },
-    {
-      "id": "0mumSg7DD78",
-      "title": "Double Overtake on the Straights 🏎️🤩 #f1 #formula1",
-      "channel": "Bloxxi",
-      "published": "2026-10-25T14:32:37Z",
-      "thumbnail": "https://i.ytimg.com/vi/0mumSg7DD78/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=0mumSg7DD78"
-    },
-    {
       "id": "yfXy6gQBKoo",
       "title": "1992 Canadian Grand Prix (GP4 Simulated Season)",
       "channel": "Debug MgGraw",
       "published": "2026-10-25T13:30:06Z",
       "thumbnail": "https://i.ytimg.com/vi/yfXy6gQBKoo/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=yfXy6gQBKoo"
+    },
+    {
+      "id": "4YTuyqiSrHg",
+      "title": "Every Tenth Counts! 🏎️ | Austin GP 2026 Q2 Highlights",
+      "channel": "Racing Corner F1",
+      "published": "2026-10-25T12:37:09Z",
+      "thumbnail": "https://i.ytimg.com/vi/4YTuyqiSrHg/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=4YTuyqiSrHg"
+    },
+    {
+      "id": "Pjs5XvrTEWM",
+      "title": "F1 Crashes That Escalated Quickly 💀",
+      "channel": "Formoola",
+      "published": "2026-10-24T14:54:39Z",
+      "thumbnail": "https://i.ytimg.com/vi/Pjs5XvrTEWM/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=Pjs5XvrTEWM"
     }
   ]
 }
