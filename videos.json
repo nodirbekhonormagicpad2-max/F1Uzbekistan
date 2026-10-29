@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-29T16:44:51.635709+00:00",
+  "updated_at": "2026-10-29T17:41:43.123763+00:00",
   "videos": [
     {
       "id": "CUab6AlZ33k",
@@ -130,14 +130,6 @@
       "url": "https://www.youtube.com/watch?v=YcwVBfiqrXw"
     },
     {
-      "id": "lf0LaXCLBs4",
-      "title": "F1 Extended Highlights: United States Grand Prix",
-      "channel": "TSN",
-      "published": "2026-10-25T23:23:49Z",
-      "thumbnail": "https://i.ytimg.com/vi/lf0LaXCLBs4/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=lf0LaXCLBs4"
-    },
-    {
       "id": "u-d_e-7LfCc",
       "title": "Drivers React After Race | 2026 United States Grand Prix",
       "channel": "مطبخ وروتينات ام الاولاد ",
@@ -192,6 +184,14 @@
       "published": "2026-10-25T22:12:55Z",
       "thumbnail": "https://i.ytimg.com/vi/_9kFQidMd1g/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=_9kFQidMd1g"
+    },
+    {
+      "id": "44Q7TycUZcU",
+      "title": "Feature Race Highlights | Austin, 2026 | F1 ACADEMY",
+      "channel": "F1 Academy",
+      "published": "2026-10-25T21:50:32Z",
+      "thumbnail": "https://i.ytimg.com/vi/44Q7TycUZcU/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=44Q7TycUZcU"
     }
   ]
 }
