@@ -447,6 +447,21 @@
   let previousOverflow = "";
   let previousFocus = null;
 
+  // Tasodifiy rasm tanlash.
+  // Oldingi rasm ketma-ket takrorlanmaydi.
+  function randomIndex(exclude = -1) {
+    if (photos.length <= 1) return 0;
+
+    const available = photos.length - 1;
+    const random = Math.floor(Math.random() * available);
+
+    if (exclude < 0 || exclude >= photos.length) {
+      return Math.floor(Math.random() * photos.length);
+    }
+
+    return random >= exclude ? random + 1 : random;
+  }
+
   function show(i) {
     if (!photos.length) return;
 
@@ -520,8 +535,6 @@
       dateEl.textContent = "📅 " + date;
       viewerMeta.append(dateEl);
     }
-
-    // O‘QISH VAQTI OLIB TASHLANGAN
 
     if (
       typeof photo.source === "string" &&
@@ -683,7 +696,8 @@
         return;
       }
 
-      show(0);
+      // Birinchi rasm ham random.
+      show(randomIndex());
 
       if (photos.length > 1) {
         setInterval(() => {
@@ -691,7 +705,7 @@
             !viewer.classList.contains("open") &&
             !document.hidden
           ) {
-            show(index + 1);
+            show(randomIndex(displayedIndex));
           }
         }, INTERVAL);
       }
