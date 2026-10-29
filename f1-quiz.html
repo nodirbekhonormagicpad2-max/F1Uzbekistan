@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a0b10">
+<title>F1 QUIZ PRO | F1 Uzbekistan TV</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 80% 0%,#4a0c11 0%,transparent 42%),#0a0b10;color:#fff;font-family:Arial,Helvetica,sans-serif}a{color:inherit;text-decoration:none}.wrap{max-width:920px;margin:auto;padding:25px 18px 65px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;border-bottom:1px solid #34343a;padding-bottom:20px}.brand{font-size:clamp(17px,3vw,25px);font-weight:900;letter-spacing:.05em}.brand b{color:#ff303e}.back{border:1px solid #444;padding:11px 14px;border-radius:10px;font-size:14px}.tag{color:#ff454e;font-weight:900;letter-spacing:3px;font-size:12px;margin:30px 0 12px}.hero{font-size:clamp(40px,8vw,76px);line-height:1;margin:0 0 15px;font-weight:900;letter-spacing:-.05em}.hero span{color:#ed1c2e}.sub{color:#bfc0ca;line-height:1.6}.card{background:linear-gradient(145deg,#1c1d26,#111219);border:1px solid #383943;border-radius:22px;padding:clamp(20px,5vw,42px);box-shadow:0 25px 70px #0008;margin-top:30px}.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:25px}.level{background:#1d1e27;border:1px solid #484954;border-radius:13px;padding:24px 10px;cursor:pointer;color:#fff;font-size:20px;font-weight:900}.level small{display:block;font-size:12px;color:#bfc0ca;margin-top:8px}.level:hover,.level:focus-visible{border-color:#ff303e;background:#32171d}.btn{border:0;border-radius:11px;background:#e7192b;color:white;padding:16px 23px;font-weight:900;font-size:16px;cursor:pointer}.btn:hover{background:#b70c1c}.secondary{background:#30313b}.secondary:hover{background:#41424e}.hidden{display:none!important}.row{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.progress{height:9px;background:#34343c;border-radius:20px;overflow:hidden;margin:20px 0 26px}.progress>div{height:100%;width:0;background:#e7192b;transition:width .25s}.timer{font-size:25px;font-weight:900;color:#ff4b55}.question{font-size:clamp(23px,4vw,34px);line-height:1.3;font-weight:900;margin:0 0 25px}.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px}.answer{min-height:74px;text-align:left;padding:17px;border:1px solid #444652;border-radius:12px;background:#23242e;color:#fff;font-size:16px;cursor:pointer}.answer:hover:not(:disabled){border-color:#e7192b}.answer:disabled{cursor:default;opacity:.88}.answer.correct{background:#17412d;border-color:#42dd8a}.answer.wrong{background:#531d28;border-color:#ff5669}.answer strong{color:#ff6670;margin-right:10px}.feedback{min-height:25px;margin:20px 0;color:#bfc0ca;font-weight:bold}.result-score{font-size:clamp(55px,10vw,95px);font-weight:900;margin:15px 0}.result-title{font-size:clamp(26px,5vw,43px);font-weight:900;color:#ffc85c}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}.actions .btn{flex:1}.muted{color:#bfc0ca}footer{text-align:center;color:#747582;font-size:12px;margin-top:50px}@media(max-width:580px){.levels,.answers{grid-template-columns:1fr}.level{padding:18px}.back{font-size:12px}.actions{flex-direction:column}}
+</style>
+<script src="./f1-quiz-questions.js" defer></script>
+<script src="./f1-quiz.js" defer></script>
+</head>
+<body>
+<main class="wrap">
+<header class="top"><a class="brand" href="/"><b>F1</b> UZBEKISTAN TV</a><a class="back" href="/">← Bosh sahifa</a></header>
+<p class="tag">🏁 F1 QUIZ CHALLENGE</p>
+<h1 class="hero">F1 QUIZ <span>PRO</span></h1>
+<p class="sub">15 ta savol. Har biriga 15 soniya. Chempion bo‘lishga tayyormisiz?</p>
+<section class="card" id="start"><h2>🎮 Darajani tanlang</h2><p class="muted">Har to‘g‘ri javob — 10 ball. Maksimal natija — 150 ball.</p><div class="levels"><button class="level" data-level="easy">🟢 EASY<small>Oson savollar</small></button><button class="level" data-level="medium">🟡 MEDIUM<small>O‘rtacha savollar</small></button><button class="level" data-level="hard">🔴 HARD<small>Murakkab savollar</small></button></div></section>
+<section class="card hidden" id="game" aria-live="polite"><div class="row"><b id="counter">Savol 1 / 15</b><span class="timer" id="timer">⏱ 15</span><b id="score">0 ball</b></div><div class="progress"><div id="bar"></div></div><h2 class="question" id="question"></h2><div class="answers" id="answers"></div><p class="feedback" id="feedback" role="status"></p><button class="btn hidden" id="next">Keyingi savol →</button></section>
+<section class="card hidden" id="result" aria-live="polite"><p class="tag">🏆 NATIJANGIZ</p><div class="result-title" id="rank"></div><div class="result-score" id="finalScore"></div><p id="details" class="muted"></p><div class="actions"><button class="btn" id="restart">↻ Qayta o‘ynash</button><button class="btn secondary" id="share">↗ Natijani ulashish</button></div><p id="shareStatus" role="status" class="muted"></p></section>
+<footer>© F1 UZBEKISTAN TV · QUIZ PRO</footer>
+</main>
+</body>
+</html>
