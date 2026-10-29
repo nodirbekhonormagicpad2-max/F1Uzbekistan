@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#090909">
 
 <title>F1 Uzbekistan TV — Jonli efir</title>
-<meta name="description" content="F1 Uzbekistan TV — jonli efir, F1 yangiliklari, videolar, galereya va poyga natijalari.">
+<meta name="description" content="F1 Uzbekistan TV — jonli efir, F1 yangiliklari, videolar, galereya, F1 QUIZ va poyga natijalari.">
 
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preload" href="/drivers/russell.jpg?v=russell-fix-20261027" as="image">
@@ -85,6 +85,45 @@ header{
 }
 
 .header-telegram:hover{background:#b90500}
+
+/* F1 QUIZ — YUQORI TUGMA */
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:10px;
+  flex-shrink:0;
+}
+
+.header-quiz{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:50px;
+  padding:0 20px;
+  border:1px solid #ff3434;
+  border-radius:8px;
+  background:linear-gradient(135deg,#9d0000,#e10600);
+  color:#fff;
+  text-decoration:none;
+  font-size:14px;
+  font-weight:900;
+  white-space:nowrap;
+  box-shadow:0 0 18px #e1060040;
+  transition:background .2s,box-shadow .2s;
+}
+
+.header-quiz:hover{
+  background:#ff1717;
+  box-shadow:0 0 24px #e1060070;
+}
+
+.header-quiz:focus-visible,
+.quiz-card:focus-visible{
+  outline:3px solid #fff;
+  outline-offset:3px;
+}
 
 main{
   width:min(1060px,100%);
@@ -526,6 +565,84 @@ h1 span{color:var(--red)}
   font-size:13px;
 }
 
+/* F1 QUIZ PRO — KATTA KARTOCHKA */
+
+.quiz-card{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  min-height:190px;
+  margin-top:24px;
+  padding:26px;
+  overflow:hidden;
+  border:1px solid var(--red);
+  border-radius:16px;
+  background:
+    linear-gradient(90deg,#090909 0%,#090909f2 44%,#09090955 100%),
+    url("/drivers/verstappen.jpg") right 30% / auto 135% no-repeat,
+    #161616;
+  color:#fff;
+  text-decoration:none;
+  box-shadow:0 0 24px #e1060030;
+  transition:border-color .2s,box-shadow .2s;
+}
+
+.quiz-card-content{
+  position:relative;
+  z-index:1;
+}
+
+.quiz-card-label{
+  display:inline-block;
+  padding:7px 12px;
+  border-radius:6px;
+  background:var(--red);
+  color:#fff;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.5px;
+}
+
+.quiz-card h2{
+  margin:16px 0 9px;
+  font-size:clamp(28px,5vw,43px);
+  font-weight:900;
+  font-style:italic;
+  line-height:1.1;
+}
+
+.quiz-card h2 span{
+  color:#ff3434;
+}
+
+.quiz-card p{
+  margin:0;
+  color:#ddd;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.quiz-card-arrow{
+  position:relative;
+  z-index:1;
+  display:grid;
+  place-items:center;
+  width:48px;
+  height:48px;
+  flex-shrink:0;
+  border:1px solid var(--red);
+  border-radius:50%;
+  background:#090909dd;
+  font-size:25px;
+}
+
+.quiz-card:hover{
+  border-color:#ff5353;
+  box-shadow:0 0 32px #e1060060;
+}
+
 /* TAQVIM */
 
 .calendar-section{
@@ -576,7 +693,21 @@ footer span{
   .logo{font-size:21px;padding:8px 9px}
   .brand-name{font-size:12px;letter-spacing:.5px}
   .brand-sub{font-size:8px;letter-spacing:2px}
-  .header-telegram{min-height:40px;padding:0 12px;font-size:11px;letter-spacing:.3px}
+
+  .header-actions{gap:6px}
+
+  .header-quiz{
+    min-height:40px;
+    padding:0 10px;
+    font-size:11px;
+  }
+
+  .header-telegram{
+    min-height:40px;
+    padding:0 12px;
+    font-size:11px;
+    letter-spacing:.3px;
+  }
 
   main{padding:32px 12px 28px}
   .intro{margin-bottom:22px}
@@ -599,6 +730,17 @@ footer span{
   .chat-form{grid-template-columns:1fr}
   .chat-form button{width:100%}
   .chat-messages{height:280px}
+
+  .quiz-card{
+    min-height:165px;
+    padding:18px;
+    background-size:auto,auto 115%;
+  }
+
+  .quiz-card-arrow{
+    width:40px;
+    height:40px;
+  }
 
   .calendar-btn{
     min-height:65px;
@@ -650,7 +792,18 @@ footer span{
   .logo{font-size:18px;padding:7px}
   .brand-name{font-size:10px}
   .brand-sub{display:none}
-  .header-telegram{padding:0 8px;font-size:10px}
+
+  .header-actions{gap:4px}
+
+  .header-quiz{
+    padding:0 7px;
+    font-size:10px;
+  }
+
+  .header-telegram{
+    padding:0 8px;
+    font-size:10px;
+  }
 
   .results-row{
     grid-template-columns:20px 62px minmax(0,1fr) auto;
@@ -665,8 +818,25 @@ footer span{
   .results-code{font-size:8px}
 }
 
+@media(max-width:340px){
+  header{
+    flex-wrap:wrap;
+    justify-content:center;
+    padding:10px 8px;
+  }
+
+  .header-actions{
+    width:100%;
+    justify-content:center;
+  }
+}
+
 @media(prefers-reduced-motion:reduce){
-  .results-row{transition:none}
+  .results-row,
+  .header-quiz,
+  .quiz-card{
+    transition:none;
+  }
 }
 </style>
 </head>
@@ -682,12 +852,20 @@ footer span{
     </div>
   </div>
 
-  <a
-    class="header-telegram"
-    href="https://t.me/F1_Uzbekistan"
-    target="_blank"
-    rel="noopener noreferrer"
-  >TELEGRAM ↗</a>
+  <!-- F1 QUIZ VA TELEGRAM -->
+
+  <div class="header-actions">
+    <a class="header-quiz" href="./f1-quiz.html">
+      🎮 F1 QUIZ
+    </a>
+
+    <a
+      class="header-telegram"
+      href="https://t.me/F1_Uzbekistan"
+      target="_blank"
+      rel="noopener noreferrer"
+    >TELEGRAM ↗</a>
+  </div>
 </header>
 
 <main>
@@ -823,6 +1001,27 @@ footer span{
     <div class="results-note" id="resultsExtra" hidden></div>
 
   </section>
+
+  <!-- F1 QUIZ PRO — KATTA KARTOCHKA -->
+
+  <a
+    class="quiz-card"
+    href="./f1-quiz.html"
+    aria-label="F1 QUIZ PRO o‘yinini boshlash"
+  >
+    <div class="quiz-card-content">
+      <span class="quiz-card-label">🎮 YANGI O‘YIN</span>
+
+      <h2>F1 <span>QUIZ PRO</span></h2>
+
+      <p>
+        15 ta savol · 15 soniya · 150 ball<br>
+        Formula 1 bilimingizni sinab ko‘ring!
+      </p>
+    </div>
+
+    <span class="quiz-card-arrow" aria-hidden="true">➜</span>
+  </a>
 
   <!-- TAQVIM -->
 
@@ -1097,7 +1296,6 @@ footer span{
     img.width = 108;
     img.height = 108;
 
-    // BARCHA RASMLAR DARHOL YUKLANADI
     img.loading = "eager";
     img.decoding = "async";
 
@@ -1112,7 +1310,6 @@ footer span{
       if(retryCount < 1){
         retryCount++;
 
-        // Keshdagi xato javobni chetlab o‘tish
         img.src = url +
           (url.includes("?") ? "&" : "?") +
           "retry=" + IMAGE_VERSION;
@@ -1365,7 +1562,6 @@ footer span{
     render();
   });
 
-  // FAQAT JSON MANBASI ISHLAMAGANDA KO‘RSATILADIGAN ZAXIRA
   const savedSession = {
     session:"Practice 1",
     meeting:"United States",
@@ -1415,7 +1611,6 @@ footer span{
   showSession(savedSession);
   refresh();
 
-  // NATIJALAR HAR 60 SONIYADA TEKSHIRILADI
   setInterval(refresh,60000);
 
 })();
