@@ -155,12 +155,12 @@ async function saveToGitHub(env, photo) {
       );
     }
 
-    // Bir xil ID qayta qo'shilmasin
+    // Bir xil ID qayta qo‘shilmasin.
     if (items.some(item => item.id === photo.id)) {
       return;
     }
 
-    // Yangi maqola ro'yxat boshiga qo'shiladi
+    // Yangi post ro‘yxat boshiga qo‘shiladi.
     items.unshift(photo);
 
     const body = {
@@ -204,7 +204,7 @@ async function saveToGitHub(env, photo) {
   );
 }
 
-/* ADMIN PANELDAN MAQOLA QABUL QILISH */
+/* ADMIN PANELDAN F1 STORIES POST QABUL QILISH */
 
 export async function onRequestPost({ request, env }) {
   if (
@@ -245,16 +245,18 @@ export async function onRequestPost({ request, env }) {
       }, 401);
     }
 
-    /* MAQOLA MA'LUMOTLARI */
+    /* POST MA'LUMOTLARI */
 
     const title = String(
       form.get("title_uz") || ""
     ).trim();
 
+    // Maqola bo‘sh bo‘lishi mumkin.
     const article = String(
       form.get("article_uz") || ""
     ).trim();
 
+    // Manba ham ixtiyoriy.
     const source = String(
       form.get("source") || ""
     ).trim();
@@ -263,6 +265,7 @@ export async function onRequestPost({ request, env }) {
 
     /* TEKSHIRISHLAR */
 
+    // Sarlavha majburiy.
     if (!title || title.length > 160) {
       return json({
         success: false,
@@ -270,12 +273,12 @@ export async function onRequestPost({ request, env }) {
       }, 400);
     }
 
-    if (!article || article.length > MAX_ARTICLE_LENGTH) {
+    // O‘ZGARISH: maqola majburiy emas.
+    // Faqat maksimal uzunlik tekshiriladi.
+    if (article.length > MAX_ARTICLE_LENGTH) {
       return json({
         success: false,
-        error:
-          "To‘liq maqola kiritilishi shart. " +
-          "Maksimal 30000 belgi."
+        error: "Maqola 30000 belgidan oshmasin."
       }, 400);
     }
 
@@ -286,6 +289,7 @@ export async function onRequestPost({ request, env }) {
       }, 400);
     }
 
+    // Rasm majburiy.
     if (
       !image ||
       typeof image.arrayBuffer !== "function" ||
@@ -314,7 +318,7 @@ export async function onRequestPost({ request, env }) {
       }, 400);
     }
 
-    /* YANGI MAQOLA ID */
+    /* YANGI POST ID */
 
     const id = crypto.randomUUID();
 
@@ -332,14 +336,17 @@ export async function onRequestPost({ request, env }) {
       }
     });
 
-    /* F1 STORIES MAQOLASI */
+    /* F1 STORIES POSTI */
 
     const photo = {
       id,
       url:
         `/api/gallery-image?file=${id}.${extension}`,
       title_uz: title,
+
+      // Maqola kiritilmagan bo‘lsa, bo‘sh satr saqlanadi.
       article_uz: article,
+
       source: source,
       published: new Date().toISOString()
     };
@@ -357,7 +364,7 @@ export async function onRequestPost({ request, env }) {
       return json({
         success: false,
         error:
-          "Surat R2 ga yuklandi, ammo maqola " +
+          "Surat R2 ga yuklandi, ammo post " +
           "GitHub ro‘yxatiga saqlanmadi. " +
           "Qayta yuborishdan oldin tekshiring."
       }, 502);
@@ -368,7 +375,7 @@ export async function onRequestPost({ request, env }) {
     return json({
       success: true,
       message:
-        "F1 STORIES maqolasi muvaffaqiyatli saqlandi.",
+        "F1 STORIES posti muvaffaqiyatli saqlandi.",
       photo
     });
 
@@ -381,7 +388,7 @@ export async function onRequestPost({ request, env }) {
     return json({
       success: false,
       error:
-        "Maqolani saqlashda server xatoligi yuz berdi."
+        "Postni saqlashda server xatoligi yuz berdi."
     }, 500);
   }
 }
