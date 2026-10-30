@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30T03:40:57.325421+00:00",
+  "updated_at": "2026-10-30T04:40:30.299312+00:00",
   "videos": [
     {
       "id": "bM-sC_RUwDk",
@@ -24,6 +24,14 @@
       "published": "2026-10-29T19:30:09Z",
       "thumbnail": "https://i.ytimg.com/vi/LZfrkeAN_Nc/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=LZfrkeAN_Nc"
+    },
+    {
+      "id": "DI4WsBljPeE",
+      "title": "Palmowski vs Larsen Austin Crash Explained  F1 Academy 2026",
+      "channel": "Gridline F1 News",
+      "published": "2026-10-29T14:00:26Z",
+      "thumbnail": "https://i.ytimg.com/vi/DI4WsBljPeE/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=DI4WsBljPeE"
     },
     {
       "id": "sZ-gDLcmtzM",
@@ -114,6 +122,14 @@
       "url": "https://www.youtube.com/watch?v=CMGXt6KzcyI"
     },
     {
+      "id": "9DeUDoJBUNU",
+      "title": "More Airborne Crashes in F1",
+      "channel": "Formoola",
+      "published": "2026-10-26T14:45:24Z",
+      "thumbnail": "https://i.ytimg.com/vi/9DeUDoJBUNU/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=9DeUDoJBUNU"
+    },
+    {
       "id": "N1P2YUaxSxE",
       "title": "Monoposto 2026",
       "channel": "Pole Position Garage",
@@ -176,22 +192,6 @@
       "published": "2026-10-25T22:42:12Z",
       "thumbnail": "https://i.ytimg.com/vi/IvndX4u-faM/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=IvndX4u-faM"
-    },
-    {
-      "id": "bk0LDO4qyho",
-      "title": "Lewis Hamilton Post-Race interview  | 2026 United States Grand Prix",
-      "channel": "مطبخ وروتينات ام الاولاد ",
-      "published": "2026-10-25T22:39:27Z",
-      "thumbnail": "https://i.ytimg.com/vi/bk0LDO4qyho/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=bk0LDO4qyho"
-    },
-    {
-      "id": "srLm23RUAH0",
-      "title": "Race Highlights | 2026 United States Grand Prix",
-      "channel": "FORMULA 1",
-      "published": "2026-10-25T22:33:34Z",
-      "thumbnail": "https://i.ytimg.com/vi/srLm23RUAH0/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=srLm23RUAH0"
     }
   ]
 }
