@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30T15:43:14.428328+00:00",
+  "updated_at": "2026-10-30T16:40:58.367952+00:00",
   "videos": [
     {
       "id": "Hz3sPHLHY8w",
@@ -32,14 +32,6 @@
       "published": "2026-10-29T20:30:07Z",
       "thumbnail": "https://i.ytimg.com/vi/CUab6AlZ33k/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=CUab6AlZ33k"
-    },
-    {
-      "id": "LZfrkeAN_Nc",
-      "title": "F1 26 - Chinese Grand Prix",
-      "channel": "JUSTKKC",
-      "published": "2026-10-29T19:30:09Z",
-      "thumbnail": "https://i.ytimg.com/vi/LZfrkeAN_Nc/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=LZfrkeAN_Nc"
     },
     {
       "id": "DI4WsBljPeE",
@@ -192,6 +184,14 @@
       "published": "2026-10-25T23:23:49Z",
       "thumbnail": "https://i.ytimg.com/vi/lf0LaXCLBs4/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=lf0LaXCLBs4"
+    },
+    {
+      "id": "srLm23RUAH0",
+      "title": "Race Highlights | 2026 United States Grand Prix",
+      "channel": "FORMULA 1",
+      "published": "2026-10-25T22:33:34Z",
+      "thumbnail": "https://i.ytimg.com/vi/srLm23RUAH0/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=srLm23RUAH0"
     }
   ]
 }
