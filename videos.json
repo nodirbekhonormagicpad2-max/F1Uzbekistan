@@ -1,6 +1,14 @@
 {
-  "updated_at": "2026-10-31T04:36:50.456450+00:00",
+  "updated_at": "2026-10-31T05:33:08.213010+00:00",
   "videos": [
+    {
+      "id": "1gaK1G281NY",
+      "title": "Ferrari dominating Free Practice before qualifying falls apart is actual cinema #f1 #formula1",
+      "channel": "The F1 Channel",
+      "published": "2026-10-31T05:00:29Z",
+      "thumbnail": "https://i.ytimg.com/vi/1gaK1G281NY/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=1gaK1G281NY"
+    },
     {
       "id": "tEEGnZna3Gc",
       "title": "FP2 Highlights | 2026 Mexico City Grand Prix",
@@ -178,20 +186,12 @@
       "url": "https://www.youtube.com/watch?v=V2fKBrdevHw"
     },
     {
-      "id": "CMGXt6KzcyI",
-      "title": "POV: Verstappen overtakes Hamilton in the 2021 Abu Dhabi finale 🏎️🔥",
-      "channel": "Apex Rush",
-      "published": "2026-10-26T15:06:07Z",
-      "thumbnail": "https://i.ytimg.com/vi/CMGXt6KzcyI/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=CMGXt6KzcyI"
-    },
-    {
-      "id": "9DeUDoJBUNU",
-      "title": "More Airborne Crashes in F1",
-      "channel": "Formoola",
-      "published": "2026-10-26T14:45:24Z",
-      "thumbnail": "https://i.ytimg.com/vi/9DeUDoJBUNU/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=9DeUDoJBUNU"
+      "id": "aG65u6ATkw4",
+      "title": "Max Verstappen Overtake Lando Norris in COTA F1 United states grand prix 2026",
+      "channel": "Lambe Racing F1",
+      "published": "2026-10-26T15:13:13Z",
+      "thumbnail": "https://i.ytimg.com/vi/aG65u6ATkw4/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=aG65u6ATkw4"
     }
   ]
 }
