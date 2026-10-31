@@ -74,6 +74,7 @@
     const more = $('leaderboardMore');
 
     more.classList.toggle('hidden', all.length <= 10);
+
     more.textContent = expanded
       ? '↑ TOP 10 GA QAYTISH'
       : '🏆 TOP 100 NI KO‘RISH ↓';
@@ -86,7 +87,8 @@
 
     const currentRequest = ++requestNumber;
 
-    $('leaderboardStatus').textContent = '⏳ Reyting yuklanmoqda...';
+    $('leaderboardStatus').textContent =
+      '⏳ Reyting yuklanmoqda...';
 
     try {
       const response = await fetch(
@@ -94,17 +96,23 @@
         { cache: 'no-store' }
       );
 
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
       const data = await response.json();
 
-      if (!response.ok || !data.success) {
+      if (!data.success) {
         throw new Error(data.error || 'Server xatosi');
+      }
+
+      if (!Array.isArray(data.leaderboard)) {
+        throw new Error('Reyting ma’lumotlari noto‘g‘ri');
       }
 
       if (currentRequest !== requestNumber) return;
 
-      cache[level] = Array.isArray(data.leaderboard)
-        ? data.leaderboard
-        : [];
+      cache[level] = data.leaderboard;
 
       if (activeLevel === level) {
         render();
@@ -118,7 +126,7 @@
       console.error('Reyting xatosi:', error);
 
       $('leaderboardStatus').textContent =
-        '⚠️ Reyting yuklanmadi. Internetni tekshiring.';
+        '⚠️ Reyting xatosi: ' + error.message;
     }
   }
 
@@ -139,8 +147,9 @@
     loadLeaderboard(level);
   }
 
-  // Natijani faqat Worker saqlaydi.
-  // Brauzerdan ball yuborish mumkin emas.
+  // Natijalarni Cloudflare Worker saqlaydi.
+  // Brauzer faqat reytingni ko‘rsatadi.
+
   window.F1QuizLeaderboard = {
     showLevel,
     refresh: () => loadLeaderboard(activeLevel)
