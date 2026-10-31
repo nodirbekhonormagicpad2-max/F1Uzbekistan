@@ -1,6 +1,22 @@
 {
-  "updated_at": "2026-10-31T18:40:50.426734+00:00",
+  "updated_at": "2026-10-31T19:31:43.922769+00:00",
   "videos": [
+    {
+      "id": "u1H0dCJM5mA",
+      "title": "🟡 FP3 HIGHLIGHTS CHART F1 2026 MEXICO CITY GP ⚪ #fp3 #mexicocitygp #f12026",
+      "channel": "izquierdoF1",
+      "published": "2026-10-31T19:14:04Z",
+      "thumbnail": "https://i.ytimg.com/vi/u1H0dCJM5mA/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=u1H0dCJM5mA"
+    },
+    {
+      "id": "07rbfjRHxE0",
+      "title": "⚪ FP3 HIGHLIGHTS LEADERBOARD F1 2026 MEXICO CITY GP ⚪ #fp3 #mexicocitygp #f12026",
+      "channel": "izquierdoF1",
+      "published": "2026-10-31T18:55:48Z",
+      "thumbnail": "https://i.ytimg.com/vi/07rbfjRHxE0/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=07rbfjRHxE0"
+    },
     {
       "id": "ZAz1v35oRCw",
       "title": "Qualifying Highlights | 2020 Great Britain Grand Prix",
@@ -32,6 +48,14 @@
       "published": "2026-10-31T00:26:19Z",
       "thumbnail": "https://i.ytimg.com/vi/tEEGnZna3Gc/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=tEEGnZna3Gc"
+    },
+    {
+      "id": "DOdGQCjT07k",
+      "title": "[LIVE] FORMULA 1 Mexico City Grand Prix 2026 – QUALIFYING Watchalong | Live Timing",
+      "channel": "Les Voitures Ont La Parole",
+      "published": "2026-10-30T23:46:56Z",
+      "thumbnail": "https://i.ytimg.com/vi/DOdGQCjT07k/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=DOdGQCjT07k"
     },
     {
       "id": "YrKZ1EmzG60",
@@ -138,22 +162,6 @@
       "url": "https://www.youtube.com/watch?v=DI4WsBljPeE"
     },
     {
-      "id": "sZ-gDLcmtzM",
-      "title": "2026 F1 US GP Qualifying Highlights | Nico Hülkenberg | Monopost Career Mode",
-      "channel": "Monoposto Cockpit",
-      "published": "2026-10-29T11:45:25Z",
-      "thumbnail": "https://i.ytimg.com/vi/sZ-gDLcmtzM/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=sZ-gDLcmtzM"
-    },
-    {
-      "id": "W5rGv04NoMI",
-      "title": "Qualifying Highlights | 2020 Hungarian Grand Prix",
-      "channel": "Mystic Formula Racing",
-      "published": "2026-10-28T22:30:39Z",
-      "thumbnail": "https://i.ytimg.com/vi/W5rGv04NoMI/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=W5rGv04NoMI"
-    },
-    {
       "id": "_eHO9EaHkbI",
       "title": "Top 5 F1 #1: craziest crashes ever (all survived) Alonso F1 News #shorts",
       "channel": "PitwindowTV",
@@ -178,20 +186,12 @@
       "url": "https://www.youtube.com/watch?v=8SX77gZycWE"
     },
     {
-      "id": "-_BVv1bcw0E",
-      "title": "INSANE F1 RACING!  Last-Lap Battles &amp; Unreal Overtakes! #f1 #motorsport #gameplay #shorts #viral #yt",
-      "channel": "F1 Cars Racing ",
-      "published": "2026-10-27T08:30:22Z",
-      "thumbnail": "https://i.ytimg.com/vi/-_BVv1bcw0E/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=-_BVv1bcw0E"
-    },
-    {
-      "id": "V2fKBrdevHw",
-      "title": "Close overtake by Kimi. #shorts #f1 #f1shorts",
-      "channel": "VEYLORE",
-      "published": "2026-10-26T23:07:40Z",
-      "thumbnail": "https://i.ytimg.com/vi/V2fKBrdevHw/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=V2fKBrdevHw"
+      "id": "3odJ-J7yR4c",
+      "title": "Ranking Insane Classic F1 Crashes",
+      "channel": "f1_fanatix",
+      "published": "2026-10-27T12:14:41Z",
+      "thumbnail": "https://i.ytimg.com/vi/3odJ-J7yR4c/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=3odJ-J7yR4c"
     }
   ]
 }
