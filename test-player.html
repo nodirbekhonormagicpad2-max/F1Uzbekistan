@@ -16,205 +16,335 @@
       box-sizing: border-box;
     }
 
-    body {
+    html, body {
       margin: 0;
-      padding: 15px;
+      min-height: 100%;
       background: #090909;
-      color: white;
+      color: #fff;
       font-family: Arial, sans-serif;
     }
 
     .container {
+      width: 100%;
       max-width: 1100px;
-      margin: 20px auto;
+      margin: 0 auto;
+      padding: 20px 12px;
     }
 
     h1 {
+      margin: 18px 0 25px;
       text-align: center;
-      font-size: clamp(22px, 5vw, 34px);
-    }
-
-    h1 span {
       color: #e10600;
+      font-size: clamp(22px, 5vw, 36px);
     }
 
     .player-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
       overflow: hidden;
       border: 2px solid #e10600;
       border-radius: 12px;
-      background: black;
+      background: #000;
     }
 
     .video-js {
-      width: 100%;
-      height: auto;
-      aspect-ratio: 16 / 9;
+      position: absolute;
+      inset: 0;
+      width: 100% !important;
+      height: 100% !important;
     }
 
     .video-js .vjs-big-play-button {
       background: #e10600;
-      border: none;
+      border: 0;
       border-radius: 10px;
     }
 
-    .controls {
+    .buttons {
       display: flex;
       gap: 10px;
       margin-top: 15px;
+      flex-wrap: wrap;
     }
 
-    button {
-      flex: 1;
-      min-height: 50px;
+    .buttons button {
+      flex: 1 1 140px;
+      min-height: 52px;
       padding: 12px;
-      border: 0;
-      border-radius: 9px;
+      border: none;
+      border-radius: 10px;
       background: #e10600;
       color: white;
+      font-size: 15px;
       font-weight: bold;
       cursor: pointer;
     }
 
-    button:last-child {
+    .buttons button.secondary {
       background: #333;
     }
 
+    .buttons button:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+
     .status {
-      margin-top: 15px;
-      padding: 15px;
-      border-radius: 9px;
-      background: #191919;
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 10px;
+      background: #1c1c1c;
       color: #ddd;
-      line-height: 1.6;
       font-size: 14px;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
     }
 
     .status.success {
-      color: #55e995;
+      color: #58e895;
     }
 
     .status.error {
-      color: #ff6666;
+      color: #ff7373;
+    }
+
+    .hint {
+      margin-top: 15px;
+      color: #999;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 14px 10px;
+      }
+
+      .buttons button {
+        font-size: 13px;
+        padding: 10px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-<div class="container">
+  <div class="container">
 
-  <h1>🏎️ <span>F1 UZBEKISTAN TV</span></h1>
+    <h1>🏎️ F1 UZBEKISTAN TV</h1>
 
-  <div class="player-box">
-    <video
-      id="f1-player"
-      class="video-js vjs-default-skin"
-      controls
-      playsinline
-      preload="none">
-    </video>
+    <div class="player-box">
+      <video
+        id="f1-player"
+        class="video-js vjs-default-skin"
+        controls
+        playsinline
+        preload="none">
+      </video>
+    </div>
+
+    <div class="buttons">
+
+      <button id="playBtn" type="button">
+        ▶ Efirni boshlash
+      </button>
+
+      <button id="refreshBtn" type="button">
+        ↻ Yangilash
+      </button>
+
+      <button
+        id="fullscreenBtn"
+        class="secondary"
+        type="button">
+        ⛶ Katta ekran
+      </button>
+
+    </div>
+
+    <div class="status" id="status">
+      ⏳ VK Live efiri tekshirilmoqda...
+    </div>
+
+    <div class="hint">
+      Manba: OBS → VK Live → Cloudflare Worker → Video.js
+    </div>
+
   </div>
 
-  <div class="controls">
-    <button id="refreshBtn">↻ Yangilash</button>
-    <button id="fullscreenBtn">⛶ Katta ekran</button>
-  </div>
+  <script src="https://vjs.zencdn.net/8.23.4/video.min.js"></script>
 
-  <div class="status" id="status">
-    VK Live efiri tekshirilmoqda...
-  </div>
+  <script>
+    "use strict";
 
-</div>
+    // Sizning Cloudflare Worker manzilingiz
+    const WORKER_URL =
+      "https://f1-uzbekistan-live.nodirbekhonormagicpad2.workers.dev";
 
-<script src="https://vjs.zencdn.net/8.23.4/video.min.js"></script>
+    const statusBox =
+      document.getElementById("status");
 
-<script>
-  const WORKER_URL =
-    "https://f1-uzbekistan-live.nodirbekhonormagicpad2.workers.dev";
+    const playBtn =
+      document.getElementById("playBtn");
 
-  const statusBox = document.getElementById("status");
+    const refreshBtn =
+      document.getElementById("refreshBtn");
 
-  const player = videojs("f1-player", {
-    controls: true,
-    autoplay: false,
-    preload: "none",
-    fluid: true,
-    responsive: true,
-    liveui: true
-  });
+    const fullscreenBtn =
+      document.getElementById("fullscreenBtn");
 
-  function setStatus(message, type = "") {
-    statusBox.textContent = message;
-    statusBox.className = "status " + type;
-  }
+    let currentHls = "";
+    let loading = false;
 
-  async function loadStream() {
-    setStatus("🔄 VK Live efiri qidirilmoqda...");
+    // Video.js pleer
+    const player = videojs("f1-player", {
+      controls: true,
+      autoplay: false,
+      preload: "none",
+      fluid: false,
+      responsive: true,
+      liveui: true,
+      html5: {
+        vhs: {
+          overrideNative: true
+        }
+      }
+    });
 
-    try {
-      const response = await fetch(
-        WORKER_URL + "/stream?t=" + Date.now(),
-        { cache: "no-store" }
-      );
+    function setStatus(message, type = "") {
+      statusBox.textContent = message;
+      statusBox.className = "status " + type;
+    }
 
-      const data = await response.json();
+    // VK Live'dan HLS manzilini olish
+    async function loadStream(startPlayback = false) {
+      if (loading) return;
 
-      if (!response.ok || !data.ok) {
-        throw new Error(
-          data.error || "VK Live efiri topilmadi"
+      loading = true;
+      refreshBtn.disabled = true;
+
+      setStatus("🔄 VK Live efiri tekshirilmoqda...");
+
+      try {
+        const endpoint =
+          WORKER_URL +
+          "/stream?t=" +
+          Date.now();
+
+        const response = await fetch(endpoint, {
+          cache: "no-store"
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+          throw new Error(
+            data.error || "VK Live efiri topilmadi"
+          );
+        }
+
+        if (!data.hls) {
+          throw new Error("HLS manzili mavjud emas");
+        }
+
+        const hlsUrl = new URL(data.hls);
+
+        if (hlsUrl.protocol !== "https:") {
+          throw new Error("HLS manzili HTTPS emas");
+        }
+
+        currentHls = hlsUrl.href;
+
+        player.src({
+          src: currentHls,
+          type: "application/x-mpegURL"
+        });
+
+        setStatus(
+          "✅ HLS manzili topildi. " +
+          "▶ Efirni boshlash tugmasini bosing.",
+          "success"
+        );
+
+        if (startPlayback) {
+          try {
+            await player.play();
+          } catch (playError) {
+            setStatus(
+              "⚠️ HLS topildi, ammo video boshlanmadi: " +
+              playError.message,
+              "error"
+            );
+          }
+        }
+
+      } catch (error) {
+        console.error("HLS xatosi:", error);
+
+        setStatus(
+          "❌ Xatolik: " + error.message,
+          "error"
+        );
+
+      } finally {
+        loading = false;
+        refreshBtn.disabled = false;
+      }
+    }
+
+    // Efirni boshlash
+    playBtn.addEventListener("click", async function () {
+      if (!currentHls) {
+        await loadStream(true);
+        return;
+      }
+
+      try {
+        await player.play();
+      } catch (error) {
+        setStatus(
+          "❌ Video boshlanmadi: " + error.message,
+          "error"
         );
       }
+    });
 
-      if (!data.hls) {
-        throw new Error("HLS manzili mavjud emas");
-      }
+    // Yangilash
+    refreshBtn.addEventListener("click", function () {
+      loadStream(false);
+    });
 
-      player.src({
-        src: data.hls,
-        type: "application/x-mpegURL"
-      });
-
-      setStatus(
-        "✅ HLS manzili topildi! Endi ▶ Play tugmasini bosing.",
-        "success"
-      );
-
-    } catch (error) {
-      setStatus(
-        "❌ Xatolik: " + error.message,
-        "error"
-      );
-    }
-  }
-
-  document.getElementById("refreshBtn")
-    .addEventListener("click", loadStream);
-
-  document.getElementById("fullscreenBtn")
-    .addEventListener("click", function () {
+    // Katta ekran
+    fullscreenBtn.addEventListener("click", function () {
       player.requestFullscreen();
     });
 
-  player.on("playing", function () {
-    setStatus(
-      "🔴 F1 Uzbekistan TV — jonli efir ishlayapti!",
-      "success"
-    );
-  });
+    // Video ishlay boshlaganda
+    player.on("playing", function () {
+      setStatus(
+        "🔴 F1 Uzbekistan TV — jonli efir ishlayapti!",
+        "success"
+      );
+    });
 
-  player.on("error", function () {
-    const error = player.error();
+    // Video xatosi
+    player.on("error", function () {
+      const error = player.error();
 
-    setStatus(
-      "❌ Video ochilmadi: " +
-      (error ? error.message : "Noma’lum xatolik") +
-      ". VK video serverida cheklov bo‘lishi mumkin.",
-      "error"
-    );
-  });
+      setStatus(
+        "❌ Video ochilmadi: " +
+        (error ? error.message : "Noma'lum xatolik") +
+        ". VK HLS oqimida CORS, IP yoki boshqa cheklov bo'lishi mumkin.",
+        "error"
+      );
+    });
 
-  loadStream();
-</script>
+    // Sahifa ochilganda HLS manzilini qidirish
+    loadStream(false);
+
+  </script>
 
 </body>
 </html>
