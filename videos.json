@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-01T17:04:00.749358+00:00",
+  "updated_at": "2026-11-01T17:59:17.463344+00:00",
   "videos": [
     {
       "id": "XgjWcaAvvUc",
@@ -146,14 +146,6 @@
       "url": "https://www.youtube.com/watch?v=uztemM_ChLk"
     },
     {
-      "id": "7ldMhpW0ABM",
-      "title": "2026 F1 Mexico City Grand Prix Qualifying Watchalong",
-      "channel": "P1 with Matt & Tommy",
-      "published": "2026-10-31T22:24:04Z",
-      "thumbnail": "https://i.ytimg.com/vi/7ldMhpW0ABM/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=7ldMhpW0ABM"
-    },
-    {
       "id": "IE_fPYzyknI",
       "title": "❗Lewis Hamilton Vs George Russell❗Sprint Race F1 Mexico Hermanos Rodriguez  #MexicanGP 2026",
       "channel": "Conqueror Motorsports",
@@ -192,6 +184,14 @@
       "published": "2026-10-29T19:30:09Z",
       "thumbnail": "https://i.ytimg.com/vi/LZfrkeAN_Nc/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=LZfrkeAN_Nc"
+    },
+    {
+      "id": "DI4WsBljPeE",
+      "title": "Palmowski vs Larsen Austin Crash Explained  F1 Academy 2026",
+      "channel": "Gridline F1 News",
+      "published": "2026-10-29T14:00:26Z",
+      "thumbnail": "https://i.ytimg.com/vi/DI4WsBljPeE/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=DI4WsBljPeE"
     }
   ]
 }
