@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>F1 Uzbekistan TV — Yangi pleer sinovi</title>
+
+  <link
+    rel="stylesheet"
+    href="https://vjs.zencdn.net/8.23.4/video-js.css"
+  >
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 15px;
+      background: #090909;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 20px auto;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: clamp(22px, 5vw, 34px);
+    }
+
+    h1 span {
+      color: #e10600;
+    }
+
+    .player-box {
+      overflow: hidden;
+      border: 2px solid #e10600;
+      border-radius: 12px;
+      background: black;
+    }
+
+    .video-js {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+    }
+
+    .video-js .vjs-big-play-button {
+      background: #e10600;
+      border: none;
+      border-radius: 10px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    button {
+      flex: 1;
+      min-height: 50px;
+      padding: 12px;
+      border: 0;
+      border-radius: 9px;
+      background: #e10600;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:last-child {
+      background: #333;
+    }
+
+    .status {
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 9px;
+      background: #191919;
+      color: #ddd;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .status.success {
+      color: #55e995;
+    }
+
+    .status.error {
+      color: #ff6666;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>🏎️ <span>F1 UZBEKISTAN TV</span></h1>
+
+  <div class="player-box">
+    <video
+      id="f1-player"
+      class="video-js vjs-default-skin"
+      controls
+      playsinline
+      preload="none">
+    </video>
+  </div>
+
+  <div class="controls">
+    <button id="refreshBtn">↻ Yangilash</button>
+    <button id="fullscreenBtn">⛶ Katta ekran</button>
+  </div>
+
+  <div class="status" id="status">
+    VK Live efiri tekshirilmoqda...
+  </div>
+
+</div>
+
+<script src="https://vjs.zencdn.net/8.23.4/video.min.js"></script>
+
+<script>
+  const WORKER_URL =
+    "https://f1-uzbekistan-live.nodirbekhonormagicpad2.workers.dev";
+
+  const statusBox = document.getElementById("status");
+
+  const player = videojs("f1-player", {
+    controls: true,
+    autoplay: false,
+    preload: "none",
+    fluid: true,
+    responsive: true,
+    liveui: true
+  });
+
+  function setStatus(message, type = "") {
+    statusBox.textContent = message;
+    statusBox.className = "status " + type;
+  }
+
+  async function loadStream() {
+    setStatus("🔄 VK Live efiri qidirilmoqda...");
+
+    try {
+      const response = await fetch(
+        WORKER_URL + "/stream?t=" + Date.now(),
+        { cache: "no-store" }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.ok) {
+        throw new Error(
+          data.error || "VK Live efiri topilmadi"
+        );
+      }
+
+      if (!data.hls) {
+        throw new Error("HLS manzili mavjud emas");
+      }
+
+      player.src({
+        src: data.hls,
+        type: "application/x-mpegURL"
+      });
+
+      setStatus(
+        "✅ HLS manzili topildi! Endi ▶ Play tugmasini bosing.",
+        "success"
+      );
+
+    } catch (error) {
+      setStatus(
+        "❌ Xatolik: " + error.message,
+        "error"
+      );
+    }
+  }
+
+  document.getElementById("refreshBtn")
+    .addEventListener("click", loadStream);
+
+  document.getElementById("fullscreenBtn")
+    .addEventListener("click", function () {
+      player.requestFullscreen();
+    });
+
+  player.on("playing", function () {
+    setStatus(
+      "🔴 F1 Uzbekistan TV — jonli efir ishlayapti!",
+      "success"
+    );
+  });
+
+  player.on("error", function () {
+    const error = player.error();
+
+    setStatus(
+      "❌ Video ochilmadi: " +
+      (error ? error.message : "Noma’lum xatolik") +
+      ". VK video serverida cheklov bo‘lishi mumkin.",
+      "error"
+    );
+  });
+
+  loadStream();
+</script>
+
+</body>
+</html>
