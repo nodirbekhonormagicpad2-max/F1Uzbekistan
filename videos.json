@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-01T00:59:24.862122+00:00",
+  "updated_at": "2026-11-01T01:59:46.371585+00:00",
   "videos": [
     {
       "id": "U2u8NERDdvo",
@@ -58,6 +58,14 @@
       "url": "https://www.youtube.com/watch?v=uztemM_ChLk"
     },
     {
+      "id": "7ldMhpW0ABM",
+      "title": "2026 F1 Mexico City Grand Prix Qualifying Watchalong",
+      "channel": "P1 with Matt & Tommy",
+      "published": "2026-10-31T22:24:04Z",
+      "thumbnail": "https://i.ytimg.com/vi/7ldMhpW0ABM/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=7ldMhpW0ABM"
+    },
+    {
       "id": "ChDqqpKxkzo",
       "title": "Max Verstappen ANGRY TEAM RADIO After QUALIFYING! | 2026 Mexico GP",
       "channel": "F1Fun4u",
@@ -80,6 +88,14 @@
       "published": "2026-10-31T22:19:54Z",
       "thumbnail": "https://i.ytimg.com/vi/hd6jgijDtkI/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=hd6jgijDtkI"
+    },
+    {
+      "id": "vObk2n8a1lM",
+      "title": "Qualifying Full Highlights | 2026 Mexican Grand Prix | F1 Highlights",
+      "channel": "THAR GAMER",
+      "published": "2026-10-31T22:15:34Z",
+      "thumbnail": "https://i.ytimg.com/vi/vObk2n8a1lM/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=vObk2n8a1lM"
     },
     {
       "id": "ENJtPBnDI2c",
@@ -138,14 +154,6 @@
       "url": "https://www.youtube.com/watch?v=ZAz1v35oRCw"
     },
     {
-      "id": "HIiTeK1rk44",
-      "title": "&quot;Only 3 Drivers Survived? Mexico City GP Qualifying Highlights | Monopost Career Mode&quot;",
-      "channel": "Monoposto Cockpit",
-      "published": "2026-10-31T11:45:21Z",
-      "thumbnail": "https://i.ytimg.com/vi/HIiTeK1rk44/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=HIiTeK1rk44"
-    },
-    {
       "id": "Hz3sPHLHY8w",
       "title": "I Migliori 4 Momenti di KIMI ANTONELLI parte 2 #F1 #Formula1 #F12026 F1 #Formula1 #KimiAntonelli",
       "channel": "Sbourbo",
@@ -184,14 +192,6 @@
       "published": "2026-10-27T18:17:30Z",
       "thumbnail": "https://i.ytimg.com/vi/5bBEN4Q8KYE/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=5bBEN4Q8KYE"
-    },
-    {
-      "id": "8SX77gZycWE",
-      "title": "“Overtake or Not!” — Verstappen Cuts Straight to the Point on Team Radio #formula1 #f1",
-      "channel": "Formula Focus Racing",
-      "published": "2026-10-27T15:30:20Z",
-      "thumbnail": "https://i.ytimg.com/vi/8SX77gZycWE/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=8SX77gZycWE"
     }
   ]
 }
