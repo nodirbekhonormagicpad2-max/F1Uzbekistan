@@ -25,7 +25,7 @@ h1 span{color:var(--red)}
 .player-wrap{padding:5px;border:1px solid #373737;border-radius:14px;background:linear-gradient(135deg,#41110f,#151515 45%);box-shadow:0 20px 65px #0009}
 .player{position:relative;overflow:hidden;background:#000;border-radius:9px;aspect-ratio:16/9}
 .player video{width:100%;height:100%;display:block;background:#000;object-fit:contain}
-.live-panel{margin-bottom:18px}.live-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.live-top h2{font-size:19px;margin:0}.live-status{font-size:11px;font-weight:800;color:#aaa}.live-status.on{color:#ff5252}.video-placeholder{position:absolute;inset:0;background:radial-gradient(circle,#411014,#050505 75%);display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;gap:12px;padding:16px;pointer-events:none}.video-placeholder strong{font-size:clamp(25px,5vw,45px);color:#fff}.video-placeholder span{color:#ccc;font-size:13px}.player-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.player-btn{border:1px solid #454545;background:#242424;color:#fff;border-radius:9px;padding:13px;cursor:pointer;font-weight:800}.player-btn.primary{background:#e10600;border-color:#e10600}.player-info{color:#aaa;text-align:center;font-size:12px;min-height:20px;margin-top:10px}.quiz-link{display:block;text-decoration:none;color:#fff;margin-top:20px;padding:22px;border:1px solid #e10600;border-radius:14px;background:linear-gradient(110deg,#400e0e,#111);font-weight:900;font-size:23px}#f1-photo-gallery{margin-top:20px}
+.live-panel{margin-bottom:18px}.live-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.live-top h2{font-size:19px;margin:0}.live-status{font-size:11px;font-weight:800;color:#aaa}.live-status.on{color:#ff5252}.video-placeholder{position:absolute;inset:0;background:radial-gradient(circle,#411014,#050505 75%);display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;gap:12px;padding:16px;pointer-events:none}.video-placeholder[hidden]{display:none!important}.video-placeholder strong{font-size:clamp(25px,5vw,45px);color:#fff}.video-placeholder span{color:#ccc;font-size:13px}.player-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.player-btn{border:1px solid #454545;background:#242424;color:#fff;border-radius:9px;padding:13px;cursor:pointer;font-weight:800}.player-btn.primary{background:#e10600;border-color:#e10600}.player-info{color:#aaa;text-align:center;font-size:12px;min-height:20px;margin-top:10px}.quiz-link{display:block;text-decoration:none;color:#fff;margin-top:20px;padding:22px;border:1px solid #e10600;border-radius:14px;background:linear-gradient(110deg,#400e0e,#111);font-weight:900;font-size:23px}#f1-photo-gallery{margin-top:20px}
 .chat{margin-top:32px;padding:22px;border:1px solid #303030;border-radius:12px;background:linear-gradient(110deg,#171717,#101010)}
 .chat h2{margin:0 0 6px;font-size:20px}
 .chat-messages{height:320px;overflow-y:auto;padding:12px;border:1px solid #292929;border-radius:9px;background:#0b0b0b}
@@ -322,10 +322,11 @@ chatForm.addEventListener('submit',async event=>{
   let hls = null, live = false, userStarted = false, streamUrl = '';
   let reconnectTimer = null, checkBusy = false;
   function setInfo(message){info.textContent = message;}
-  function showPlaceholder(message){placeholder.hidden = false;placeholderText.textContent = message;}
+  function showPlaceholder(message){placeholder.hidden = false;placeholder.style.display='flex';placeholderText.textContent = message;}
+  function hidePlaceholder(){placeholder.hidden=true;placeholder.style.display='none';}
   function destroy(){clearTimeout(reconnectTimer);reconnectTimer=null;if(hls){hls.destroy();hls=null;}video.pause();video.removeAttribute('src');video.load();}
   function bestLevelIndex(levels){let best=0;for(let i=1;i<levels.length;i++){const a=levels[i],b=levels[best];if((a.height||0)>(b.height||0)||((a.height||0)===(b.height||0)&&(a.bitrate||0)>(b.bitrate||0)))best=i;}return best;}
-  async function tryPlay(){try{await video.play();placeholder.hidden=true;playButton.textContent='⏸ Pauza';setInfo('🔴 Jonli efir davom etmoqda — eng yuqori sifat');}catch(e){playButton.textContent='▶ Efirni ochish';showPlaceholder('Efir tayyor. ▶ Efirni ochish tugmasini bosing.');setInfo('Brauzer avtomatik ijroga ruxsat bermadi.');}}
+  async function tryPlay(){try{await video.play();hidePlaceholder();playButton.textContent='⏸ Pauza';setInfo('🔴 Jonli efir davom etmoqda — eng yuqori sifat');}catch(e){playButton.textContent='▶ Efirni ochish';showPlaceholder('Efir tayyor. ▶ Efirni ochish tugmasini bosing.');setInfo('Brauzer avtomatik ijroga ruxsat bermadi.');}}
   function attachStream(){destroy();if(!live)return;const source=PLAYLIST_ENDPOINT;
     if(window.Hls && Hls.isSupported()){
       const instance=new Hls({startLevel:-1,enableWorker:true,lowLatencyMode:true,maxBufferLength:20});hls=instance;
@@ -345,9 +346,9 @@ chatForm.addEventListener('submit',async event=>{
   }
   playButton.addEventListener('click',async()=>{if(!live){userStarted=true;await checkLive(true);return;}if(!video.paused){video.pause();playButton.textContent='▶ Play';setInfo('Efir pauzada.');return;}userStarted=true;if(!hls&&!video.src)attachStream();else await tryPlay();});
   refreshButton.addEventListener('click',()=>checkLive(true));
-  video.addEventListener('play',()=>{placeholder.hidden=true;playButton.textContent='⏸ Pauza';});
+  video.addEventListener('play',()=>{hidePlaceholder();playButton.textContent='⏸ Pauza';});
   video.addEventListener('pause',()=>{playButton.textContent='▶ Play';});
-  video.addEventListener('playing',()=>{placeholder.hidden=true;});
+  video.addEventListener('playing',()=>{hidePlaceholder();});
   checkLive();setInterval(()=>checkLive(false),30000);
 })();
 </script>
