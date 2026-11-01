@@ -16,10 +16,6 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
 <style>
-/* ========================================
-   ASOSIY DIZAYN
-======================================== */
-
 * {
   box-sizing: border-box;
 }
@@ -53,7 +49,8 @@ body.theater-open {
 }
 
 button,
-input {
+input,
+select {
   font-family: inherit;
 }
 
@@ -230,8 +227,6 @@ h1 span {
   }
 }
 
-/* VIDEO */
-
 .video-frame {
   position: relative;
   width: 100%;
@@ -250,8 +245,6 @@ h1 span {
   object-fit: contain;
   background: #000;
 }
-
-/* VIDEO USTIDAGI XABAR */
 
 .video-placeholder {
   position: absolute;
@@ -298,8 +291,6 @@ h1 span {
   line-height: 1.6;
 }
 
-/* PLEYER TUGMALARI */
-
 .player-controls {
   display: flex;
   flex-wrap: wrap;
@@ -343,6 +334,23 @@ h1 span {
   cursor: wait;
 }
 
+.quality-select {
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #555;
+  border-radius: 8px;
+  background: #1b1b1b;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.quality-select:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
 .player-info {
   min-height: 20px;
   margin-top: 8px;
@@ -354,10 +362,6 @@ h1 span {
 
 /* ========================================
    SAYT ICHIDAGI KATTA EKRAN
-
-   requestFullscreen() ISHLATILMAYDI.
-   SHU SABABLI BRAUZERNING WORKER
-   ADRESLI FULLSCREEN XABARI CHIQMAYDI.
 ======================================== */
 
 .theater-overlay {
@@ -435,10 +439,6 @@ h1 span {
   color: #777;
   font-size: 11px;
   text-align: center;
-}
-
-.video-return-slot {
-  display: none;
 }
 
 @media (orientation: landscape) and (max-height: 550px) {
@@ -1076,9 +1076,15 @@ footer span {
   }
 
   .player-btn {
-    flex: 1;
+    flex: 1 1 29%;
     padding: 10px 8px;
     font-size: 11px;
+  }
+
+  .quality-select {
+    flex: 1 1 100%;
+    width: 100%;
+    font-size: 12px;
   }
 
   .f1-tv-countdown {
@@ -1379,8 +1385,6 @@ footer span {
 
     </div>
 
-    <!-- Video odatdagi joyi -->
-
     <div id="videoHome">
 
       <div
@@ -1449,11 +1453,26 @@ footer span {
         ⛶ Katta ekran
       </button>
 
+      <select
+        id="qualitySelect"
+        class="quality-select"
+        aria-label="Video sifatini tanlash"
+        disabled
+      >
+        <option value="best">
+          ⚙️ Sifat: ENG YUQORI
+        </option>
+        <option value="-1">
+          ⚙️ Sifat: AUTO
+        </option>
+      </select>
+
     </div>
 
     <div
       class="player-info"
       id="playerInfo"
+      aria-live="polite"
     >
       Efir avtomatik tekshiriladi.
     </div>
@@ -1753,10 +1772,7 @@ footer span {
 </footer>
 
 <!-- ========================================
-     KATTA EKRAN OVERLAY
-
-     VIDEO ELEMENTI SHU YERGA KO'CHIRILADI.
-     YANGI VIDEO YARATILMAYDI.
+     KATTA EKRAN
 ======================================== -->
 
 <div
@@ -1808,17 +1824,16 @@ footer span {
   "use strict";
 
   /*
-    WORKER MANZILI
+    Cloudflare Worker:
 
-    /stream:
-      efir bor yoki yo'qligini tekshiradi.
+    /stream
+      Efir holatini tekshiradi.
 
-    /playlist.m3u8:
-      videoni Worker proxy orqali beradi.
+    /playlist.m3u8
+      Videoni Worker orqali uzatadi.
 
-    Muhim:
-    video.src ga VK ning asl HLS URL manzili
-    emas, Worker playlist manzili beriladi.
+    Video VK ning asl URL manzilidan
+    emas, Worker playlistidan olinadi.
   */
 
   const WORKER_URL =
@@ -1862,6 +1877,9 @@ footer span {
   const fullscreenButton =
     document.getElementById("fullscreenButton");
 
+  const qualitySelect =
+    document.getElementById("qualitySelect");
+
   const playerInfo =
     document.getElementById("playerInfo");
 
@@ -1875,22 +1893,25 @@ footer span {
     document.getElementById("theaterClose");
 
   let hlsPlayer = null;
-
   let currentPlaylist = "";
-
   let checking = false;
-
   let userStarted = false;
-
   let isLive = false;
-
   let theaterOpen = false;
 
   let reconnectTimer = null;
-
   let reconnectAttempts = 0;
-
   let playbackPending = false;
+
+  /*
+    "best" = eng yuqori sifat
+    "-1"   = avtomatik sifat
+    "0", "1"... = qo'lda tanlangan level
+  */
+
+  let selectedQuality = "best";
+
+  let bestLevelIndex = -1;
 
   /* ------------------------------------
      STATUS
@@ -1917,7 +1938,218 @@ footer span {
   }
 
   /* ------------------------------------
-     PLEYERNI TOZALASH
+     SIFAT YORDAMCHI FUNKSIYALARI
+  ------------------------------------ */
+
+  function qualityLabel(level) {
+    if (!level) {
+      return "Noma’lum";
+    }
+
+    if (level.height) {
+      return level.height + "p";
+    }
+
+    if (level.bitrate) {
+      return Math.round(
+        level.bitrate / 1000
+      ) + " kbps";
+    }
+
+    return "Variant";
+  }
+
+  function findBestLevel(levels) {
+    if (!levels || !levels.length) {
+      return -1;
+    }
+
+    let bestIndex = 0;
+
+    levels.forEach((level, index) => {
+      const best = levels[bestIndex];
+
+      const height =
+        Number(level.height) || 0;
+
+      const bestHeight =
+        Number(best.height) || 0;
+
+      const bitrate =
+        Number(level.bitrate) || 0;
+
+      const bestBitrate =
+        Number(best.bitrate) || 0;
+
+      if (
+        height > bestHeight ||
+        (
+          height === bestHeight &&
+          bitrate > bestBitrate
+        )
+      ) {
+        bestIndex = index;
+      }
+    });
+
+    return bestIndex;
+  }
+
+  function resetQualityOptions() {
+    qualitySelect.replaceChildren();
+
+    const bestOption =
+      document.createElement("option");
+
+    bestOption.value = "best";
+    bestOption.textContent =
+      "⚙️ Sifat: ENG YUQORI";
+
+    const autoOption =
+      document.createElement("option");
+
+    autoOption.value = "-1";
+    autoOption.textContent =
+      "⚙️ Sifat: AUTO";
+
+    qualitySelect.append(
+      bestOption,
+      autoOption
+    );
+
+    qualitySelect.value =
+      selectedQuality === "-1"
+        ? "-1"
+        : "best";
+
+    qualitySelect.disabled = true;
+
+    bestLevelIndex = -1;
+  }
+
+  function populateQualityOptions() {
+    if (!hlsPlayer) {
+      return;
+    }
+
+    const levels = hlsPlayer.levels;
+
+    resetQualityOptions();
+
+    if (!levels || !levels.length) {
+      return;
+    }
+
+    bestLevelIndex =
+      findBestLevel(levels);
+
+    levels.forEach((level, index) => {
+      const option =
+        document.createElement("option");
+
+      option.value = String(index);
+
+      option.textContent =
+        "⚙️ Sifat: " +
+        qualityLabel(level);
+
+      qualitySelect.append(option);
+    });
+
+    qualitySelect.disabled = false;
+
+    const availableValues = [
+      ...qualitySelect.options
+    ].map(option => option.value);
+
+    if (
+      !availableValues.includes(
+        selectedQuality
+      )
+    ) {
+      selectedQuality = "best";
+    }
+
+    qualitySelect.value =
+      selectedQuality;
+  }
+
+  function applyQuality() {
+    if (!hlsPlayer) {
+      return;
+    }
+
+    const levels = hlsPlayer.levels;
+
+    if (!levels || !levels.length) {
+      return;
+    }
+
+    if (selectedQuality === "-1") {
+      hlsPlayer.currentLevel = -1;
+
+      setInfo(
+        "📺 Video sifati: AUTO"
+      );
+
+      return;
+    }
+
+    let levelIndex;
+
+    if (selectedQuality === "best") {
+      levelIndex = findBestLevel(levels);
+    } else {
+      levelIndex = Number(selectedQuality);
+    }
+
+    if (
+      !Number.isInteger(levelIndex) ||
+      levelIndex < 0 ||
+      levelIndex >= levels.length
+    ) {
+      levelIndex = findBestLevel(levels);
+    }
+
+    if (levelIndex < 0) {
+      return;
+    }
+
+    /*
+      currentLevel darhol sifatni
+      almashtirishga harakat qiladi.
+
+      nextLevel esa keyingi segmentlar
+      uchun shu sifatni saqlaydi.
+    */
+
+    hlsPlayer.currentLevel = levelIndex;
+    hlsPlayer.nextLevel = levelIndex;
+
+    setInfo(
+      "📺 Video sifati: " +
+      qualityLabel(levels[levelIndex])
+    );
+
+    console.log(
+      "F1 Uzbekistan TV sifati:",
+      qualityLabel(levels[levelIndex]),
+      levels[levelIndex]
+    );
+  }
+
+  qualitySelect.addEventListener(
+    "change",
+    () => {
+      selectedQuality =
+        qualitySelect.value;
+
+      applyQuality();
+    }
+  );
+
+  /* ------------------------------------
+     QAYTA ULANISH
   ------------------------------------ */
 
   function clearReconnectTimer() {
@@ -1955,6 +2187,8 @@ footer span {
 
     currentPlaylist = "";
     playbackPending = false;
+
+    resetQualityOptions();
   }
 
   /* ------------------------------------
@@ -1998,10 +2232,6 @@ footer span {
     }
   }
 
-  /* ------------------------------------
-     QAYTA ULANISH
-  ------------------------------------ */
-
   function scheduleReconnect() {
     if (!isLive || reconnectTimer) {
       return;
@@ -2037,7 +2267,6 @@ footer span {
   ------------------------------------ */
 
   function attachStream(force = false) {
-
     if (
       !force &&
       currentPlaylist === PLAYLIST_ENDPOINT
@@ -2047,14 +2276,6 @@ footer span {
 
     destroyPlayer();
 
-    /*
-      Worker playlist har safar yangi
-      URL bilan olinadi.
-
-      Bu eski HLS playlist keshda
-      qolib ketishining oldini oladi.
-    */
-
     const playlistUrl =
       new URL(PLAYLIST_ENDPOINT);
 
@@ -2063,15 +2284,16 @@ footer span {
       String(Date.now())
     );
 
-    currentPlaylist = PLAYLIST_ENDPOINT;
+    currentPlaylist =
+      PLAYLIST_ENDPOINT;
 
     setInfo(
       "Jonli efir videosi ulanmoqda..."
     );
 
     /*
-      iPhone / Safari:
-      native HLS ishlatiladi.
+      Safari / iPhone:
+      native HLS.
     */
 
     if (
@@ -2079,10 +2301,12 @@ footer span {
         "application/vnd.apple.mpegurl"
       )
     ) {
-
-      video.src = playlistUrl.toString();
+      video.src =
+        playlistUrl.toString();
 
       video.load();
+
+      qualitySelect.disabled = true;
 
       if (userStarted) {
         tryPlay();
@@ -2092,59 +2316,86 @@ footer span {
     }
 
     /*
-      Android Chrome / Samsung Internet:
-      hls.js ishlatiladi.
+      Android / Chrome:
+      hls.js.
     */
 
     if (
       window.Hls &&
       window.Hls.isSupported()
     ) {
-
       hlsPlayer = new Hls({
         enableWorker: true,
         lowLatencyMode: false,
+
+        /*
+          Sifatni ekran o'lchami
+          bilan cheklamaymiz.
+        */
+
+        capLevelToPlayerSize: false,
+
+        /*
+          Manifest yuklangach eng yuqori
+          sifatni qo'lda tanlaymiz.
+        */
+
+        startLevel: -1,
+
         liveSyncDurationCount: 3,
-        maxBufferLength: 20,
-        backBufferLength: 30,
-        manifestLoadingMaxRetry: 3,
-        levelLoadingMaxRetry: 3,
-        fragLoadingMaxRetry: 3
+        maxBufferLength: 30,
+        backBufferLength: 30
       });
 
-      hlsPlayer.on(
+      const instance = hlsPlayer;
+
+      instance.on(
         Hls.Events.MEDIA_ATTACHED,
         () => {
-
-          if (!hlsPlayer) {
+          if (hlsPlayer !== instance) {
             return;
           }
 
-          hlsPlayer.loadSource(
+          instance.loadSource(
             playlistUrl.toString()
           );
         }
       );
 
-      hlsPlayer.on(
+      instance.on(
         Hls.Events.MANIFEST_PARSED,
         () => {
+          if (hlsPlayer !== instance) {
+            return;
+          }
 
           reconnectAttempts = 0;
 
-          setInfo(
-            "Video tayyor. ▶ Efirni ochish tugmasini bosing."
-          );
+          populateQualityOptions();
+
+          /*
+            ENG YUQORI sifatni tanlash.
+          */
+
+          applyQuality();
 
           if (userStarted) {
             tryPlay();
+          } else {
+            showPlaceholder(
+              "🔴 Jonli efir tayyor! " +
+              "Tomosha qilish uchun ▶ Efirni ochish tugmasini bosing."
+            );
           }
         }
       );
 
-      hlsPlayer.on(
+      instance.on(
         Hls.Events.ERROR,
         (event, data) => {
+          if (hlsPlayer !== instance) {
+            return;
+          }
 
           console.error(
             "HLS xatosi:",
@@ -2159,13 +2410,11 @@ footer span {
             data.type ===
             Hls.ErrorTypes.NETWORK_ERROR
           ) {
-
             setInfo(
               "Video tarmog‘ida xatolik. Qayta ulanmoqda..."
             );
 
             scheduleReconnect();
-
             return;
           }
 
@@ -2173,13 +2422,12 @@ footer span {
             data.type ===
             Hls.ErrorTypes.MEDIA_ERROR
           ) {
-
             setInfo(
               "Video tiklanmoqda..."
             );
 
             try {
-              hlsPlayer.recoverMediaError();
+              instance.recoverMediaError();
             } catch (error) {
               scheduleReconnect();
             }
@@ -2195,7 +2443,7 @@ footer span {
         }
       );
 
-      hlsPlayer.attachMedia(video);
+      instance.attachMedia(video);
 
       return;
     }
@@ -2210,21 +2458,18 @@ footer span {
   }
 
   /* ------------------------------------
-     WORKERDAN EFIRNI TEKSHIRISH
+     EFIR HOLATINI TEKSHIRISH
   ------------------------------------ */
 
   async function checkLive(force = false) {
-
     if (checking) {
       return;
     }
 
     checking = true;
-
     refreshButton.disabled = true;
 
     try {
-
       const endpoint =
         new URL(STREAM_ENDPOINT);
 
@@ -2251,25 +2496,17 @@ footer span {
         );
       }
 
-      const data = await response.json();
-
-      /*
-        /stream dan faqat efir holati
-        tekshiriladi.
-
-        data.hls to'g'ridan-to'g'ri
-        videoga berilmaydi.
-      */
+      const data =
+        await response.json();
 
       const liveNow =
         data &&
         data.ok === true &&
         data.live === true &&
         typeof data.hls === "string" &&
-        data.hls.includes(".m3u8");
+        data.hls.startsWith("https://");
 
       if (!liveNow) {
-
         isLive = false;
 
         setStatus(
@@ -2300,6 +2537,11 @@ footer span {
         "JONLI EFIR"
       );
 
+      /*
+        Har 30 soniyada ishlayotgan
+        videoni qayta yuklamaymiz.
+      */
+
       if (
         force ||
         !currentPlaylist
@@ -2308,22 +2550,19 @@ footer span {
       }
 
       if (!userStarted) {
-
         showPlaceholder(
           "🔴 Jonli efir boshlandi! " +
           "Tomosha qilish uchun ▶ Efirni ochish tugmasini bosing."
         );
-
       } else if (
         video.paused &&
-        currentPlaylist
+        currentPlaylist &&
+        video.readyState >= 2
       ) {
-
         tryPlay();
       }
 
     } catch (error) {
-
       console.error(
         "Worker tekshirish xatosi:",
         error
@@ -2335,7 +2574,6 @@ footer span {
       );
 
       if (!currentPlaylist) {
-
         setStatus(
           "offline",
           "ULANISH KUTILMOQDA"
@@ -2348,30 +2586,27 @@ footer span {
       }
 
     } finally {
-
       checking = false;
-
       refreshButton.disabled = false;
     }
   }
 
   /* ------------------------------------
-     EFIRNI OCHISH
+     EFIRNI OCHISH / PAUZA
   ------------------------------------ */
 
   playButton.addEventListener(
     "click",
     async () => {
-
       if (!video.paused) {
         video.pause();
+        userStarted = false;
         return;
       }
 
       userStarted = true;
 
       if (!currentPlaylist) {
-
         setInfo(
           "Jonli efir qidirilmoqda..."
         );
@@ -2396,7 +2631,6 @@ footer span {
   video.addEventListener(
     "play",
     () => {
-
       playButton.textContent =
         "⏸ Pauza";
 
@@ -2407,7 +2641,6 @@ footer span {
   video.addEventListener(
     "pause",
     () => {
-
       playButton.textContent =
         "▶ Efirni ochish";
     }
@@ -2416,11 +2649,9 @@ footer span {
   video.addEventListener(
     "playing",
     () => {
-
       hidePlaceholder();
 
       reconnectAttempts = 0;
-
       clearReconnectTimer();
 
       setInfo(
@@ -2432,7 +2663,6 @@ footer span {
   video.addEventListener(
     "waiting",
     () => {
-
       setInfo(
         "Video yuklanmoqda..."
       );
@@ -2442,7 +2672,6 @@ footer span {
   video.addEventListener(
     "stalled",
     () => {
-
       setInfo(
         "Video oqimi vaqtincha sekinlashdi..."
       );
@@ -2452,7 +2681,6 @@ footer span {
   video.addEventListener(
     "error",
     () => {
-
       if (!video.error) {
         return;
       }
@@ -2477,7 +2705,6 @@ footer span {
   refreshButton.addEventListener(
     "click",
     async () => {
-
       setInfo(
         "Jonli efir yangilanmoqda..."
       );
@@ -2489,18 +2716,10 @@ footer span {
   );
 
   /* ------------------------------------
-     KATTA EKRAN
-
-     Bu haqiqiy brauzer fullscreen emas.
-     Sayt ichidagi theater mode.
-
-     Shuning uchun brauzerning
-     workers.dev manzili ko'rsatilgan
-     fullscreen xabari chiqmaydi.
+     SAYT ICHIDAGI KATTA EKRAN
   ------------------------------------ */
 
   function openTheater() {
-
     if (theaterOpen) {
       return;
     }
@@ -2527,7 +2746,6 @@ footer span {
   }
 
   function closeTheater() {
-
     if (!theaterOpen) {
       return;
     }
@@ -2556,7 +2774,6 @@ footer span {
   fullscreenButton.addEventListener(
     "click",
     () => {
-
       if (theaterOpen) {
         closeTheater();
       } else {
@@ -2573,7 +2790,6 @@ footer span {
   document.addEventListener(
     "keydown",
     event => {
-
       if (
         event.key === "Escape" &&
         theaterOpen
@@ -2584,28 +2800,18 @@ footer span {
   );
 
   /*
-    Android telefonidagi orqaga tugmasi
-    bosilganda theater mode yopiladi.
+    Theater rejimi brauzerning
+    haqiqiy fullscreen funksiyasini
+    chaqirmaydi.
   */
 
-  window.addEventListener(
-    "popstate",
-    () => {
-
-      if (theaterOpen) {
-        closeTheater();
-      }
-    }
-  );
-
   /* ------------------------------------
-     SAHIFAGA QAYTGANDA TEKSHIRISH
+     SAHIFAGA QAYTGANDA
   ------------------------------------ */
 
   document.addEventListener(
     "visibilitychange",
     () => {
-
       if (!document.hidden) {
         checkLive();
       }
@@ -2616,15 +2822,15 @@ footer span {
      BOSHLASH
   ------------------------------------ */
 
+  resetQualityOptions();
+
   checkLive();
 
   setInterval(
     () => {
-
       if (!document.hidden) {
         checkLive();
       }
-
     },
     CHECK_INTERVAL
   );
@@ -2639,14 +2845,6 @@ footer span {
 <script>
 (() => {
   "use strict";
-
-  /*
-    Siz yuborgan 2026-yil Meksika GP
-    sessiyalari saqlangan.
-
-    Ular tugagach yangi sessiyalarni
-    sessions ro'yxatiga qo'shish kerak.
-  */
 
   const sessions = [
     {
@@ -2683,16 +2881,13 @@ footer span {
     String(number).padStart(2, "0");
 
   function update() {
-
     const now = Date.now();
 
     const session = sessions.find(
-      item =>
-        Date.parse(item.date) > now
+      item => Date.parse(item.date) > now
     );
 
     if (!session) {
-
       el("tvGP").textContent =
         "F1 TAQVIMI";
 
@@ -2708,7 +2903,6 @@ footer span {
         "tvMinutes",
         "tvSeconds"
       ].forEach(id => {
-
         el(id).textContent = "--";
       });
 
@@ -2727,47 +2921,26 @@ footer span {
       session.gp;
 
     el("tvSession").textContent =
-      session.name.toLocaleUpperCase(
-        "uz-UZ"
-      );
+      session.name.toLocaleUpperCase("uz-UZ");
 
     el("tvDate").textContent =
       "📅 " +
-      new Intl.DateTimeFormat(
-        "uz-UZ",
-        {
-          timeZone: "Asia/Tashkent",
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false
-        }
-      ).format(target) +
+      new Intl.DateTimeFormat("uz-UZ", {
+        timeZone: "Asia/Tashkent",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(target) +
       " — Toshkent vaqti";
 
     const values = [
-      pad(
-        Math.floor(
-          diff / 86400000
-        )
-      ),
-      pad(
-        Math.floor(
-          diff % 86400000 / 3600000
-        )
-      ),
-      pad(
-        Math.floor(
-          diff % 3600000 / 60000
-        )
-      ),
-      pad(
-        Math.floor(
-          diff % 60000 / 1000
-        )
-      )
+      pad(Math.floor(diff / 86400000)),
+      pad(Math.floor(diff % 86400000 / 3600000)),
+      pad(Math.floor(diff % 3600000 / 60000)),
+      pad(Math.floor(diff % 60000 / 1000))
     ];
 
     [
@@ -2776,18 +2949,13 @@ footer span {
       "tvMinutes",
       "tvSeconds"
     ].forEach((id, index) => {
-
-      el(id).textContent =
-        values[index];
+      el(id).textContent = values[index];
     });
   }
 
   update();
 
-  setInterval(
-    update,
-    1000
-  );
+  setInterval(update, 1000);
 
 })();
 </script>
@@ -2919,7 +3087,6 @@ footer span {
   };
 
   function driverInfo(name) {
-
     const words = String(name || "")
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
@@ -2932,7 +3099,6 @@ footer span {
       const [surname, info]
       of Object.entries(driverData)
     ) {
-
       if (words.includes(surname)) {
         return info;
       }
@@ -2946,7 +3112,6 @@ footer span {
   }
 
   function portraitElement(info, index) {
-
     const box =
       document.createElement("div");
 
@@ -2962,9 +3127,7 @@ footer span {
     fallback.textContent = info[1];
 
     if (!info[2]) {
-
       box.append(fallback);
-
       return box;
     }
 
@@ -2996,7 +3159,6 @@ footer span {
     );
 
     if (info[1] === "RUS") {
-
       url.searchParams.set(
         "v",
         "russell-fix-20261027-v2"
@@ -3004,9 +3166,7 @@ footer span {
     }
 
     img.onerror = () => {
-
       if (retries++ < 1) {
-
         const retry = new URL(url);
 
         retry.searchParams.set(
@@ -3015,9 +3175,7 @@ footer span {
         );
 
         img.src = retry.toString();
-
       } else if (img.isConnected) {
-
         img.replaceWith(fallback);
       }
     };
@@ -3030,13 +3188,9 @@ footer span {
   }
 
   function lap(value) {
-
     const n = Number(value);
 
-    return (
-      Number.isFinite(n) &&
-      n > 0
-    )
+    return Number.isFinite(n) && n > 0
       ? Math.floor(n / 60) +
         ":" +
         (n % 60)
@@ -3046,26 +3200,17 @@ footer span {
   }
 
   function formatRaceSeconds(value) {
-
     const n = Number(value);
 
-    if (
-      !Number.isFinite(n) ||
-      n <= 0
-    ) {
+    if (!Number.isFinite(n) || n <= 0) {
       return "—";
     }
 
-    const h =
-      Math.floor(n / 3600);
-
-    const m =
-      Math.floor(n % 3600 / 60);
-
-    const s =
-      (n % 60)
-        .toFixed(3)
-        .padStart(6, "0");
+    const h = Math.floor(n / 3600);
+    const m = Math.floor(n % 3600 / 60);
+    const s = (n % 60)
+      .toFixed(3)
+      .padStart(6, "0");
 
     return h > 0
       ? h +
@@ -3076,18 +3221,12 @@ footer span {
       : m + ":" + s;
   }
 
-  function displayTime(
-    item,
-    first,
-    session
-  ) {
-
+  function displayTime(item, first, session) {
     if (
       item.gap !== undefined &&
       item.gap !== null &&
       String(item.gap).trim()
     ) {
-
       return String(item.gap).trim();
     }
 
@@ -3097,21 +3236,16 @@ footer span {
       typeof raw === "string" &&
       /^[+−-]/.test(raw.trim())
     ) {
-
       return raw;
     }
 
-    const current =
-      Number(raw);
-
-    const best =
-      Number(first.time);
+    const current = Number(raw);
+    const best = Number(first.time);
 
     if (
       !Number.isFinite(current) ||
       current <= 0
     ) {
-
       return String(raw || "—");
     }
 
@@ -3119,7 +3253,6 @@ footer span {
       session === "Race" ||
       session === "Sprint"
     ) {
-
       return item === first
         ? formatRaceSeconds(current)
         : Number.isFinite(best) &&
@@ -3138,15 +3271,12 @@ footer span {
   }
 
   function createRow(item, index) {
-
-    const info =
-      driverInfo(item.name);
+    const info = driverInfo(item.name);
 
     const row =
       document.createElement("div");
 
-    row.className =
-      "results-row";
+    row.className = "results-row";
 
     row.style.setProperty(
       "--team",
@@ -3155,83 +3285,63 @@ footer span {
 
     row.style.setProperty(
       "--team-bg",
-      backgrounds[item.team] ||
-      "#24242b"
+      backgrounds[item.team] || "#24242b"
     );
 
     const pos =
       document.createElement("span");
 
-    pos.className =
-      "results-pos";
-
+    pos.className = "results-pos";
     pos.textContent =
       String(item.position ?? "—");
 
     const driver =
       document.createElement("div");
 
-    driver.className =
-      "results-driver";
+    driver.className = "results-driver";
 
     const name =
       document.createElement("div");
 
-    name.className =
-      "results-name";
+    name.className = "results-name";
 
     const flag =
       document.createElement("span");
 
-    flag.className =
-      "results-flag";
-
+    flag.className = "results-flag";
     flag.textContent = info[0];
 
     name.append(
       flag,
       document.createTextNode(
-        " " +
-        (item.name || "Poygachi")
+        " " + (item.name || "Poygachi")
       )
     );
 
     const team =
       document.createElement("div");
 
-    team.className =
-      "results-team";
-
-    team.textContent =
-      item.team || "";
+    team.className = "results-team";
+    team.textContent = item.team || "";
 
     const code =
       document.createElement("span");
 
-    code.className =
-      "results-code";
+    code.className = "results-code";
+    code.textContent = info[1];
 
-    code.textContent =
-      info[1];
-
-    driver.append(
-      name,
-      team,
-      code
-    );
+    driver.append(name, team, code);
 
     const time =
       document.createElement("span");
 
-    time.className =
-      "results-time";
+    time.className = "results-time";
 
-    time.textContent =
-      displayTime(
-        item,
-        results[0],
-        activeSession
-      );
+    time.textContent = displayTime(
+      item,
+      results[0],
+      activeSession
+    );
 
     row.append(
       pos,
@@ -3244,7 +3354,6 @@ footer span {
   }
 
   function render() {
-
     const fragment =
       document.createDocumentFragment();
 
@@ -3252,14 +3361,11 @@ footer span {
       ? results
       : results.slice(0, 5);
 
-    visible.forEach(
-      (item, index) => {
-
-        fragment.append(
-          createRow(item, index)
-        );
-      }
-    );
+    visible.forEach((item, index) => {
+      fragment.append(
+        createRow(item, index)
+      );
+    });
 
     list.replaceChildren(fragment);
 
@@ -3281,13 +3387,11 @@ footer span {
   }
 
   function showSession(data) {
-
     if (
       !data ||
       !Array.isArray(data.results) ||
       !data.results.length
     ) {
-
       throw new Error(
         "Natijalar mavjud emas"
       );
@@ -3306,10 +3410,7 @@ footer span {
       );
 
     if (!incoming.length) {
-
-      throw new Error(
-        "Natijalar bo‘sh"
-      );
+      throw new Error("Natijalar bo‘sh");
     }
 
     const session =
@@ -3335,41 +3436,29 @@ footer span {
           )
         : "";
 
-    const signature =
-      JSON.stringify({
-        session,
-        meeting,
-        date: data.date,
-        results: incoming
-      });
+    const signature = JSON.stringify({
+      session,
+      meeting,
+      date: data.date,
+      results: incoming
+    });
 
-    if (
-      signature === lastSignature
-    ) {
+    if (signature === lastSignature) {
       return;
     }
 
     const newSession =
-      session +
-      "|" +
-      meeting +
-      "|" +
+      session + "|" +
+      meeting + "|" +
       dateText;
 
-    if (
-      newSession !== currentSession
-    ) {
-
+    if (newSession !== currentSession) {
       expanded = false;
-
-      currentSession =
-        newSession;
+      currentSession = newSession;
     }
 
     results = incoming;
-
     activeSession = session;
-
     lastSignature = signature;
 
     title.textContent =
@@ -3393,15 +3482,12 @@ footer span {
   toggle.addEventListener(
     "click",
     () => {
-
       expanded = !expanded;
-
       render();
     }
   );
 
   async function refresh() {
-
     if (loading) {
       return;
     }
@@ -3409,7 +3495,6 @@ footer span {
     loading = true;
 
     try {
-
       const url = new URL(
         "./latest-session.json",
         location.href
@@ -3428,7 +3513,6 @@ footer span {
       );
 
       if (!response.ok) {
-
         throw new Error(
           "HTTP " + response.status
         );
@@ -3442,14 +3526,12 @@ footer span {
       loadedOnce = true;
 
     } catch (error) {
-
       console.error(
         "F1 natijalar xatosi:",
         error
       );
 
       if (!loadedOnce) {
-
         title.textContent =
           "🏁 F1 NATIJALARI";
 
@@ -3471,7 +3553,6 @@ footer span {
         toggle.hidden = true;
 
       } else {
-
         extra.hidden = false;
 
         extra.textContent =
@@ -3480,22 +3561,17 @@ footer span {
       }
 
     } finally {
-
       loading = false;
     }
   }
 
   refresh();
 
-  setInterval(
-    refresh,
-    5000
-  );
+  setInterval(refresh, 5000);
 
   document.addEventListener(
     "visibilitychange",
     () => {
-
       if (!document.hidden) {
         refresh();
       }
@@ -3559,11 +3635,8 @@ const app =
   initializeApp(firebaseConfig);
 
 try {
-
   getAnalytics(app);
-
 } catch (error) {
-
   console.warn(
     "Firebase Analytics:",
     error
@@ -3622,9 +3695,7 @@ const renderedMessages =
 
 let sendCooldown = false;
 
-/* ------------------------------------
-   15 DAQIQALIK CHEKLOV
------------------------------------- */
+/* 15 DAQIQALIK CHEKLOV */
 
 const CHAT_WAIT =
   15 * 60 * 1000;
@@ -3633,38 +3704,24 @@ const CHAT_LAST_KEY =
   "f1_chat_last_sent";
 
 try {
-
   chatName.value =
     localStorage.getItem(
       "f1_chat_name"
     ) || "";
-
 } catch (error) {}
-
-/* ------------------------------------
-   STATUS
------------------------------------- */
 
 function setStatus(
   message,
   isError = false
 ) {
+  chatStatus.textContent = message;
 
-  chatStatus.textContent =
-    message;
-
-  chatStatus.className =
-    isError
-      ? "chat-status error"
-      : "chat-status";
+  chatStatus.className = isError
+    ? "chat-status error"
+    : "chat-status";
 }
 
-/* ------------------------------------
-   VAQT
------------------------------------- */
-
 function formatTime(timestamp) {
-
   if (!timestamp) {
     return "";
   }
@@ -3672,9 +3729,7 @@ function formatTime(timestamp) {
   const date =
     new Date(timestamp);
 
-  return Number.isNaN(
-    date.getTime()
-  )
+  return Number.isNaN(date.getTime())
     ? ""
     : date.toLocaleTimeString(
         "uz-UZ",
@@ -3685,14 +3740,8 @@ function formatTime(timestamp) {
       );
 }
 
-/* ------------------------------------
-   QOLGAN KUTISH VAQTI
------------------------------------- */
-
 function chatRemaining() {
-
   try {
-
     const last = Number(
       localStorage.getItem(
         CHAT_LAST_KEY
@@ -3706,20 +3755,16 @@ function chatRemaining() {
     );
 
   } catch (error) {
-
     return 0;
   }
 }
 
 function chatWaitText(ms) {
-
   const totalSeconds =
     Math.ceil(ms / 1000);
 
   const minutes =
-    Math.floor(
-      totalSeconds / 60
-    );
+    Math.floor(totalSeconds / 60);
 
   const seconds =
     totalSeconds % 60;
@@ -3734,12 +3779,10 @@ function chatWaitText(ms) {
 }
 
 function updateChatWait() {
-
   const remaining =
     chatRemaining();
 
   if (remaining > 0) {
-
     chatSend.disabled = true;
 
     chatSend.textContent =
@@ -3750,7 +3793,6 @@ function updateChatWait() {
     );
 
   } else if (!sendCooldown) {
-
     chatSend.disabled = false;
 
     chatSend.textContent =
@@ -3761,7 +3803,6 @@ function updateChatWait() {
         "⏳"
       )
     ) {
-
       setStatus("");
     }
   }
@@ -3774,15 +3815,7 @@ setInterval(
 
 updateChatWait();
 
-/* ------------------------------------
-   XABARNI KO'RSATISH
------------------------------------- */
-
-function renderMessage(
-  key,
-  data
-) {
-
+function renderMessage(key, data) {
   if (
     !data ||
     renderedMessages.has(key)
@@ -3805,8 +3838,7 @@ function renderMessage(
     "chat-name";
 
   name.textContent =
-    data.name ||
-    "Foydalanuvchi";
+    data.name || "Foydalanuvchi";
 
   const time =
     document.createElement("span");
@@ -3815,9 +3847,7 @@ function renderMessage(
     "chat-time";
 
   time.textContent =
-    formatTime(
-      data.createdAt
-    );
+    formatTime(data.createdAt);
 
   const text =
     document.createElement("div");
@@ -3834,9 +3864,7 @@ function renderMessage(
     text
   );
 
-  chatMessages.append(
-    message
-  );
+  chatMessages.append(message);
 
   renderedMessages.set(
     key,
@@ -3850,42 +3878,28 @@ function renderMessage(
     chatMessages.scrollHeight;
 }
 
-/* ------------------------------------
-   XABARNI O'CHIRISH
------------------------------------- */
-
 function removeMessage(key) {
-
   const message =
     renderedMessages.get(key);
 
   if (message) {
-
     message.remove();
 
-    renderedMessages.delete(
-      key
-    );
+    renderedMessages.delete(key);
   }
 
   if (
     renderedMessages.size === 0
   ) {
-
     chatEmpty.style.display =
       "grid";
   }
 }
 
-/* ------------------------------------
-   FIREBASE XABARLARNI O'QISH
------------------------------------- */
-
 onChildAdded(
   messagesQuery,
 
   snapshot => {
-
     renderMessage(
       snapshot.key,
       snapshot.val()
@@ -3893,15 +3907,13 @@ onChildAdded(
   },
 
   error => {
-
     console.error(
       "Chat o‘qish xatosi:",
       error
     );
 
     setStatus(
-      error.code ===
-      "PERMISSION_DENIED"
+      error.code === "PERMISSION_DENIED"
         ? "Firebase Database Rules chatni o‘qishga ruxsat bermayapti."
         : "Chatni yuklashda xatolik yuz berdi.",
       true
@@ -3913,34 +3925,24 @@ onChildRemoved(
   messagesQuery,
 
   snapshot => {
-
     removeMessage(
       snapshot.key
     );
   }
 );
 
-/* ------------------------------------
-   XABAR YUBORISH
------------------------------------- */
-
 chatForm.addEventListener(
   "submit",
 
   async event => {
-
     event.preventDefault();
 
     if (sendCooldown) {
       return;
     }
 
-    if (
-      chatRemaining() > 0
-    ) {
-
+    if (chatRemaining() > 0) {
       updateChatWait();
-
       return;
     }
 
@@ -3958,14 +3960,12 @@ chatForm.addEventListener(
       name.length < 1 ||
       name.length > 30
     ) {
-
       setStatus(
         "Ism 1–30 belgidan iborat bo‘lishi kerak.",
         true
       );
 
       chatName.focus();
-
       return;
     }
 
@@ -3973,19 +3973,16 @@ chatForm.addEventListener(
       text.length < 1 ||
       text.length > 500
     ) {
-
       setStatus(
         "Xabar 1–500 belgidan iborat bo‘lishi kerak.",
         true
       );
 
       chatText.focus();
-
       return;
     }
 
     sendCooldown = true;
-
     chatSend.disabled = true;
 
     setStatus(
@@ -3993,7 +3990,6 @@ chatForm.addEventListener(
     );
 
     try {
-
       await push(
         messagesRef,
         {
@@ -4004,7 +4000,6 @@ chatForm.addEventListener(
       );
 
       try {
-
         localStorage.setItem(
           CHAT_LAST_KEY,
           String(Date.now())
@@ -4016,7 +4011,6 @@ chatForm.addEventListener(
         );
 
       } catch (error) {
-
         console.warn(
           "Chat vaqtini saqlash xatosi:",
           error
@@ -4028,29 +4022,23 @@ chatForm.addEventListener(
       updateChatWait();
 
     } catch (error) {
-
       console.error(
         "Xabar yuborish xatosi:",
         error
       );
 
       setStatus(
-        error.code ===
-        "PERMISSION_DENIED"
+        error.code === "PERMISSION_DENIED"
           ? "Firebase Database Rules xabar yuborishga ruxsat bermayapti."
           : "Xabar yuborishda xatolik yuz berdi.",
         true
       );
 
     } finally {
-
       setTimeout(
         () => {
-
           sendCooldown = false;
-
           updateChatWait();
-
         },
         1000
       );
@@ -4058,36 +4046,23 @@ chatForm.addEventListener(
   }
 );
 
-/* ------------------------------------
-   BOSHQA TAB BILAN SINXRONLASH
------------------------------------- */
-
 window.addEventListener(
   "storage",
 
   event => {
-
     if (
-      event.key ===
-      CHAT_LAST_KEY
+      event.key === CHAT_LAST_KEY
     ) {
-
       updateChatWait();
     }
   }
 );
 
-/* ------------------------------------
-   SAHIFAGA QAYTGANDA
------------------------------------- */
-
 document.addEventListener(
   "visibilitychange",
 
   () => {
-
     if (!document.hidden) {
-
       updateChatWait();
     }
   }
