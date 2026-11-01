@@ -2,7 +2,7 @@
   "session": "Saralash natijalari",
   "meeting": "Mexico",
   "date": "2026-10-31T22:00:00+00:00",
-  "updated": "2026-10-31T22:49:02.098322+00:00",
+  "updated": "2026-11-01T01:38:40.382965+00:00",
   "results": [
     {
       "position": 1,
@@ -48,90 +48,84 @@
     },
     {
       "position": 8,
-      "name": "L LAWSON",
-      "team": "Racing Bulls",
-      "time": "77.029"
-    },
-    {
-      "position": 9,
       "name": "A LINDBLAD",
       "team": "Racing Bulls",
       "time": "77.117"
     },
     {
-      "position": 10,
+      "position": 9,
       "name": "P GASLY",
       "team": "Alpine",
       "time": "77.153"
     },
     {
-      "position": 11,
+      "position": 10,
       "name": "N HULKENBERG",
       "team": "Audi",
       "time": "77.306"
     },
     {
-      "position": 12,
+      "position": 11,
       "name": "F COLAPINTO",
       "team": "Alpine",
       "time": "77.64"
     },
     {
-      "position": 13,
+      "position": 12,
       "name": "O PIASTRI",
       "team": "McLaren",
       "time": "77.646"
     },
     {
-      "position": 14,
+      "position": 13,
       "name": "G BORTOLETO",
       "team": "Audi",
       "time": "77.68"
     },
     {
-      "position": 15,
+      "position": 14,
       "name": "O BEARMAN",
       "team": "Haas F1 Team",
       "time": "78.083"
     },
     {
-      "position": 16,
+      "position": 15,
       "name": "C SAINZ",
       "team": "Williams",
       "time": "78.521"
     },
     {
-      "position": 17,
+      "position": 16,
       "name": "A ALBON",
       "team": "Williams",
       "time": "78.63"
     },
     {
-      "position": 18,
+      "position": 17,
       "name": "F ALONSO",
       "team": "Aston Martin",
       "time": "78.908"
     },
     {
-      "position": 19,
+      "position": 18,
       "name": "R HIRAKAWA",
       "team": "Haas F1 Team",
       "time": "78.958"
     },
     {
-      "position": 20,
+      "position": 19,
       "name": "L STROLL",
       "team": "Aston Martin",
       "time": "79.072"
     },
     {
-      "position": 21,
+      "position": 20,
       "name": "S PEREZ",
       "team": "Cadillac",
       "time": "79.105"
     },
     {
-      "position": 22,
+      "position": 21,
       "name": "V BOTTAS",
       "team": "Cadillac",
       "time": "79.852"
