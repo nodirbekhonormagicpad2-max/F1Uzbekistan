@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-01T09:37:48.956940+00:00",
+  "updated_at": "2026-11-01T10:32:22.954614+00:00",
   "videos": [
     {
       "id": "bMRC0ehgN-k",
@@ -90,6 +90,14 @@
       "url": "https://www.youtube.com/watch?v=Oq6Ex60YlU0"
     },
     {
+      "id": "i0Rj-cj7oCE",
+      "title": "Charles Leclerc FULL TEAM RADIO After QUALIFYING | 2026 Mexico GP!",
+      "channel": "F1Fun4u",
+      "published": "2026-10-31T22:49:38Z",
+      "thumbnail": "https://i.ytimg.com/vi/i0Rj-cj7oCE/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=i0Rj-cj7oCE"
+    },
+    {
       "id": "O9kbG2tTX10",
       "title": "Qualifying Highlights | 2026 Mexico City Grand Prix",
       "channel": "FORMULA 1",
@@ -154,20 +162,20 @@
       "url": "https://www.youtube.com/watch?v=vObk2n8a1lM"
     },
     {
-      "id": "bAt293L89-0",
-      "title": "LIVE: F1 Qualifying Press Conference - Mexico GP | Lewis Hamilton, George Russell, Charles Leclerc",
-      "channel": "Formula 1 Info",
-      "published": "2026-10-31T22:08:21Z",
-      "thumbnail": "https://i.ytimg.com/vi/bAt293L89-0/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=bAt293L89-0"
-    },
-    {
       "id": "4CIGUgxoTEw",
       "title": "LAWSON AND VERSTAPPEN FIGHT in FP2 | F1 Highlight",
       "channel": "FormulaStats",
       "published": "2026-10-30T22:25:21Z",
       "thumbnail": "https://i.ytimg.com/vi/4CIGUgxoTEw/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=4CIGUgxoTEw"
+    },
+    {
+      "id": "Hz3sPHLHY8w",
+      "title": "I Migliori 4 Momenti di KIMI ANTONELLI parte 2 #F1 #Formula1 #F12026 F1 #Formula1 #KimiAntonelli",
+      "channel": "Sbourbo",
+      "published": "2026-10-30T11:30:32Z",
+      "thumbnail": "https://i.ytimg.com/vi/Hz3sPHLHY8w/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=Hz3sPHLHY8w"
     },
     {
       "id": "849lbzXhxAo",
@@ -184,14 +192,6 @@
       "published": "2026-10-29T19:30:09Z",
       "thumbnail": "https://i.ytimg.com/vi/LZfrkeAN_Nc/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=LZfrkeAN_Nc"
-    },
-    {
-      "id": "DI4WsBljPeE",
-      "title": "Palmowski vs Larsen Austin Crash Explained  F1 Academy 2026",
-      "channel": "Gridline F1 News",
-      "published": "2026-10-29T14:00:26Z",
-      "thumbnail": "https://i.ytimg.com/vi/DI4WsBljPeE/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=DI4WsBljPeE"
     }
   ]
 }
