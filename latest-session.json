@@ -1,134 +1,110 @@
 {
-  "session": "Saralash natijalari",
+  "session": "Poyga natijalari",
   "meeting": "Mexico",
-  "date": "2026-10-31T22:00:00+00:00",
-  "updated": "2026-11-01T01:38:40.382965+00:00",
+  "date": "2026-11-01T23:00:00+00:00",
+  "updated": "2026-11-01T23:35:06.587968+00:00",
   "results": [
     {
       "position": 1,
-      "name": "L HAMILTON",
-      "team": "Ferrari",
-      "time": "76.514"
+      "name": "M VERSTAPPEN",
+      "team": "Red Bull Racing",
+      "time": "8428.772"
     },
     {
       "position": 2,
-      "name": "G RUSSELL",
-      "team": "Mercedes",
-      "time": "76.523"
+      "name": "L HAMILTON",
+      "team": "Ferrari",
+      "time": "8429.571"
     },
     {
       "position": 3,
-      "name": "C LECLERC",
-      "team": "Ferrari",
-      "time": "76.633"
+      "name": "K ANTONELLI",
+      "team": "Mercedes",
+      "time": "8432.778"
     },
     {
       "position": 4,
-      "name": "M VERSTAPPEN",
-      "team": "Red Bull Racing",
-      "time": "76.692"
+      "name": "C LECLERC",
+      "team": "Ferrari",
+      "time": "8439.479"
     },
     {
       "position": 5,
-      "name": "K ANTONELLI",
-      "team": "Mercedes",
-      "time": "76.707"
+      "name": "L NORRIS",
+      "team": "McLaren",
+      "time": "8440.55"
     },
     {
       "position": 6,
-      "name": "L NORRIS",
-      "team": "McLaren",
-      "time": "76.728"
+      "name": "G RUSSELL",
+      "team": "Mercedes",
+      "time": "8441.035"
     },
     {
       "position": 7,
-      "name": "I HADJAR",
-      "team": "Red Bull Racing",
-      "time": "76.9"
+      "name": "O PIASTRI",
+      "team": "McLaren",
+      "time": "8448.247"
     },
     {
       "position": 8,
-      "name": "A LINDBLAD",
-      "team": "Racing Bulls",
-      "time": "77.117"
+      "name": "F COLAPINTO",
+      "team": "Alpine",
+      "time": "8448.976"
     },
     {
       "position": 9,
-      "name": "P GASLY",
-      "team": "Alpine",
-      "time": "77.153"
+      "name": "L LAWSON",
+      "team": "Racing Bulls",
+      "time": "8449.671"
     },
     {
       "position": 10,
-      "name": "N HULKENBERG",
-      "team": "Audi",
-      "time": "77.306"
+      "name": "P GASLY",
+      "team": "Alpine",
+      "time": "8450.255"
     },
     {
       "position": 11,
-      "name": "F COLAPINTO",
-      "team": "Alpine",
-      "time": "77.64"
+      "name": "G BORTOLETO",
+      "team": "Audi",
+      "time": "8450.813"
     },
     {
       "position": 12,
-      "name": "O PIASTRI",
-      "team": "McLaren",
-      "time": "77.646"
+      "name": "I HADJAR",
+      "team": "Red Bull Racing",
+      "time": "8451.275"
     },
     {
       "position": 13,
-      "name": "G BORTOLETO",
-      "team": "Audi",
-      "time": "77.68"
+      "name": "R HIRAKAWA",
+      "team": null,
+      "time": "8454.145"
     },
     {
       "position": 14,
-      "name": "O BEARMAN",
-      "team": "Haas F1 Team",
-      "time": "78.083"
+      "name": "A ALBON",
+      "team": "Williams",
+      "time": "8456.334"
     },
     {
       "position": 15,
       "name": "C SAINZ",
       "team": "Williams",
-      "time": "78.521"
+      "time": "8457.41"
     },
     {
       "position": 16,
-      "name": "A ALBON",
-      "team": "Williams",
-      "time": "78.63"
+      "name": "N HULKENBERG",
+      "team": "Audi",
+      "time": "8458.749"
     },
     {
       "position": 17,
-      "name": "F ALONSO",
-      "team": "Aston Martin",
-      "time": "78.908"
-    },
-    {
-      "position": 18,
-      "name": "R HIRAKAWA",
-      "team": "Haas F1 Team",
-      "time": "78.958"
-    },
-    {
-      "position": 19,
-      "name": "L STROLL",
-      "team": "Aston Martin",
-      "time": "79.072"
-    },
-    {
-      "position": 20,
       "name": "S PEREZ",
       "team": "Cadillac",
-      "time": "79.105"
-    },
-    {
-      "position": 21,
-      "name": "V BOTTAS",
-      "team": "Cadillac",
-      "time": "79.852"
+      "time": "8459.467"
     }
   ]
 }
