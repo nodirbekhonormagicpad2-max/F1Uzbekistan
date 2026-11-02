@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-02T04:29:07.979491+00:00",
+  "updated_at": "2026-11-02T05:30:28.048858+00:00",
   "videos": [
     {
       "id": "tIiRK7hKScU",
@@ -8,6 +8,14 @@
       "published": "2026-11-01T23:24:08Z",
       "thumbnail": "https://i.ytimg.com/vi/tIiRK7hKScU/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=tIiRK7hKScU"
+    },
+    {
+      "id": "WLUFaj6Td0E",
+      "title": "F1 Extended Highlights: Mexico City Grand Prix",
+      "channel": "TSN",
+      "published": "2026-11-01T23:12:39Z",
+      "thumbnail": "https://i.ytimg.com/vi/WLUFaj6Td0E/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=WLUFaj6Td0E"
     },
     {
       "id": "CzZYXj3KODY",
@@ -122,14 +130,6 @@
       "url": "https://www.youtube.com/watch?v=mZQwMnnFeG0"
     },
     {
-      "id": "gVjKUVNzCGc",
-      "title": "2026 F1 Mexican GP Qualifying analysis by Peter Windsor",
-      "channel": "Peter Windsor",
-      "published": "2026-11-01T00:54:40Z",
-      "thumbnail": "https://i.ytimg.com/vi/gVjKUVNzCGc/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=gVjKUVNzCGc"
-    },
-    {
       "id": "Hz3sPHLHY8w",
       "title": "I Migliori 4 Momenti di KIMI ANTONELLI parte 2 #F1 #Formula1 #F12026 F1 #Formula1 #KimiAntonelli",
       "channel": "Sbourbo",
@@ -144,6 +144,14 @@
       "published": "2026-10-30T09:05:27Z",
       "thumbnail": "https://i.ytimg.com/vi/849lbzXhxAo/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=849lbzXhxAo"
+    },
+    {
+      "id": "rTWe7S8cSBc",
+      "title": "Completely Strange F1 Crashes",
+      "channel": "f1_fanatix",
+      "published": "2026-10-29T22:31:09Z",
+      "thumbnail": "https://i.ytimg.com/vi/rTWe7S8cSBc/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=rTWe7S8cSBc"
     },
     {
       "id": "LZfrkeAN_Nc",
@@ -184,14 +192,6 @@
       "published": "2026-10-28T13:51:35Z",
       "thumbnail": "https://i.ytimg.com/vi/JwgCtjrZYrs/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=JwgCtjrZYrs"
-    },
-    {
-      "id": "s9TDwUklwdA",
-      "title": "Norris locks up and Leclerc overtakes him like McQueen in the final Race #f1 #f1shorts #leclerc",
-      "channel": "Linn",
-      "published": "2026-10-27T20:29:44Z",
-      "thumbnail": "https://i.ytimg.com/vi/s9TDwUklwdA/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=s9TDwUklwdA"
     }
   ]
 }
