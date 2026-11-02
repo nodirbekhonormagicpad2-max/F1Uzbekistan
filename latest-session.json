@@ -2,7 +2,7 @@
   "session": "Poyga natijalari",
   "meeting": "Mexico",
   "date": "2026-11-01T23:00:00+00:00",
-  "updated": "2026-11-01T23:35:06.587968+00:00",
+  "updated": "2026-11-02T02:53:14.912979+00:00",
   "results": [
     {
       "position": 1,
@@ -42,69 +42,69 @@
     },
     {
       "position": 7,
-      "name": "O PIASTRI",
-      "team": "McLaren",
-      "time": "8448.247"
-    },
-    {
-      "position": 8,
-      "name": "F COLAPINTO",
-      "team": "Alpine",
-      "time": "8448.976"
-    },
-    {
-      "position": 9,
       "name": "L LAWSON",
       "team": "Racing Bulls",
       "time": "8449.671"
     },
     {
-      "position": 10,
-      "name": "P GASLY",
-      "team": "Alpine",
-      "time": "8450.255"
-    },
-    {
-      "position": 11,
+      "position": 8,
       "name": "G BORTOLETO",
       "team": "Audi",
       "time": "8450.813"
     },
     {
-      "position": 12,
+      "position": 9,
       "name": "I HADJAR",
       "team": "Red Bull Racing",
       "time": "8451.275"
     },
     {
-      "position": 13,
+      "position": 10,
       "name": "R HIRAKAWA",
       "team": null,
       "time": "8454.145"
     },
     {
-      "position": 14,
+      "position": 11,
       "name": "A ALBON",
       "team": "Williams",
       "time": "8456.334"
     },
     {
-      "position": 15,
+      "position": 12,
       "name": "C SAINZ",
       "team": "Williams",
       "time": "8457.41"
     },
     {
-      "position": 16,
+      "position": 13,
+      "name": "O PIASTRI",
+      "team": "McLaren",
+      "time": "8458.247"
+    },
+    {
+      "position": 14,
       "name": "N HULKENBERG",
       "team": "Audi",
       "time": "8458.749"
     },
     {
-      "position": 17,
+      "position": 15,
+      "name": "F COLAPINTO",
+      "team": "Alpine",
+      "time": "8458.976"
+    },
+    {
+      "position": 16,
       "name": "S PEREZ",
       "team": "Cadillac",
       "time": "8459.467"
+    },
+    {
+      "position": 17,
+      "name": "P GASLY",
+      "team": "Alpine",
+      "time": "8480.255"
     }
   ]
 }
