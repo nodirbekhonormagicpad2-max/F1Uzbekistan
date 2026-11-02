@@ -157,10 +157,10 @@ header {
   transition: transform .2s, background .2s;  
 }  
   
-.header-quiz {  
-  border: 1px solid #ff3b3b80;  
-  background: #e1060024;  
-}  
+.header-quiz {
+  border: 1px solid var(--red);
+  background: var(--red);
+}
   
 .header-telegram {  
   border: 1px solid var(--red);  
@@ -1473,6 +1473,11 @@ footer span {
     justify-content: center;  
   }  
 }  
+/* Pleyer tashqarisidagi tugmalarni yashirish */
+#fullscreenButton,
+#qualitySelect {
+  display: none !important;
+}
 </style>  </head>  <body>  <!-- ========================================  
      HEADER  
 ======================================== -->  <header>    <div class="brand">  <div class="logo">F1</div>  
@@ -1550,10 +1555,12 @@ footer span {
 
     <video  
       id="liveVideo"  
-      controls  
+      controls
+       autoplay
+       muted
       playsinline  
       webkit-playsinline  
-      preload="none"  
+      preload="auto"  
       crossorigin="anonymous"  
     ></video>  
 
@@ -2008,7 +2015,7 @@ aria-label="F1 QUIZ PRO o‘yinini boshlash"
   let hlsPlayer = null;  
   let currentPlaylist = "";  
   let checking = false;  
-  let userStarted = false;  
+  let userStarted = true;  
   let isLive = false;  
   let theaterOpen = false;  
   
