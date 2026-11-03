@@ -1,0 +1,23 @@
+
+{
+  "name": "F1 Uzbekistan",
+  "short_name": "F1 Uzbekistan",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#08090d",
+  "theme_color": "#e10600",
+  "lang": "uz",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
