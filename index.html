@@ -4315,5 +4315,66 @@ document.addEventListener(
 ></script>  <script  
   src="./home-gallery.js?v=stories-random-1"  
   defer  
-></script>  </body>  
+></script>  
+
+
+<style>
+#installAppBtn {
+  position: fixed;
+  bottom: 85px;
+  right: 16px;
+  z-index: 99999;
+  background: #e10600;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 15px 20px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 5px 20px #e1060066;
+}
+</style>
+
+<button id="installAppBtn" type="button">
+  📲 Ilovani o‘rnatish
+</button>
+
+<script>
+let installPrompt = null;
+
+window.addEventListener("beforeinstallprompt", function(e) {
+  e.preventDefault();
+  installPrompt = e;
+});
+
+document.getElementById("installAppBtn")
+  .addEventListener("click", async function() {
+    if (installPrompt) {
+      const promptEvent = installPrompt;
+      installPrompt = null;
+      await promptEvent.prompt();
+      await promptEvent.userChoice;
+      return;
+    }
+
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      alert(
+        "iPhone uchun:\n" +
+        "Safari → Ulashish → Add to Home Screen"
+      );
+    } else {
+      alert(
+        "Android uchun:\n" +
+        "Chrome → ⋮ → Install app yoki Add to Home screen"
+      );
+    }
+  });
+
+window.addEventListener("appinstalled", function() {
+  document.getElementById("installAppBtn").style.display = "none";
+});
+</script>
+
+</body>  
 </html>
