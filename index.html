@@ -1524,9 +1524,13 @@ footer span {
 ======================================== -->  <header>    <div class="brand">  <div class="logo">F1</div>  
 
 <div>  
-  <div class="brand-name">  
-    F1 UZBEKISTAN TV  
-  </div>  
+  
+<div class="brand-name">
+  <button id="installAppBtn" type="button">
+    📲 Ilovani o‘rnatish
+  </button>
+</div>
+
 
   <div class="brand-sub">  
     JONLI EFIR  
@@ -4320,25 +4324,20 @@ document.addEventListener(
 
 <style>
 #installAppBtn {
-  position: fixed;
-  bottom: 85px;
-  right: 16px;
-  z-index: 99999;
+  position: static;
+  display: inline-block;
+  white-space: nowrap;
   background: #e10600;
   color: white;
   border: none;
-  border-radius: 14px;
-  padding: 15px 20px;
-  font-size: 15px;
+  border-radius: 8px;
+  padding: 7px 9px;
+  font-size: 11px;
   font-weight: bold;
   cursor: pointer;
   box-shadow: 0 5px 20px #e1060066;
 }
 </style>
-
-<button id="installAppBtn" type="button">
-  📲 Ilovani o‘rnatish
-</button>
 
 <script>
 let installPrompt = null;
