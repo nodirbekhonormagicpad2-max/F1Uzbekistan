@@ -1478,6 +1478,39 @@ footer span {
 #qualitySelect {
   display: none !important;
 }
+
+/* F1 rasmi video oynasini to'liq egallaydi */
+
+.video-placeholder {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  padding: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.waiting-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.waiting-status {
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  width: 100%;
+  padding: 5px;
+  color: white;
+  font-size: 11px;
+  text-align: center;
+  text-shadow: 0 2px 5px black;
+}
+
 </style>  </head>  <body>  <!-- ========================================  
      HEADER  
 ======================================== -->  <header>    <div class="brand">  <div class="logo">F1</div>  
@@ -1572,27 +1605,19 @@ footer span {
     </div>  
 
     <div  
-      class="video-placeholder"  
-      id="videoPlaceholder"  
-    >  
+      
+<div class="video-placeholder" id="videoPlaceholder">
+  <img
+    src="./f1-loading.png"
+    alt="F1 Uzbekistan TV"
+    class="waiting-image"
+  >
 
-      <div class="placeholder-logo">
-  <img src="f1-loading.png" alt="F1 Uzbekistan TV"
-       style="width: 180px; max-width: 100%; height: auto; border-radius: 12px;">
-</div> 
+  <div class="waiting-status" id="placeholderText">
+    Efir yuklanmoqda...
+  </div>
+</div>
 
-      <div class="placeholder-title">  
-        F1 UZBEKISTAN  
-      </div>  
-
-      <div  
-        class="placeholder-text"  
-        id="placeholderText"  
-      >  
-        ⏳ Efir yuklanmoqda...
-      </div>  
-
-    </div>  
 
   </div>  
 
@@ -2304,7 +2329,6 @@ aria-label="F1 QUIZ PRO o‘yinini boshlash"
     try {  
       await video.play();  
   
-      hidePlaceholder();  
   
       setInfo(  
         "🔴 Jonli efir namoyish etilmoqda."  
@@ -2719,7 +2743,6 @@ aria-label="F1 QUIZ PRO o‘yinini boshlash"
       playButton.textContent =  
         "⏸ Pauza";  
   
-      hidePlaceholder();  
     }  
   );  
   
