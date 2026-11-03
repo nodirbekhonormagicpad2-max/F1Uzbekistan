@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-03T11:22:14.438288+00:00",
+  "updated_at": "2026-11-03T12:15:29.666691+00:00",
   "videos": [
     {
       "id": "xEcWC3bY9kw",
@@ -72,14 +72,6 @@
       "published": "2026-11-01T22:54:22Z",
       "thumbnail": "https://i.ytimg.com/vi/CzZYXj3KODY/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=CzZYXj3KODY"
-    },
-    {
-      "id": "tvBGQKBp0n0",
-      "title": "Valtteri Bottas FULL TEAM RADIO After MASSIVE CRASH At The 2026 Mexico GP!",
-      "channel": "F1Fun4u",
-      "published": "2026-11-01T22:13:36Z",
-      "thumbnail": "https://i.ytimg.com/vi/tvBGQKBp0n0/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=tvBGQKBp0n0"
     },
     {
       "id": "j7cIf8GGFjw",
@@ -192,6 +184,14 @@
       "published": "2026-10-30T09:05:27Z",
       "thumbnail": "https://i.ytimg.com/vi/849lbzXhxAo/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=849lbzXhxAo"
+    },
+    {
+      "id": "rTWe7S8cSBc",
+      "title": "Completely Strange F1 Crashes",
+      "channel": "f1_fanatix",
+      "published": "2026-10-29T22:31:09Z",
+      "thumbnail": "https://i.ytimg.com/vi/rTWe7S8cSBc/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=rTWe7S8cSBc"
     }
   ]
 }
