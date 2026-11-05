@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-05T08:33:42.195752+00:00",
+  "updated_at": "2026-11-05T09:53:50.382797+00:00",
   "videos": [
     {
       "id": "2Xx3FO9Tz_c",
@@ -162,6 +162,14 @@
       "url": "https://www.youtube.com/watch?v=j7cIf8GGFjw"
     },
     {
+      "id": "8iY80y_DvsE",
+      "title": "Bottas CRASHES in Mexico GP! 🚨 Cadillac Red Flag #F1",
+      "channel": "sportsfortify",
+      "published": "2026-11-01T21:26:17Z",
+      "thumbnail": "https://i.ytimg.com/vi/8iY80y_DvsE/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=8iY80y_DvsE"
+    },
+    {
       "id": "sUVzR12orx0",
       "title": "F1 Mexico City GP Qualifying Highlights 2026 🏎️ - Part 3/3",
       "channel": "Stefan - Bogdan Birtu",
@@ -184,14 +192,6 @@
       "published": "2026-11-01T19:50:00Z",
       "thumbnail": "https://i.ytimg.com/vi/B4nyriHi7K0/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=B4nyriHi7K0"
-    },
-    {
-      "id": "-CrJqa7qP7g",
-      "title": "F1 MEXICAN GP 2026 FULL RACE HIGHLIGHTS | Epic Battles in Mexico City! 🇲🇽🔥 Simulation",
-      "channel": "CHANO2K Simulation",
-      "published": "2026-11-01T18:00:16Z",
-      "thumbnail": "https://i.ytimg.com/vi/-CrJqa7qP7g/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=-CrJqa7qP7g"
     }
   ]
 }
