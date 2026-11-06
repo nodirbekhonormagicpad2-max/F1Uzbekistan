@@ -1,6 +1,14 @@
 {
-  "updated_at": "2026-11-06T03:18:13.530834+00:00",
+  "updated_at": "2026-11-06T04:27:16.515574+00:00",
   "videos": [
+    {
+      "id": "X4T7eD_c53Y",
+      "title": "Rosberg Calls Out the Double Standard in Ferrari&#39;s Hamilton Leclerc Incidents #formula1 #f1",
+      "channel": "Formula Focus Racing",
+      "published": "2026-11-06T03:30:28Z",
+      "thumbnail": "https://i.ytimg.com/vi/X4T7eD_c53Y/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=X4T7eD_c53Y"
+    },
     {
       "id": "2Xx3FO9Tz_c",
       "title": "He knew more than they thought. #formula1 #movie",
@@ -184,14 +192,6 @@
       "published": "2026-11-01T20:02:16Z",
       "thumbnail": "https://i.ytimg.com/vi/sUVzR12orx0/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=sUVzR12orx0"
-    },
-    {
-      "id": "Y9SPGHvqTN8",
-      "title": "F1 Mexico City GP Qualifying Highlights 2026 🏎️ - Part 2/3",
-      "channel": "Stefan - Bogdan Birtu",
-      "published": "2026-11-01T19:55:53Z",
-      "thumbnail": "https://i.ytimg.com/vi/Y9SPGHvqTN8/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=Y9SPGHvqTN8"
     }
   ]
 }
