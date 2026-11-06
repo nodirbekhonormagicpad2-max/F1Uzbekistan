@@ -1,6 +1,14 @@
 {
-  "updated_at": "2026-11-06T11:26:55.715935+00:00",
+  "updated_at": "2026-11-06T12:23:09.296059+00:00",
   "videos": [
+    {
+      "id": "WRelIkoVq7w",
+      "title": "[F1] 2026 Qatar GP Qualifying Highlights | Hulkenberg&#39;s Audi - Monopost Career Mode",
+      "channel": "Monoposto Cockpit",
+      "published": "2026-11-06T11:45:00Z",
+      "thumbnail": "https://i.ytimg.com/vi/WRelIkoVq7w/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=WRelIkoVq7w"
+    },
     {
       "id": "X4T7eD_c53Y",
       "title": "Rosberg Calls Out the Double Standard in Ferrari&#39;s Hamilton Leclerc Incidents #formula1 #f1",
@@ -114,6 +122,14 @@
       "url": "https://www.youtube.com/watch?v=bXjuY0riiug"
     },
     {
+      "id": "BVNQm5biOe0",
+      "title": "When Charles Leclerc invents his own track layout in Mexico is actual cinema #f1 #formula1 #leclerc",
+      "channel": "The F1 Channel",
+      "published": "2026-11-02T06:00:10Z",
+      "thumbnail": "https://i.ytimg.com/vi/BVNQm5biOe0/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=BVNQm5biOe0"
+    },
+    {
       "id": "eMBI0isVJbo",
       "title": "Drivers React After The Race | 2026 Mexico Grand Prix",
       "channel": "FORMULA 1",
@@ -176,22 +192,6 @@
       "published": "2026-11-01T22:13:36Z",
       "thumbnail": "https://i.ytimg.com/vi/tvBGQKBp0n0/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=tvBGQKBp0n0"
-    },
-    {
-      "id": "j7cIf8GGFjw",
-      "title": "🚨 Valtteri Bottas&#39;s CAR CRASH at Turn One in Mexico Grand Prix  | Valtteri Bottas car crash ",
-      "channel": "FOOTBALL VIEW",
-      "published": "2026-11-01T21:42:01Z",
-      "thumbnail": "https://i.ytimg.com/vi/j7cIf8GGFjw/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=j7cIf8GGFjw"
-    },
-    {
-      "id": "NrHnnvGZYus",
-      "title": "Formula 1 Mexico Bottas crash. #f1 #formula1 #racing #shorts #MexicoGP #mexico",
-      "channel": "Jérome Marcelino",
-      "published": "2026-11-01T21:33:17Z",
-      "thumbnail": "https://i.ytimg.com/vi/NrHnnvGZYus/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=NrHnnvGZYus"
     }
   ]
 }
