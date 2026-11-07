@@ -2459,7 +2459,8 @@ aria-label="F1 QUIZ PRO o‘yinini boshlash"
         enableWorker: true,  
         lowLatencyMode: false,  
         capLevelToPlayerSize: false,  
-        startLevel: -1,  
+        startLevel: 0,
+        autoStartLoad: false,
         liveSyncDurationCount: 3,  
         maxBufferLength: 30,  
         backBufferLength: 30  
@@ -2492,6 +2493,7 @@ aria-label="F1 QUIZ PRO o‘yinini boshlash"
   
           populateQualityOptions();  
           applyQuality();  
+          instance.startLoad();
   
           if (userStarted) {  
             tryPlay();  
