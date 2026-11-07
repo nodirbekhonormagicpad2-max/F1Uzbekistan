@@ -1,6 +1,14 @@
 {
-  "updated_at": "2026-11-07T22:05:36.100855+00:00",
+  "updated_at": "2026-11-07T23:03:57.101452+00:00",
   "videos": [
+    {
+      "id": "wI0lvTGACok",
+      "title": "Qualifying Highlights | São Paulo Grand Prix 2026",
+      "channel": "Paddock Wire",
+      "published": "2026-11-07T22:22:45Z",
+      "thumbnail": "https://i.ytimg.com/vi/wI0lvTGACok/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=wI0lvTGACok"
+    },
     {
       "id": "MPvZvNndnZY",
       "title": "🔴 F1 LIVE BRAZIL GP QUALIFYING - Live Timing + Commentary + Track",
@@ -26,6 +34,14 @@
       "url": "https://www.youtube.com/watch?v=E8qP8qkpsRg"
     },
     {
+      "id": "AZv6LSPPr6Y",
+      "title": "🔴 F1 LIVE: Brazil GP Qualifying Watchalong | F1 Live Timing &amp; Telemetry (Sao Paulo GP Interlagos)",
+      "channel": "Racing Statistics",
+      "published": "2026-11-07T21:21:34Z",
+      "thumbnail": "https://i.ytimg.com/vi/AZv6LSPPr6Y/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=AZv6LSPPr6Y"
+    },
+    {
       "id": "Cn4C153hCLk",
       "title": "Qualifying Highlights | 2026 Sao Paulo Grand Prix",
       "channel": "FORMULA 1",
@@ -35,7 +51,7 @@
     },
     {
       "id": "VkLbgbxiQb8",
-      "title": "F1 Qualifying Press Conference - Sao Paulo Grand Prix |",
+      "title": "F1 Qualifying Press Conference - Sao Paulo Grand Prix | Lando Norris, George Russell, Kimi Antonelli",
       "channel": "Formula 1 Info",
       "published": "2026-11-07T21:15:20Z",
       "thumbnail": "https://i.ytimg.com/vi/VkLbgbxiQb8/hqdefault.jpg",
@@ -48,14 +64,6 @@
       "published": "2026-11-07T20:58:43Z",
       "thumbnail": "https://i.ytimg.com/vi/PkJhX1rn1H8/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=PkJhX1rn1H8"
-    },
-    {
-      "id": "2ObtEgxsVBk",
-      "title": "⚪ QUALIFYING HIGHLIGHTS LEADERBOARD F1 2026 BRAZILIAN GP #qualifying  #saopaulogp #f12026",
-      "channel": "izquierdoF1",
-      "published": "2026-11-07T20:57:23Z",
-      "thumbnail": "https://i.ytimg.com/vi/2ObtEgxsVBk/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=2ObtEgxsVBk"
     },
     {
       "id": "dcilhRpaM2o",
@@ -184,14 +192,6 @@
       "published": "2026-11-06T03:00:25Z",
       "thumbnail": "https://i.ytimg.com/vi/CCFg8srvcgQ/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=CCFg8srvcgQ"
-    },
-    {
-      "id": "eRhMHdyYgPs",
-      "title": "Clean overtake #fypシ #fypシ゚viral #f1 #highlights #formulaoneracing #mclaren #overtake #shorts",
-      "channel": "Zackfs100",
-      "published": "2026-11-05T20:35:41Z",
-      "thumbnail": "https://i.ytimg.com/vi/eRhMHdyYgPs/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=eRhMHdyYgPs"
     }
   ]
 }
