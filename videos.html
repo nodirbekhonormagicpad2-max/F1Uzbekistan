@@ -107,6 +107,14 @@ function render(){
 }
 
 async function load(){if(loading)return;loading=true;try{const response=await fetch('./uploaded-videos.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw new Error('HTTP '+response.status);const data=await response.json();const items=Array.isArray(data)?data:Array.isArray(data?.videos)?data.videos:[];const seen=new Set();videos=items.filter(v=>{if(!v||typeof v!=='object'||!validVideoURL(v))return false;const key=str(v.id)||videoURL(v);if(seen.has(key))return false;seen.add(key);return true;});render();}catch(e){console.error('F1 Videolar:',e);status.textContent='Videolar ro‘yxatini yuklab bo‘lmadi. uploaded-videos.json faylini tekshiring.';}finally{loading=false;}}
+// Modalni yopish tugmasi va qo‘shimcha yopish usullari.
+closeButton.addEventListener('click', closeVideo);
+viewer.addEventListener('click', event => {
+  if (event.target === viewer) closeVideo();
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && viewer.classList.contains('open')) closeVideo();
+});
 load();setInterval(load,300000);
 })();
 </script>
