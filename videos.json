@@ -1,6 +1,14 @@
 {
-  "updated_at": "2026-11-07T00:48:12.789414+00:00",
+  "updated_at": "2026-11-07T01:52:12.361707+00:00",
   "videos": [
+    {
+      "id": "OwQ4ernSM00",
+      "title": "FP1 Highlights | 2026 Sao Paulo Grand Prix",
+      "channel": "FORMULA 1",
+      "published": "2026-11-06T18:22:52Z",
+      "thumbnail": "https://i.ytimg.com/vi/OwQ4ernSM00/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=OwQ4ernSM00"
+    },
     {
       "id": "-Xd_AF8y4_M",
       "title": "F1 FP1 Highlights | 2026 São Paulo Grand Prix | F1 Highlights | Formula1 Highlights",
@@ -184,14 +192,6 @@
       "published": "2026-11-01T23:45:14Z",
       "thumbnail": "https://i.ytimg.com/vi/gTeuN3dlIbU/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=gTeuN3dlIbU"
-    },
-    {
-      "id": "qVADDBKRVBQ",
-      "title": "🔴F1 LIVE - Mexico GP RACE - Commentary + Timings",
-      "channel": "F1 Gamer",
-      "published": "2026-11-01T23:31:37Z",
-      "thumbnail": "https://i.ytimg.com/vi/qVADDBKRVBQ/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=qVADDBKRVBQ"
     }
   ]
 }
