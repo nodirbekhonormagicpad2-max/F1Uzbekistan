@@ -1,3 +1,4 @@
+
 "use strict";
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
@@ -38,8 +39,14 @@ async function matches(a, b) {
   const encoder = new TextEncoder();
 
   const [hashA, hashB] = await Promise.all([
-    crypto.subtle.digest("SHA-256", encoder.encode(a)),
-    crypto.subtle.digest("SHA-256", encoder.encode(b))
+    crypto.subtle.digest(
+      "SHA-256",
+      encoder.encode(a)
+    ),
+    crypto.subtle.digest(
+      "SHA-256",
+      encoder.encode(b)
+    )
   ]);
 
   const A = new Uint8Array(hashA);
@@ -71,7 +78,10 @@ function unb64(text) {
   const binary = atob(text.replace(/\s/g, ""));
 
   return new TextDecoder().decode(
-    Uint8Array.from(binary, char => char.charCodeAt(0))
+    Uint8Array.from(
+      binary,
+      char => char.charCodeAt(0)
+    )
   );
 }
 
@@ -105,6 +115,70 @@ function validImage(bytes, type) {
   }
 
   return false;
+}
+
+/* IMAGEKIT'GA RASM YUKLASH */
+
+async function uploadToImageKit(
+  env,
+  bytes,
+  filename,
+  mimeType
+) {
+  const form = new FormData();
+
+  form.append(
+    "file",
+    new Blob([bytes], { type: mimeType }),
+    filename
+  );
+
+  form.append("fileName", filename);
+  form.append("folder", "/f1uzbekistan/gallery");
+  form.append("useUniqueFileName", "false");
+
+  const auth = btoa(
+    `${env.IMAGEKIT_PRIVATE_KEY}:`
+  );
+
+  const response = await fetch(
+    "https://upload.imagekit.io/api/v1/files/upload",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${auth}`
+      },
+      body: form
+    }
+  );
+
+  if (!response.ok) {
+    console.error(
+      "ImageKit upload HTTP:",
+      response.status
+    );
+
+    throw new Error(
+      "ImageKit upload failed: " +
+      response.status
+    );
+  }
+
+  const result = await response.json();
+
+  if (
+    typeof result.url !== "string" ||
+    !result.url.startsWith("https://")
+  ) {
+    throw new Error(
+      "ImageKit rasm manzilini qaytarmadi."
+    );
+  }
+
+  return {
+    url: result.url,
+    fileId: result.fileId
+  };
 }
 
 /* GITHUB'DAGI GALEREYA RO'YXATINI YANGILASH */
@@ -155,12 +229,10 @@ async function saveToGitHub(env, photo) {
       );
     }
 
-    // Bir xil ID qayta qo‘shilmasin.
     if (items.some(item => item.id === photo.id)) {
       return;
     }
 
-    // Yangi post ro‘yxat boshiga qo‘shiladi.
     items.unshift(photo);
 
     const body = {
@@ -204,13 +276,13 @@ async function saveToGitHub(env, photo) {
   );
 }
 
-/* ADMIN PANELDAN F1 STORIES POST QABUL QILISH */
+/* ADMIN PANELDAN POST QABUL QILISH */
 
 export async function onRequestPost({ request, env }) {
   if (
     !env.ADMIN_PASSWORD ||
     !env.GITHUB_TOKEN ||
-    !env.VIDEO_BUCKET
+    !env.IMAGEKIT_PRIVATE_KEY
   ) {
     return json({
       success: false,
@@ -237,7 +309,10 @@ export async function onRequestPost({ request, env }) {
     const password = form.get("password");
 
     if (
-      !await matches(password, env.ADMIN_PASSWORD)
+      !await matches(
+        password,
+        env.ADMIN_PASSWORD
+      )
     ) {
       return json({
         success: false,
@@ -251,12 +326,10 @@ export async function onRequestPost({ request, env }) {
       form.get("title_uz") || ""
     ).trim();
 
-    // Maqola bo‘sh bo‘lishi mumkin.
     const article = String(
       form.get("article_uz") || ""
     ).trim();
 
-    // Manba ham ixtiyoriy.
     const source = String(
       form.get("source") || ""
     ).trim();
@@ -265,31 +338,30 @@ export async function onRequestPost({ request, env }) {
 
     /* TEKSHIRISHLAR */
 
-    // Sarlavha majburiy.
     if (!title || title.length > 160) {
       return json({
         success: false,
-        error: "Sarlavha 1–160 belgidan iborat bo‘lsin."
+        error:
+          "Sarlavha 1–160 belgidan iborat bo‘lsin."
       }, 400);
     }
 
-    // O‘ZGARISH: maqola majburiy emas.
-    // Faqat maksimal uzunlik tekshiriladi.
     if (article.length > MAX_ARTICLE_LENGTH) {
       return json({
         success: false,
-        error: "Maqola 30000 belgidan oshmasin."
+        error:
+          "Maqola 30000 belgidan oshmasin."
       }, 400);
     }
 
     if (source.length > MAX_SOURCE_LENGTH) {
       return json({
         success: false,
-        error: "Manba 300 belgidan oshmasin."
+        error:
+          "Manba 300 belgidan oshmasin."
       }, 400);
     }
 
-    // Rasm majburiy.
     if (
       !image ||
       typeof image.arrayBuffer !== "function" ||
@@ -305,7 +377,7 @@ export async function onRequestPost({ request, env }) {
       }, 400);
     }
 
-    /* SURATNI TEKSHIRISH */
+    /* RASM FAYLINI TEKSHIRISH */
 
     const bytes = new Uint8Array(
       await image.arrayBuffer()
@@ -321,56 +393,61 @@ export async function onRequestPost({ request, env }) {
     /* YANGI POST ID */
 
     const id = crypto.randomUUID();
-
     const extension = MIME[image.type];
+    const filename = `${id}.${extension}`;
 
-    const key = `gallery/${id}.${extension}`;
+    /* RASMNI IMAGEKIT'GA SAQLASH */
 
-    /* SURATNI R2 GA SAQLASH */
-
-    await env.VIDEO_BUCKET.put(key, bytes, {
-      httpMetadata: {
-        contentType: image.type,
-        cacheControl:
-          "public, max-age=31536000, immutable"
-      }
-    });
-
-    /* F1 STORIES POSTI */
-
-    const photo = {
-      id,
-      url:
-        `/api/gallery-image?file=${id}.${extension}`,
-      title_uz: title,
-
-      // Maqola kiritilmagan bo‘lsa, bo‘sh satr saqlanadi.
-      article_uz: article,
-
-      source: source,
-      published: new Date().toISOString()
-    };
-
-    /* GITHUB JSON FAYLIGA SAQLASH */
+    let uploaded;
 
     try {
-      await saveToGitHub(env, photo);
+      uploaded = await uploadToImageKit(
+        env,
+        bytes,
+        filename,
+        image.type
+      );
     } catch (error) {
       console.error(
-        "F1 STORIES GitHub xatosi:",
+        "ImageKit yuklash xatosi:",
         error
       );
 
       return json({
         success: false,
         error:
-          "Surat R2 ga yuklandi, ammo post " +
-          "GitHub ro‘yxatiga saqlanmadi. " +
-          "Qayta yuborishdan oldin tekshiring."
+          "Rasmni ImageKit'ga yuklab bo‘lmadi."
       }, 502);
     }
 
-    /* MUVAFFAQIYATLI JAVOB */
+    /* POST MA'LUMOTLARI */
+
+    const photo = {
+      id,
+      url: uploaded.url,
+      title_uz: title,
+      article_uz: article,
+      source,
+      published: new Date().toISOString()
+    };
+
+    /* GITHUB RO'YXATIGA SAQLASH */
+
+    try {
+      await saveToGitHub(env, photo);
+    } catch (error) {
+      console.error(
+        "GitHub saqlash xatosi:",
+        error
+      );
+
+      return json({
+        success: false,
+        error:
+          "Rasm ImageKit'ga yuklandi, ammo post " +
+          "GitHub ro‘yxatiga saqlanmadi."
+      }, 502);
+    }
 
     return json({
       success: true,
