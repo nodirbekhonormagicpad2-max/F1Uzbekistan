@@ -259,43 +259,22 @@
     }
 
     #f1-cinema-modal .cp-frame {
-  width: 100%;
-  height: min(75dvh, 750px);
-  aspect-ratio: auto;
-  overflow: auto;
-  border-radius: 9px;
-  background: #000;
-  -webkit-overflow-scrolling: touch;
-}
-
-#f1-cinema-modal .cp-frame.cp-vertical,
-#f1-cinema-modal .cp-frame.cp-square {
-  width: 100%;
-  max-width: 650px;
-  height: min(75dvh, 750px);
-  max-height: none;
-  aspect-ratio: auto;
-  margin: 0 auto;
-}
-
-#f1-cinema-modal .cp-frame iframe {
-  display: block;
-  width: 100%;
-  height: 750px;
-  border: 0;
-  background: #000;
-}
+      width: 100%;
+      height: min(70dvh, 650px);
+      overflow: hidden;
+      border-radius: 9px;
+      background: #000;
+    }
 
     #f1-cinema-modal .cp-frame.cp-vertical {
       width: min(420px, 100%);
-      aspect-ratio: 9 / 16;
-      max-height: 75vh;
+      height: min(70dvh, 650px);
       margin: 0 auto;
     }
 
     #f1-cinema-modal .cp-frame.cp-square {
       width: min(650px, 100%);
-      aspect-ratio: 1 / 1;
+      height: min(70dvh, 650px);
       margin: 0 auto;
     }
 
@@ -413,7 +392,7 @@
   modal.innerHTML = `
     <div class="cp-dialog">
       <div class="cp-modalhead">
-        <h3 class="cp-modaltitle"></h3>
+        <h3 class="cp-modaltitle">🎬 F1 CINEMA</h3>
 
         <button type="button" class="cp-close">
           ✕ Yopish
@@ -427,7 +406,6 @@
   document.body.appendChild(modal);
 
   const frame = modal.querySelector(".cp-frame");
-  const modalTitle = modal.querySelector(".cp-modaltitle");
   const closeButton = modal.querySelector(".cp-close");
 
   function title(video) {
@@ -620,8 +598,6 @@
       lastFocus = document.activeElement;
       previousOverflow = document.body.style.overflow;
     }
-
-    modalTitle.textContent = title(video);
 
     frame.classList.remove(
       "cp-vertical",
