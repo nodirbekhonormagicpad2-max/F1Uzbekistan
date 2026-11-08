@@ -101,12 +101,12 @@
     }
 
     #f1-cinema-premium .cp-image {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  object-position: center;
-}
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+    }
 
     #f1-cinema-premium .cp-placeholder {
       position: absolute;
@@ -152,18 +152,6 @@
       pointer-events: none;
     }
 
-    #f1-cinema-premium .cp-counter {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      padding: 8px 13px;
-      border-radius: 25px;
-      background: #000b;
-      font-size: 13px;
-      font-weight: 900;
-      pointer-events: none;
-    }
-
     #f1-cinema-premium .cp-caption {
       position: absolute;
       bottom: 20px;
@@ -191,14 +179,8 @@
     #f1-cinema-premium .cp-footer {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      justify-content: flex-end;
       margin-top: 14px;
-    }
-
-    #f1-cinema-premium .cp-info {
-      color: #aaa;
-      font-size: 12px;
     }
 
     #f1-cinema-premium .cp-all {
@@ -305,18 +287,6 @@
       background: #000;
     }
 
-    #f1-cinema-modal .cp-open-telegram {
-      display: inline-flex;
-      margin-top: 13px;
-      padding: 11px 14px;
-      border-radius: 8px;
-      background: #229ed9;
-      color: #fff;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 900;
-    }
-
     @media (max-width: 700px) {
       #f1-cinema-premium .cp-gallery {
         border-radius: 12px;
@@ -338,10 +308,6 @@
         width: 56px;
         height: 56px;
         font-size: 23px;
-      }
-
-      #f1-cinema-premium .cp-info {
-        font-size: 10px;
       }
 
       #f1-cinema-premium .cp-all {
@@ -387,17 +353,12 @@
 
           <div class="cp-shade"></div>
           <div class="cp-play">▶</div>
-          <div class="cp-counter"></div>
           <div class="cp-caption"></div>
         </button>
       </div>
     </div>
 
     <div class="cp-footer">
-      <span class="cp-info">
-        Videolar har 15 soniyada almashadi
-      </span>
-
       <a class="cp-all" href="./videos.html">
         Barcha videolar →
       </a>
@@ -420,7 +381,6 @@
   const stage = root.querySelector(".cp-stage");
   const mediaBox = root.querySelector(".cp-media");
   const caption = root.querySelector(".cp-caption");
-  const counter = root.querySelector(".cp-counter");
   const status = root.querySelector(".cp-status");
 
   const modal = document.createElement("div");
@@ -441,14 +401,6 @@
       </div>
 
       <div class="cp-frame"></div>
-
-      <a
-        class="cp-open-telegram"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Telegram'da ochish ↗
-      </a>
     </div>
   `;
 
@@ -457,7 +409,6 @@
   const frame = modal.querySelector(".cp-frame");
   const modalTitle = modal.querySelector(".cp-modaltitle");
   const closeButton = modal.querySelector(".cp-close");
-  const telegramLink = modal.querySelector(".cp-open-telegram");
 
   function title(video) {
     return String(
@@ -491,7 +442,9 @@
 
       if (
         url.protocol !== "https:" ||
-        url.hostname.toLowerCase() !== "t.me"
+        !["t.me", "www.t.me"].includes(
+          url.hostname.toLowerCase()
+        )
       ) {
         return "";
       }
@@ -502,10 +455,7 @@
 
       if (!match) return "";
 
-      return (
-        "https://t.me/f1cinema/" +
-        match[1]
-      );
+      return "https://t.me/f1cinema/" + match[1];
     } catch {
       return "";
     }
@@ -602,9 +552,6 @@
 
     caption.textContent = title(video);
 
-    counter.textContent =
-      `${currentIndex + 1} / ${videos.length}`;
-
     stage.setAttribute(
       "aria-label",
       title(video) + " — tomosha qilish"
@@ -679,10 +626,7 @@
 
     frame.replaceChildren(iframe);
 
-    telegramLink.href = postURL;
-
     modal.classList.add("cp-open");
-
     document.body.style.overflow = "hidden";
 
     closeButton.focus();
@@ -692,7 +636,6 @@
     if (!modal.classList.contains("cp-open")) return;
 
     modal.classList.remove("cp-open");
-
     frame.replaceChildren();
 
     document.body.style.overflow =
@@ -771,7 +714,6 @@
           "Hozircha Telegram videolari mavjud emas.";
 
         caption.textContent = "";
-        counter.textContent = "";
 
         showPlaceholder(
           "Hozircha videolar mavjud emas."
@@ -821,9 +763,5 @@
     }
   }, ROTATE_MS);
 
-  setInterval(
-    loadVideos,
-    REFRESH_MS
-  );
-
+  setInterval(loadVideos, REFRESH_MS);
 })();
