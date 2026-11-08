@@ -1,3 +1,4 @@
+
 (() => {
   "use strict";
 
@@ -5,25 +6,13 @@
 
   const ROTATE_MS = 15000;
   const REFRESH_MS = 5 * 60 * 1000;
-  const THUMB_TIMEOUT = 10000;
-
-  const thumbnailCache = new Map();
-  const thumbnailJobs = new Map();
-  const formatCache = new Map();
 
   let videos = [];
   let currentIndex = 0;
-  let modalIndex = 0;
-  let activeVideo = null;
-  let previewVideo = null;
-  let renderToken = 0;
   let loading = false;
+  let renderToken = 0;
   let previousOverflow = "";
   let lastFocus = null;
-
-  // ==========================================
-  // DIZAYN
-  // ==========================================
 
   const style = document.createElement("style");
 
@@ -57,13 +46,12 @@
       content: "";
       width: 6px;
       height: 34px;
-      background: #e10600;
       border-radius: 4px;
+      background: #e10600;
       flex-shrink: 0;
     }
 
     #f1-cinema-premium .cp-gallery {
-      width: 100%;
       overflow: hidden;
       border: 1px solid #34343c;
       border-radius: 16px;
@@ -73,9 +61,8 @@
 
     #f1-cinema-premium .cp-stage-wrap {
       display: flex;
-      justify-content: center;
       align-items: center;
-      width: 100%;
+      justify-content: center;
       background: #101014;
     }
 
@@ -84,18 +71,13 @@
       display: block;
       width: 100%;
       aspect-ratio: 16 / 9;
-      min-height: 200px;
+      min-height: 190px;
       padding: 0;
       border: 0;
       overflow: hidden;
       background: #101014;
       color: #fff;
       cursor: pointer;
-    }
-
-    #f1-cinema-premium .cp-stage.cp-landscape {
-      width: 100%;
-      aspect-ratio: 16 / 9;
     }
 
     #f1-cinema-premium .cp-stage.cp-portrait {
@@ -112,24 +94,17 @@
     #f1-cinema-premium .cp-media {
       position: absolute;
       inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #101014;
+      display: grid;
+      place-items: center;
       overflow: hidden;
+      background: #101014;
     }
 
-    #f1-cinema-premium .cp-image,
-    #f1-cinema-premium .cp-preview-video {
-      display: block;
+    #f1-cinema-premium .cp-image {
       width: 100%;
       height: 100%;
+      display: block;
       object-fit: contain;
-      background: #101014;
-    }
-
-    #f1-cinema-premium .cp-preview-video {
-      pointer-events: none;
     }
 
     #f1-cinema-premium .cp-placeholder {
@@ -143,7 +118,7 @@
         #303039,
         #101014
       );
-      color: #bbb;
+      color: #ccc;
       font-size: 14px;
       font-weight: 800;
       text-align: center;
@@ -171,7 +146,6 @@
       height: 68px;
       border-radius: 50%;
       background: #e10600;
-      color: #fff;
       font-size: 28px;
       box-shadow: 0 5px 25px #0009;
       pointer-events: none;
@@ -184,7 +158,6 @@
       padding: 8px 13px;
       border-radius: 25px;
       background: #000b;
-      color: #fff;
       font-size: 13px;
       font-weight: 900;
       pointer-events: none;
@@ -195,7 +168,6 @@
       bottom: 20px;
       left: 20px;
       right: 20px;
-      color: #fff;
       font-size: clamp(17px, 3vw, 29px);
       font-weight: 900;
       line-height: 1.25;
@@ -203,10 +175,6 @@
       text-shadow: 0 3px 12px #000;
       pointer-events: none;
       overflow-wrap: anywhere;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
 
     #f1-cinema-premium .cp-caption::after {
@@ -216,64 +184,6 @@
       height: 4px;
       margin-top: 10px;
       border-radius: 4px;
-      background: #e10600;
-    }
-
-    #f1-cinema-premium .cp-controls {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px;
-      background: #17171d;
-    }
-
-    #f1-cinema-premium .cp-arrows {
-      display: flex;
-      gap: 9px;
-    }
-
-    #f1-cinema-premium .cp-arrow {
-      display: grid;
-      place-items: center;
-      width: 40px;
-      height: 40px;
-      border: 1px solid #45454f;
-      border-radius: 9px;
-      background: #24242c;
-      color: #fff;
-      font-size: 23px;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    #f1-cinema-premium .cp-arrow:hover {
-      border-color: #e10600;
-      background: #e10600;
-    }
-
-    #f1-cinema-premium .cp-dots {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 6px;
-      min-width: 0;
-    }
-
-    #f1-cinema-premium .cp-dot {
-      width: 8px;
-      height: 8px;
-      padding: 0;
-      border: 0;
-      border-radius: 50%;
-      background: #666;
-      cursor: pointer;
-    }
-
-    #f1-cinema-premium .cp-dot.cp-active {
-      width: 21px;
-      border-radius: 6px;
       background: #e10600;
     }
 
@@ -314,8 +224,6 @@
       display: none;
     }
 
-    /* KATTA VIDEO OYNASI */
-
     #f1-cinema-modal {
       position: fixed;
       inset: 0;
@@ -353,7 +261,6 @@
       margin: 0;
       font-size: clamp(14px, 2.5vw, 19px);
       font-weight: 900;
-      line-height: 1.4;
     }
 
     #f1-cinema-modal .cp-close {
@@ -389,34 +296,24 @@
       margin: 0 auto;
     }
 
-    #f1-cinema-modal video {
+    #f1-cinema-modal .cp-frame iframe {
       display: block;
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      border: 0;
       background: #000;
     }
 
-    #f1-cinema-modal .cp-navigation {
-      display: flex;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    #f1-cinema-modal .cp-nav {
-      flex: 1;
-      padding: 12px;
-      border: 1px solid #393944;
+    #f1-cinema-modal .cp-open-telegram {
+      display: inline-flex;
+      margin-top: 13px;
+      padding: 11px 14px;
       border-radius: 8px;
-      background: #22222a;
+      background: #229ed9;
       color: #fff;
+      text-decoration: none;
       font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    #f1-cinema-modal .cp-nav:hover {
-      border-color: #e10600;
+      font-weight: 900;
     }
 
     @media (max-width: 700px) {
@@ -451,15 +348,6 @@
         font-size: 11px;
       }
 
-      #f1-cinema-premium .cp-arrow {
-        width: 35px;
-        height: 35px;
-      }
-
-      #f1-cinema-premium .cp-controls {
-        padding: 9px;
-      }
-
       #f1-cinema-modal {
         padding: 7px;
       }
@@ -471,10 +359,6 @@
   `;
 
   document.head.appendChild(style);
-
-  // ==========================================
-  // ASOSIY BLOK
-  // ==========================================
 
   const root = document.createElement("section");
 
@@ -491,7 +375,7 @@
       <div class="cp-stage-wrap">
         <button
           type="button"
-          class="cp-stage cp-landscape"
+          class="cp-stage"
           aria-label="Videoni tomosha qilish"
         >
           <div class="cp-media">
@@ -505,24 +389,6 @@
           <div class="cp-counter"></div>
           <div class="cp-caption"></div>
         </button>
-      </div>
-
-      <div class="cp-controls">
-        <div class="cp-arrows">
-          <button
-            type="button"
-            class="cp-arrow cp-prev"
-            aria-label="Oldingi video"
-          >‹</button>
-
-          <button
-            type="button"
-            class="cp-arrow cp-next"
-            aria-label="Keyingi video"
-          >›</button>
-        </div>
-
-        <div class="cp-dots"></div>
       </div>
     </div>
 
@@ -554,21 +420,14 @@
   const mediaBox = root.querySelector(".cp-media");
   const caption = root.querySelector(".cp-caption");
   const counter = root.querySelector(".cp-counter");
-  const dots = root.querySelector(".cp-dots");
   const status = root.querySelector(".cp-status");
-
-  const previousButton = root.querySelector(".cp-prev");
-  const nextButton = root.querySelector(".cp-next");
-
-  // ==========================================
-  // VIDEO MODAL
-  // ==========================================
 
   const modal = document.createElement("div");
 
   modal.id = "f1-cinema-modal";
   modal.setAttribute("role", "dialog");
   modal.setAttribute("aria-modal", "true");
+  modal.setAttribute("aria-label", "F1 Cinema video");
 
   modal.innerHTML = `
     <div class="cp-dialog">
@@ -582,15 +441,13 @@
 
       <div class="cp-frame"></div>
 
-      <div class="cp-navigation">
-        <button type="button" class="cp-nav cp-modal-prev">
-          ← Oldingi video
-        </button>
-
-        <button type="button" class="cp-nav cp-modal-next">
-          Keyingi video →
-        </button>
-      </div>
+      <a
+        class="cp-open-telegram"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Telegram'da ochish ↗
+      </a>
     </div>
   `;
 
@@ -599,12 +456,7 @@
   const frame = modal.querySelector(".cp-frame");
   const modalTitle = modal.querySelector(".cp-modaltitle");
   const closeButton = modal.querySelector(".cp-close");
-  const modalPrevious = modal.querySelector(".cp-modal-prev");
-  const modalNext = modal.querySelector(".cp-modal-next");
-
-  // ==========================================
-  // VIDEO MA'LUMOTLARI
-  // ==========================================
+  const telegramLink = modal.querySelector(".cp-open-telegram");
 
   function title(video) {
     return String(
@@ -627,35 +479,34 @@
     return String(
       video.id ||
       video.video_url ||
-      video.videoUrl ||
       video.url ||
       ""
     );
   }
 
-  function validUploadURL(video) {
+  function telegramPostURL(video) {
     try {
-      const raw = videoURL(video);
-
-      if (!raw) return false;
+      const url = new URL(videoURL(video));
 
       if (
-        /^\/api\/media\/videos\/[a-f0-9-]{36}\.(mp4|webm)$/i.test(raw)
+        url.protocol !== "https:" ||
+        url.hostname.toLowerCase() !== "t.me"
       ) {
-        return true;
+        return "";
       }
 
-      const url = new URL(
-        raw,
-        window.location.origin
+      const match = url.pathname.match(
+        /^\/f1cinema\/(\d+)\/?$/i
       );
 
+      if (!match) return "";
+
       return (
-        url.protocol === "https:" &&
-        /\.(mp4|webm)$/i.test(url.pathname)
+        "https://t.me/f1cinema/" +
+        match[1]
       );
     } catch {
-      return false;
+      return "";
     }
   }
 
@@ -668,7 +519,7 @@
       if (
         !video ||
         typeof video !== "object" ||
-        !validUploadURL(video)
+        !telegramPostURL(video)
       ) {
         return false;
       }
@@ -702,519 +553,44 @@
     return "";
   }
 
-  // ==========================================
-  // VIDEO FORMATINI ANIQLASH
-  // ==========================================
-
-  function formatFromDimensions(width, height) {
-    if (!width || !height) return "landscape";
-
-    const ratio = width / height;
-
-    if (ratio < 0.85) return "portrait";
-    if (ratio > 1.15) return "landscape";
-
-    return "square";
-  }
-
-  function declaredFormat(video) {
+  function format(video) {
     const ratio = String(
       video.aspect_ratio ||
       video.aspectRatio ||
       ""
-    ).trim();
+    );
 
     if (ratio === "9:16") return "portrait";
-    if (ratio === "16:9") return "landscape";
     if (ratio === "1:1") return "square";
 
-    const width = Number(
-      video.width ||
-      video.video_width ||
-      video.videoWidth
-    );
-
-    const height = Number(
-      video.height ||
-      video.video_height ||
-      video.videoHeight
-    );
-
-    if (width > 0 && height > 0) {
-      return formatFromDimensions(width, height);
-    }
-
-    return "";
+    return "landscape";
   }
 
-  function getFormat(video) {
-    return (
-      formatCache.get(videoURL(video)) ||
-      declaredFormat(video) ||
-      "landscape"
-    );
-  }
-
-  function setFormat(format) {
+  function setFormat(video) {
     stage.classList.remove(
-      "cp-landscape",
       "cp-portrait",
       "cp-square"
     );
 
-    stage.classList.add(
-      "cp-" + (
-        ["landscape", "portrait", "square"].includes(format)
-          ? format
-          : "landscape"
-      )
-    );
-  }
-
-  // ==========================================
-  // MUQOVANI TEKSHIRISH
-  // ==========================================
-
-  function inspectVideo(video) {
-    const url = videoURL(video);
-
-    if (thumbnailCache.has(url)) {
-      return Promise.resolve(thumbnailCache.get(url));
+    if (format(video) === "portrait") {
+      stage.classList.add("cp-portrait");
     }
 
-    if (thumbnailJobs.has(url)) {
-      return thumbnailJobs.get(url);
+    if (format(video) === "square") {
+      stage.classList.add("cp-square");
     }
-
-    const job = new Promise(resolve => {
-      const media = document.createElement("video");
-
-      const result = {
-        thumbnail: "",
-        format: getFormat(video)
-      };
-
-      let finished = false;
-      let attempt = 0;
-      let waitingForFrame = false;
-
-      const positions = [1, 3, 5];
-
-      const timer = setTimeout(
-        finish,
-        THUMB_TIMEOUT
-      );
-
-      function cleanup() {
-        media.pause();
-        media.removeAttribute("src");
-        media.load();
-      }
-
-      function finish() {
-        if (finished) return;
-
-        finished = true;
-        clearTimeout(timer);
-
-        cleanup();
-
-        if (result.thumbnail) {
-          thumbnailCache.set(url, result);
-        }
-
-        formatCache.set(url, result.format);
-
-        resolve(result);
-      }
-
-      function seekNext() {
-        if (finished) return;
-
-        if (attempt >= positions.length) {
-          finish();
-          return;
-        }
-
-        const duration = media.duration;
-
-        let second = positions[attempt++];
-
-        if (Number.isFinite(duration) && duration > 0) {
-          second = Math.min(
-            second,
-            Math.max(0, duration - 0.1)
-          );
-        }
-
-        waitingForFrame = true;
-
-        try {
-          if (
-            Math.abs(media.currentTime - second) < 0.05 &&
-            media.readyState >= 2
-          ) {
-            capture();
-          } else {
-            media.currentTime = second;
-          }
-        } catch {
-          finish();
-        }
-      }
-
-      function capture() {
-        if (finished || !waitingForFrame) return;
-
-        if (
-          !media.videoWidth ||
-          !media.videoHeight ||
-          media.readyState < 2
-        ) {
-          return;
-        }
-
-        waitingForFrame = false;
-
-        try {
-          result.format = formatFromDimensions(
-            media.videoWidth,
-            media.videoHeight
-          );
-
-          const canvas = document.createElement("canvas");
-
-          const scale = Math.min(
-            1,
-            640 / media.videoWidth
-          );
-
-          canvas.width = Math.max(
-            1,
-            Math.round(media.videoWidth * scale)
-          );
-
-          canvas.height = Math.max(
-            1,
-            Math.round(media.videoHeight * scale)
-          );
-
-          const ctx = canvas.getContext("2d", {
-            willReadFrequently: true
-          });
-
-          if (!ctx) {
-            finish();
-            return;
-          }
-
-          ctx.drawImage(
-            media,
-            0,
-            0,
-            canvas.width,
-            canvas.height
-          );
-
-          const sample = document.createElement("canvas");
-
-          sample.width = 16;
-          sample.height = 16;
-
-          const sampleCtx = sample.getContext("2d", {
-            willReadFrequently: true
-          });
-
-          if (!sampleCtx) {
-            finish();
-            return;
-          }
-
-          sampleCtx.drawImage(
-            canvas,
-            0,
-            0,
-            16,
-            16
-          );
-
-          const pixels = sampleCtx.getImageData(
-            0,
-            0,
-            16,
-            16
-          ).data;
-
-          let brightness = 0;
-
-          for (let i = 0; i < pixels.length; i += 4) {
-            brightness +=
-              pixels[i] * 0.299 +
-              pixels[i + 1] * 0.587 +
-              pixels[i + 2] * 0.114;
-          }
-
-          brightness /= pixels.length / 4;
-
-          if (
-            brightness < 12 &&
-            attempt < positions.length
-          ) {
-            seekNext();
-            return;
-          }
-
-          result.thumbnail = canvas.toDataURL(
-            "image/jpeg",
-            0.82
-          );
-
-          finish();
-
-        } catch (error) {
-          console.warn(
-            "F1 CINEMA: kadr olinmadi",
-            error
-          );
-
-          finish();
-        }
-      }
-
-      media.muted = true;
-      media.playsInline = true;
-      media.preload = "auto";
-      media.crossOrigin = "anonymous";
-
-      media.addEventListener(
-        "loadedmetadata",
-        () => {
-          if (media.videoWidth && media.videoHeight) {
-            result.format = formatFromDimensions(
-              media.videoWidth,
-              media.videoHeight
-            );
-
-            formatCache.set(url, result.format);
-          }
-
-          seekNext();
-        },
-        { once: true }
-      );
-
-      media.addEventListener("seeked", () => {
-        if (media.readyState >= 2) {
-          capture();
-        }
-      });
-
-      media.addEventListener("loadeddata", capture);
-
-      media.addEventListener(
-        "error",
-        finish,
-        { once: true }
-      );
-
-      media.src = url;
-      media.load();
-    });
-
-    thumbnailJobs.set(url, job);
-
-    job.finally(() => {
-      thumbnailJobs.delete(url);
-    });
-
-    return job;
-  }
-
-  // ==========================================
-  // ESKI MUQOVANI TOZALASH
-  // ==========================================
-
-  function clearPreview() {
-    if (previewVideo) {
-      previewVideo.pause();
-      previewVideo.removeAttribute("src");
-      previewVideo.load();
-      previewVideo = null;
-    }
-
-    mediaBox.replaceChildren();
   }
 
   function showPlaceholder(message) {
-    clearPreview();
-
     const placeholder = document.createElement("div");
 
     placeholder.className = "cp-placeholder";
     placeholder.textContent = message;
 
-    mediaBox.appendChild(placeholder);
+    mediaBox.replaceChildren(placeholder);
   }
 
-  // ==========================================
-  // RASM MUQOVASINI KO'RSATISH
-  // ==========================================
-
-  function showImage(src, token, onFailure) {
-    const image = new Image();
-
-    image.onload = () => {
-      if (token !== renderToken) return;
-
-      clearPreview();
-
-      image.className = "cp-image";
-      image.alt = "";
-
-      mediaBox.appendChild(image);
-    };
-
-    image.onerror = () => {
-      if (token !== renderToken) return;
-
-      if (typeof onFailure === "function") {
-        onFailure();
-      }
-    };
-
-    image.src = src;
-  }
-
-  // ==========================================
-  // ZAXIRA: VIDEO KADRINI KO'RSATISH
-  // ==========================================
-
-  function showVideoPreview(video, token) {
-    if (token !== renderToken) return;
-
-    clearPreview();
-
-    const preview = document.createElement("video");
-
-    preview.className = "cp-preview-video";
-    preview.muted = true;
-    preview.defaultMuted = true;
-    preview.playsInline = true;
-    preview.preload = "auto";
-    preview.autoplay = false;
-    preview.controls = false;
-    preview.loop = false;
-
-    preview.setAttribute("muted", "");
-    preview.setAttribute("playsinline", "");
-
-    let frameReady = false;
-
-    const fallbackTimer = setTimeout(() => {
-      if (
-        token !== renderToken ||
-        frameReady
-      ) {
-        return;
-      }
-
-      showPlaceholder("🎬 F1 VIDEO");
-    }, 10000);
-
-    function ready() {
-      if (token !== renderToken) return;
-
-      frameReady = true;
-      clearTimeout(fallbackTimer);
-    }
-
-    preview.addEventListener(
-      "loadedmetadata",
-      () => {
-        if (token !== renderToken) return;
-
-        if (preview.videoWidth && preview.videoHeight) {
-          const format = formatFromDimensions(
-            preview.videoWidth,
-            preview.videoHeight
-          );
-
-          formatCache.set(videoURL(video), format);
-          setFormat(format);
-        }
-
-        const duration = preview.duration;
-
-        const second =
-          Number.isFinite(duration) && duration > 0
-            ? Math.min(1, Math.max(0, duration - 0.1))
-            : 0;
-
-        try {
-          preview.currentTime = second;
-        } catch {
-          // Brauzer ruxsat bermasa, birinchi kadr qoladi.
-        }
-      }
-    );
-
-    preview.addEventListener("seeked", ready);
-    preview.addEventListener("loadeddata", ready);
-
-    preview.addEventListener("error", () => {
-      clearTimeout(fallbackTimer);
-
-      if (token === renderToken) {
-        showPlaceholder("🎬 F1 VIDEO");
-      }
-    });
-
-    preview.src = videoURL(video);
-
-    previewVideo = preview;
-
-    mediaBox.appendChild(preview);
-
-    preview.load();
-  }
-
-  // ==========================================
-  // GALEREYA NUQTALARI
-  // ==========================================
-
-  function renderDots() {
-    dots.replaceChildren();
-
-    if (videos.length <= 1) return;
-
-    for (let i = 0; i < videos.length; i++) {
-      const dot = document.createElement("button");
-
-      dot.type = "button";
-      dot.className = "cp-dot";
-
-      if (i === currentIndex) {
-        dot.classList.add("cp-active");
-      }
-
-      dot.setAttribute(
-        "aria-label",
-        `${i + 1}-videoga o'tish`
-      );
-
-      dot.addEventListener("click", () => {
-        show(i);
-      });
-
-      dots.appendChild(dot);
-    }
-  }
-
-  // ==========================================
-  // GALEREYADA VIDEONI KO'RSATISH
-  // ==========================================
-
-  async function show(index) {
+  function show(index) {
     if (!videos.length) return;
 
     currentIndex =
@@ -1233,176 +609,80 @@
       title(video) + " — tomosha qilish"
     );
 
-    setFormat(getFormat(video));
-    renderDots();
+    setFormat(video);
 
-    showPlaceholder("Muqova yuklanmoqda...");
+    const thumb = thumbnailURL(video);
 
-    // Avval tayyor muqovani ko'rsatamiz.
-    const suppliedThumb = thumbnailURL(video);
-
-    if (suppliedThumb) {
-      showImage(suppliedThumb, token, async () => {
-        const info = await inspectVideo(video);
-
-        if (token !== renderToken) return;
-
-        setFormat(info.format);
-
-        if (info.thumbnail) {
-          showImage(
-            info.thumbnail,
-            token,
-            () => showVideoPreview(video, token)
-          );
-        } else {
-          showVideoPreview(video, token);
-        }
-      });
-
-      // Muqova tayyor bo'lsa ham formatni aniqlaymiz.
-      inspectVideo(video).then(info => {
-        if (token === renderToken) {
-          setFormat(info.format);
-        }
-      });
-
+    if (!thumb) {
+      showPlaceholder("🎬 F1 CINEMA");
       return;
     }
 
-    // Muqova yo'q bo'lsa, videodan kadr olamiz.
-    let info;
+    showPlaceholder("Muqova yuklanmoqda...");
 
-    try {
-      info = await inspectVideo(video);
-    } catch {
-      info = {
-        thumbnail: "",
-        format: getFormat(video)
-      };
-    }
+    const image = new Image();
 
-    if (token !== renderToken) return;
+    image.onload = () => {
+      if (token !== renderToken) return;
 
-    setFormat(info.format);
+      image.className = "cp-image";
+      image.alt = "";
 
-    if (info.thumbnail) {
-      showImage(
-        info.thumbnail,
-        token,
-        () => showVideoPreview(video, token)
-      );
-    } else {
-      showVideoPreview(video, token);
-    }
-  }
+      mediaBox.replaceChildren(image);
+    };
 
-  // ==========================================
-  // VIDEO PLEYER
-  // ==========================================
+    image.onerror = () => {
+      if (token !== renderToken) return;
 
-  function destroyPlayer() {
-    if (activeVideo) {
-      activeVideo.pause();
-      activeVideo.removeAttribute("src");
+      showPlaceholder("🎬 F1 CINEMA");
+    };
 
-      activeVideo.querySelectorAll("source").forEach(
-        source => source.removeAttribute("src")
-      );
-
-      activeVideo.load();
-      activeVideo = null;
-    }
-
-    frame.replaceChildren();
+    image.src = thumb;
   }
 
   function play(index) {
     if (!videos.length) return;
 
-    modalIndex =
-      (index + videos.length) % videos.length;
+    const video = videos[index];
+    const postURL = telegramPostURL(video);
 
-    const video = videos[modalIndex];
+    if (!postURL) return;
 
     if (!modal.classList.contains("cp-open")) {
       lastFocus = document.activeElement;
       previousOverflow = document.body.style.overflow;
     }
 
-    destroyPlayer();
-
     modalTitle.textContent = title(video);
-
-    const format = getFormat(video);
 
     frame.classList.remove(
       "cp-vertical",
       "cp-square"
     );
 
-    if (format === "portrait") {
+    if (format(video) === "portrait") {
       frame.classList.add("cp-vertical");
     }
 
-    if (format === "square") {
+    if (format(video) === "square") {
       frame.classList.add("cp-square");
     }
 
-    const player = document.createElement("video");
+    const iframe = document.createElement("iframe");
 
-    player.controls = true;
-    player.autoplay = true;
-    player.playsInline = true;
-    player.preload = "metadata";
+    iframe.src = postURL + "?embed=1";
+    iframe.title = title(video);
+    iframe.allow = "autoplay; fullscreen";
+    iframe.allowFullscreen = true;
+    iframe.loading = "eager";
 
-    player.addEventListener(
-      "loadedmetadata",
-      () => {
-        const actualFormat = formatFromDimensions(
-          player.videoWidth,
-          player.videoHeight
-        );
+    frame.replaceChildren(iframe);
 
-        formatCache.set(
-          videoURL(video),
-          actualFormat
-        );
-
-        frame.classList.remove(
-          "cp-vertical",
-          "cp-square"
-        );
-
-        if (actualFormat === "portrait") {
-          frame.classList.add("cp-vertical");
-        }
-
-        if (actualFormat === "square") {
-          frame.classList.add("cp-square");
-        }
-      }
-    );
-
-    const source = document.createElement("source");
-
-    source.src = videoURL(video);
-
-    source.type =
-      /\.webm(?:\?|$)/i.test(source.src)
-        ? "video/webm"
-        : "video/mp4";
-
-    player.appendChild(source);
-    frame.appendChild(player);
-
-    activeVideo = player;
+    telegramLink.href = postURL;
 
     modal.classList.add("cp-open");
 
     document.body.style.overflow = "hidden";
-
-    player.play().catch(() => {});
 
     closeButton.focus();
   }
@@ -1412,7 +692,7 @@
 
     modal.classList.remove("cp-open");
 
-    destroyPlayer();
+    frame.replaceChildren();
 
     document.body.style.overflow =
       previousOverflow;
@@ -1422,34 +702,14 @@
     }
   }
 
-  // ==========================================
-  // TUGMALAR
-  // ==========================================
-
   stage.addEventListener("click", () => {
     play(currentIndex);
-  });
-
-  previousButton.addEventListener("click", () => {
-    show(currentIndex - 1);
-  });
-
-  nextButton.addEventListener("click", () => {
-    show(currentIndex + 1);
   });
 
   closeButton.addEventListener(
     "click",
     closeModal
   );
-
-  modalPrevious.addEventListener("click", () => {
-    play(modalIndex - 1);
-  });
-
-  modalNext.addEventListener("click", () => {
-    play(modalIndex + 1);
-  });
 
   modal.addEventListener("click", event => {
     if (event.target === modal) {
@@ -1466,10 +726,6 @@
     }
   });
 
-  // ==========================================
-  // VIDEO JSON FAYLINI YUKLASH
-  // ==========================================
-
   async function loadVideos() {
     if (loading) return;
 
@@ -1477,15 +733,13 @@
 
     try {
       const response = await fetch(
-        "./uploaded-videos.json?t=" + Date.now(),
-        {
-          cache: "no-store"
-        }
+        "./telegram-videos.json?t=" + Date.now(),
+        { cache: "no-store" }
       );
 
       if (!response.ok) {
         throw new Error(
-          "uploaded-videos.json HTTP " +
+          "telegram-videos.json HTTP " +
           response.status
         );
       }
@@ -1513,7 +767,7 @@
         renderToken++;
 
         status.textContent =
-          "Hozircha yuklangan videolar mavjud emas.";
+          "Hozircha Telegram videolari mavjud emas.";
 
         caption.textContent = "";
         counter.textContent = "";
@@ -1521,8 +775,6 @@
         showPlaceholder(
           "Hozircha videolar mavjud emas."
         );
-
-        dots.replaceChildren();
 
         return;
       }
@@ -1540,7 +792,7 @@
         oldKeys !== newKeys ||
         renderToken === 0
       ) {
-        await show(currentIndex);
+        show(currentIndex);
       }
 
     } catch (error) {
@@ -1556,13 +808,8 @@
     }
   }
 
-  // ==========================================
-  // ISHGA TUSHIRISH
-  // ==========================================
-
   loadVideos();
 
-  // Har 15 soniyada almashadi.
   setInterval(() => {
     if (
       videos.length > 1 &&
@@ -1573,7 +820,6 @@
     }
   }, ROTATE_MS);
 
-  // Har 5 daqiqada yangi videolar tekshiriladi.
   setInterval(
     loadVideos,
     REFRESH_MS
