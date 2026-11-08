@@ -1,6 +1,18 @@
 [
   {
     "platform": "telegram",
+    "id": "telegram--1004331486193-3",
+    "url": "https://t.me/f1cinema/3",
+    "video_url": "https://t.me/f1cinema/3",
+    "title_uz": "GOAT",
+    "thumbnail": "https://ik.imagekit.io/qgxfsy78f/f1cinema/f1cinema-3_saCLiRFqU.jpg",
+    "thumbnail_url": "https://ik.imagekit.io/qgxfsy78f/f1cinema/f1cinema-3_saCLiRFqU.jpg",
+    "channel": "F1 CINEMA",
+    "aspect_ratio": "16:9",
+    "published": "2026-11-08T12:14:21.000Z"
+  },
+  {
+    "platform": "telegram",
     "id": "telegram--1004331486193-2",
     "url": "https://t.me/f1cinema/2",
     "video_url": "https://t.me/f1cinema/2",
