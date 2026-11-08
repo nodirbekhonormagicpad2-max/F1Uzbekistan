@@ -101,11 +101,12 @@
     }
 
     #f1-cinema-premium .cp-image {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: contain;
-    }
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
 
     #f1-cinema-premium .cp-placeholder {
       position: absolute;
