@@ -1,5 +1,16 @@
-
 [
+  {
+    "platform": "telegram",
+    "id": "telegram--1004331486193-5",
+    "url": "https://t.me/f1cinema/5",
+    "video_url": "https://t.me/f1cinema/5",
+    "title_uz": "Oldingi Red Bullga sayohat",
+    "thumbnail": "https://ik.imagekit.io/qgxfsy78f/f1cinema/f1cinema-5_nnKt6HBt5.jpg",
+    "thumbnail_url": "https://ik.imagekit.io/qgxfsy78f/f1cinema/f1cinema-5_nnKt6HBt5.jpg",
+    "channel": "F1 CINEMA",
+    "aspect_ratio": "16:9",
+    "published": "2026-11-08T15:48:43.000Z"
+  },
   {
     "platform": "telegram",
     "id": "telegram--1004331486193-3",
