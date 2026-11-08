@@ -1,18 +1,6 @@
 [
   {
     "platform": "telegram",
-    "id": "telegram--1004331486193-4",
-    "url": "https://t.me/f1cinema/4",
-    "video_url": "https://t.me/f1cinema/4",
-    "title_uz": "Oldingi Red Bull",
-    "thumbnail": "https://ik.imagekit.io/qgxfsy78f/f1cinema/f1cinema-4_Yio99wJpQ.jpg",
-    "thumbnail_url": "https://ik.imagekit.io/qgxfsy78f/f1cinema/f1cinema-4_Yio99wJpQ.jpg",
-    "channel": "F1 CINEMA",
-    "aspect_ratio": "16:9",
-    "published": "2026-11-08T15:06:48.000Z"
-  },
-  {
-    "platform": "telegram",
     "id": "telegram--1004331486193-3",
     "url": "https://t.me/f1cinema/3",
     "video_url": "https://t.me/f1cinema/3",
