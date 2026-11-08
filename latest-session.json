@@ -2,7 +2,7 @@
   "session": "Poyga natijalari",
   "meeting": "Brazil",
   "date": "2026-11-08T19:00:00+00:00",
-  "updated": "2026-11-08T19:42:20.869237+00:00",
+  "updated": "2026-11-08T22:32:25.905399+00:00",
   "results": [
     {
       "position": 1,
@@ -32,7 +32,7 @@
       "position": 5,
       "name": "K ANTONELLI",
       "team": "Mercedes",
-      "time": "5759.521"
+      "time": "5764.521"
     },
     {
       "position": 6,
@@ -42,15 +42,15 @@
     },
     {
       "position": 7,
-      "name": "C LECLERC",
-      "team": "Ferrari",
-      "time": "5797.09"
-    },
-    {
-      "position": 8,
       "name": "L LAWSON",
       "team": "Racing Bulls",
       "time": "5798.906"
+    },
+    {
+      "position": 8,
+      "name": "C LECLERC",
+      "team": "Ferrari",
+      "time": "5802.09"
     },
     {
       "position": 9,
