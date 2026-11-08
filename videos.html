@@ -125,7 +125,9 @@ async function readList(filename){const response=await fetch('./'+filename+'?t='
 async function load(){
  if(loading)return;loading=true;
  try{
-  const results=await Promise.allSettled([readList('telegram-videos.json'),readList('uploaded-videos.json')]);
+  
+const results=await Promise.allSettled([readList('telegram-videos.json')]);
+
   const items=[];let success=false;
   for(const result of results){if(result.status==='fulfilled'){items.push(...result.value);success=true;}else console.warn('F1 CINEMA:',result.reason);}
   if(!success)throw Error('Video ro‘yxatlari yuklanmadi');
