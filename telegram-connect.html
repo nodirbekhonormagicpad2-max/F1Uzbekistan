@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <title>F1 CINEMA — Telegram ulash</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: #090b11;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .panel {
+      width: 100%;
+      max-width: 420px;
+      padding: 30px 22px;
+      background: #171b25;
+      border: 1px solid #343a46;
+      border-radius: 18px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #ff303d;
+      font-size: 27px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      color: #b9c0cd;
+      line-height: 1.6;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      margin-top: 20px;
+      background: #0d111a;
+      color: white;
+      border: 1px solid #505767;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      margin-top: 15px;
+      background: #e9192b;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .success {
+      color: #4ade80;
+    }
+
+    .error {
+      color: #ff7777;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="panel">
+    <h1>F1 CINEMA</h1>
+
+    <p>
+      Telegram kanalini saytga ulash
+    </p>
+
+    <form id="connectForm">
+      <input
+        id="password"
+        type="password"
+        placeholder="Admin parolingiz"
+        autocomplete="off"
+        required
+      >
+
+      <button id="connectBtn" type="submit">
+        TELEGRAM BOTNI ULASH
+      </button>
+    </form>
+
+    <div id="status" role="status"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("connectForm");
+    const password = document.getElementById("password");
+    const button = document.getElementById("connectBtn");
+    const status = document.getElementById("status");
+
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      button.disabled = true;
+      status.className = "";
+      status.textContent = "Telegram ulanmoqda...";
+
+      try {
+        const response = await fetch("/api/telegram-setup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            password: password.value
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+          throw new Error(
+            data.error || "Ulashda xatolik yuz berdi"
+          );
+        }
+
+        status.className = "success";
+        status.textContent =
+          "✅ Telegram bot muvaffaqiyatli ulandi!";
+
+        password.value = "";
+
+      } catch (error) {
+        status.className = "error";
+        status.textContent =
+          "❌ " + error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
