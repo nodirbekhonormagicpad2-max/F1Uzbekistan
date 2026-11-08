@@ -259,12 +259,32 @@
     }
 
     #f1-cinema-modal .cp-frame {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      overflow: hidden;
-      border-radius: 9px;
-      background: #000;
-    }
+  width: 100%;
+  height: min(75dvh, 750px);
+  aspect-ratio: auto;
+  overflow: auto;
+  border-radius: 9px;
+  background: #000;
+  -webkit-overflow-scrolling: touch;
+}
+
+#f1-cinema-modal .cp-frame.cp-vertical,
+#f1-cinema-modal .cp-frame.cp-square {
+  width: 100%;
+  max-width: 650px;
+  height: min(75dvh, 750px);
+  max-height: none;
+  aspect-ratio: auto;
+  margin: 0 auto;
+}
+
+#f1-cinema-modal .cp-frame iframe {
+  display: block;
+  width: 100%;
+  height: 750px;
+  border: 0;
+  background: #000;
+}
 
     #f1-cinema-modal .cp-frame.cp-vertical {
       width: min(420px, 100%);
