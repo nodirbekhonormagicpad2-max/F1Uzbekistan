@@ -3,119 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Barcha videolar | F1 Uzbekistan TV</title>
+<title>F1 CINEMA | F1 Uzbekistan TV</title>
 <style>
-:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#08090d;color:#f4f4f6;font:15px system-ui,Arial,sans-serif}header{background:#111218;border-bottom:2px solid #e10600;padding:18px max(18px,calc((100% - 1180px)/2));display:flex;justify-content:space-between;align-items:center;gap:10px}header a{color:#fff;text-decoration:none;font-weight:800}.site-logo{font-size:clamp(12px,2vw,16px)}.home-button{background:#e10600;padding:10px 13px;border-radius:9px;font-size:12px;white-space:nowrap}main{max-width:1180px;margin:auto;padding:28px 18px}h1{font-size:clamp(27px,5vw,42px);margin:0 0 8px}h1 span{color:#ff2929}.sub{color:#a8abb6;margin-bottom:24px;line-height:1.6}.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}.filters button{background:#1c1e27;color:#fff;border:1px solid #363946;border-radius:999px;padding:10px 17px;cursor:pointer;font-weight:600}.filters button.active{background:#e10600;border-color:#e10600}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}.card{background:#14161d;border:1px solid #292b36;border-radius:13px;overflow:hidden}.thumb{position:relative;display:grid;place-items:center;width:100%;aspect-ratio:16/9;padding:0;border:0;background:linear-gradient(135deg,#242632,#101116);overflow:hidden;cursor:pointer;color:#bbb}.thumb.portrait{aspect-ratio:9/16}.thumb.square{aspect-ratio:1/1}.thumb.landscape{aspect-ratio:16/9}.thumb img,.thumb .video-preview{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;background:#101116}.thumb .video-preview{pointer-events:none}.placeholder{font-size:46px;opacity:.65}.play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#e10600;border-radius:12px;padding:11px 17px;font-size:23px;color:#fff;box-shadow:0 3px 18px #0008}.info{padding:15px}.info h2{font-size:16px;line-height:1.45;margin:0 0 10px;overflow-wrap:anywhere}.meta{font-size:12px;color:#aaa}.status{color:#a8abb6;padding:25px 0}.status:empty{display:none}.viewer{position:fixed;inset:0;background:rgba(0,0,0,.96);display:none;place-items:center;padding:12px;z-index:9999;overflow:auto}.viewer.open{display:grid}.modal{width:min(900px,100%);margin:auto}.modal-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.modal-title{font-weight:800;line-height:1.4}.close{background:#e10600;border:0;color:white;padding:10px 15px;border-radius:7px;cursor:pointer;flex-shrink:0}.frame{width:100%;aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden}.frame.portrait{width:min(420px,100%);aspect-ratio:9/16;max-height:78vh;margin:auto}.frame.square{width:min(650px,100%);aspect-ratio:1;margin:auto}.frame video{width:100%;height:100%;object-fit:contain;display:block}.hint{font-size:12px;color:#9da0ab;margin-top:20px;line-height:1.6}@media(max-width:700px){main{padding:23px 15px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.info{padding:10px}.info h2{font-size:13px;line-height:1.4;margin:0 0 7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.meta{font-size:11px}.play{padding:8px 12px;font-size:17px;border-radius:9px}.filters button{padding:9px 13px;font-size:12px}.home-button{font-size:11px;padding:9px 10px}}
-@media(min-width:701px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:360px){.grid{gap:9px}.info{padding:8px}.info h2{font-size:12px}.play{padding:7px 10px;font-size:15px}}
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#08090d;color:#f4f4f6;font:15px system-ui,Arial,sans-serif}header{background:#111218;border-bottom:2px solid #e10600;padding:18px max(18px,calc((100% - 1180px)/2));display:flex;justify-content:space-between;align-items:center;gap:10px}header a{color:#fff;text-decoration:none;font-weight:800}.site-logo{font-size:clamp(12px,2vw,16px)}.home-button{background:#e10600;padding:10px 13px;border-radius:9px;font-size:12px;white-space:nowrap}main{max-width:1180px;margin:auto;padding:28px 18px}h1{font-size:clamp(27px,5vw,42px);margin:0 0 8px}h1 span{color:#ff2929}.sub{color:#a8abb6;margin-bottom:24px;line-height:1.6}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card{background:#14161d;border:1px solid #292b36;border-radius:13px;overflow:hidden}.thumb{position:relative;display:grid;place-items:center;width:100%;aspect-ratio:16/9;padding:0;border:0;background:linear-gradient(135deg,#242632,#101116);overflow:hidden;cursor:pointer;color:#bbb}.thumb.portrait{aspect-ratio:9/16}.thumb.square{aspect-ratio:1}.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.placeholder{font-size:46px;opacity:.65}.play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#e10600;border-radius:12px;padding:11px 17px;font-size:23px;color:#fff;box-shadow:0 3px 18px #0008}.info{padding:15px}.info h2{font-size:16px;line-height:1.45;margin:0 0 10px;overflow-wrap:anywhere}.meta{font-size:12px;color:#aaa}.status{color:#a8abb6;padding:25px 0}.status:empty{display:none}.viewer{position:fixed;inset:0;background:rgba(0,0,0,.96);display:none;place-items:center;padding:12px;z-index:9999;overflow:auto}.viewer.open{display:grid}.modal{width:min(900px,100%);margin:auto}.modal-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.modal-title{font-weight:800;line-height:1.4}.close{background:#e10600;border:0;color:white;padding:10px 15px;border-radius:7px;cursor:pointer;flex-shrink:0}.frame{width:100%;aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden}.frame.portrait{width:min(420px,100%);aspect-ratio:9/16;max-height:78vh;margin:auto}.frame.square{width:min(650px,100%);aspect-ratio:1;margin:auto}.frame video,.frame iframe{width:100%;height:100%;display:block;border:0}.frame video{object-fit:contain}@media(max-width:700px){main{padding:23px 15px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.info{padding:10px}.info h2{font-size:13px;line-height:1.4;margin:0 0 7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.meta{font-size:11px}.play{padding:8px 12px;font-size:17px;border-radius:9px}.home-button{font-size:11px;padding:9px 10px}}@media(max-width:360px){.grid{gap:9px}.info{padding:8px}.info h2{font-size:12px}}
 </style>
 </head>
 <body>
 <header><a href="./index.html" class="site-logo">🏎️ F1 UZBEKISTAN TV</a><a href="./index.html" class="home-button">← Bosh sahifaga</a></header>
-<main>
-<h1>🎬 F1 <span>VIDEOLAR</span></h1>
-<p class="sub">F1 Uzbekistan TV tomonidan joylangan barcha videolar.</p>
-
-<p id="status" class="status" role="status">Videolar yuklanmoqda…</p>
-<section id="grid" class="grid" aria-label="Videolar ro‘yxati"></section>
-
-</main>
+<main><h1>🎬 F1 <span>CINEMA</span></h1><p class="sub">Formula 1 olamidagi videolar.</p><p id="status" class="status" role="status">Videolar yuklanmoqda…</p><section id="grid" class="grid" aria-label="Videolar ro‘yxati"></section></main>
 <div id="viewer" class="viewer" role="dialog" aria-modal="true" aria-label="Video pleer"><div class="modal"><div class="modal-header"><div id="modal-title" class="modal-title"></div><button id="close" class="close" type="button">✕ Yopish</button></div><div id="frame" class="frame"></div></div></div>
 <script>
 (()=>{'use strict';
-const grid=document.querySelector('#grid'),status=document.querySelector('#status'),viewer=document.querySelector('#viewer'),frame=document.querySelector('#frame'),closeButton=document.querySelector('#close'),modalTitle=document.querySelector('#modal-title');
+const grid=document.getElementById('grid'),status=document.getElementById('status'),viewer=document.getElementById('viewer'),frame=document.getElementById('frame'),closeButton=document.getElementById('close'),modalTitle=document.getElementById('modal-title');
 let videos=[],previousOverflow='',lastFocus=null,loading=false;
 const str=v=>typeof v==='string'?v:'';
-const videoTitle=v=>str(v.title_uz)||str(v.title)||'F1 videosi';
-const videoURL=v=>str(v.video_url)||str(v.videoUrl)||str(v.url);
-function validVideoURL(v){const raw=videoURL(v);if(!raw)return false;try{const u=new URL(raw,location.href);return (u.protocol==='https:'||u.origin===location.origin&&u.protocol==='http:')&&/\.(mp4|webm)$/i.test(u.pathname);}catch{return false;}}
-function thumbnailURL(v){const raw=str(v.thumbnail)||str(v.thumbnail_url)||str(v.thumbnailUrl);if(!raw)return '';try{const u=new URL(raw,location.href);return u.protocol==='https:'||u.origin===location.origin&&u.protocol==='http:'?u.href:'';}catch{return '';}}
-function format(v){const ratio=str(v.aspect_ratio)||str(v.aspectRatio);if(ratio==='9:16')return 'portrait';if(ratio==='1:1')return 'square';if(ratio==='16:9')return 'landscape';const w=Number(v.width||v.video_width||v.videoWidth),h=Number(v.height||v.video_height||v.videoHeight);if(w>0&&h>0){const r=w/h;return r<.85?'portrait':r>1.15?'landscape':'square';}return 'landscape';}
-function category(v){const explicit=str(v.category).toLowerCase();if(['crash','qualifying','race'].includes(explicit))return explicit;const s=(videoTitle(v)+' '+str(v.title)).toLowerCase();if(/crash|collision|fire|flame|incident|spin|accident|avariya|hodisa|yong.in/.test(s))return 'crash';if(/qualifying|pole|q1|q2|q3|saralash/.test(s))return 'qualifying';if(/race|highlight|overtak|battle|grand prix|poyga|sprint/.test(s))return 'race';return 'other';}
+const title=v=>str(v.title_uz)||str(v.title)||'F1 videosi';
+const rawURL=v=>str(v.video_url)||str(v.videoUrl)||str(v.url);
+function driveId(raw){try{const u=new URL(raw);if(u.protocol!=='https:'||u.hostname!=='drive.google.com')return '';const m=u.pathname.match(/^\/file\/d\/([A-Za-z0-9_-]+)(?:\/|$)/);if(m)return m[1];if(u.pathname==='/open'||u.pathname==='/uc')return /^[A-Za-z0-9_-]+$/.test(u.searchParams.get('id')||'')?u.searchParams.get('id'):'';return '';}catch{return '';}}
+function directURL(raw){try{const u=new URL(raw,location.href);if(!['https:','http:'].includes(u.protocol))return '';if(u.protocol==='http:'&&u.origin!==location.origin)return '';if(!/\.(mp4|webm)$/i.test(u.pathname))return '';return u.href;}catch{return '';}}
+function source(v){const raw=rawURL(v);const id=driveId(raw);if(id)return {kind:'drive',url:'https://drive.google.com/file/d/'+encodeURIComponent(id)+'/preview'};const direct=directURL(raw);return direct?{kind:'direct',url:direct}:null;}
+function thumbnail(v){const raw=str(v.thumbnail)||str(v.thumbnail_url)||str(v.thumbnailUrl);if(!raw)return '';try{const u=new URL(raw,location.href);return u.protocol==='https:'||(u.protocol==='http:'&&u.origin===location.origin)?u.href:'';}catch{return '';}}
+function format(v){const r=str(v.aspect_ratio)||str(v.aspectRatio);return r==='9:16'?'portrait':r==='1:1'?'square':'landscape';}
 function closeVideo(){if(!viewer.classList.contains('open'))return;viewer.classList.remove('open');const player=frame.querySelector('video');if(player){player.pause();player.removeAttribute('src');player.load();}frame.replaceChildren();document.body.style.overflow=previousOverflow;if(lastFocus&&lastFocus.isConnected)lastFocus.focus();}
-function openVideo(v){if(!viewer.classList.contains('open')){lastFocus=document.activeElement;previousOverflow=document.body.style.overflow;}frame.replaceChildren();frame.className='frame';frame.classList.add(format(v));modalTitle.textContent=videoTitle(v);const player=document.createElement('video');player.controls=true;player.playsInline=true;player.autoplay=true;player.preload='metadata';player.src=videoURL(v);player.addEventListener('loadedmetadata',()=>{if(!player.videoWidth||!player.videoHeight)return;const ratio=player.videoWidth/player.videoHeight;frame.className='frame '+(ratio<.85?'portrait':ratio>1.15?'landscape':'square');});frame.appendChild(player);viewer.classList.add('open');document.body.style.overflow='hidden';player.play().catch(()=>{});closeButton.focus();}
-function addPreview(thumb,v){
-  const preview=document.createElement('video');
-  preview.className='video-preview';
-  preview.muted=true;
-  preview.defaultMuted=true;
-  preview.playsInline=true;
-  preview.preload='metadata';
-  preview.setAttribute('muted','');
-  preview.setAttribute('playsinline','');
-  preview.setAttribute('aria-hidden','true');
-  preview.addEventListener('loadedmetadata',()=>{
-    if(preview.videoWidth&&preview.videoHeight){
-      const ratio=preview.videoWidth/preview.videoHeight;
-      thumb.classList.remove('portrait','square','landscape');
-      thumb.classList.add(ratio<.85?'portrait':ratio>1.15?'landscape':'square');
-    }
-    const duration=preview.duration;
-    const second=Number.isFinite(duration)&&duration>0
-      ?Math.min(1,Math.max(0,duration-0.1)):0;
-    try{preview.currentTime=second;}catch{}
-  });
-  preview.addEventListener('error',()=>{
-    preview.remove();
-    if(!thumb.querySelector('.placeholder')){
-      const icon=document.createElement('span');
-      icon.className='placeholder';icon.textContent='🎬';
-      thumb.prepend(icon);
-    }
-  });
-  thumb.prepend(preview);
-  // Videoni faqat kartochka ekranga yaqinlashganda yuklaymiz.
-  if('IntersectionObserver' in window){
-    const observer=new IntersectionObserver(entries=>{
-      if(entries.some(e=>e.isIntersecting)){
-        preview.src=videoURL(v);
-        observer.disconnect();
-      }
-    },{rootMargin:'250px'});
-    observer.observe(thumb);
-  }else{
-    preview.src=videoURL(v);
-  }
-}
-function render(){
-  grid.replaceChildren();
-  status.textContent=videos.length?'':'Hozircha yuklangan videolar mavjud emas.';
-  for(const v of videos){
-    const card=document.createElement('article');card.className='card';
-    const thumb=document.createElement('button');thumb.type='button';
-    thumb.className='thumb '+format(v);
-    thumb.setAttribute('aria-label',videoTitle(v)+' — tomosha qilish');
-    const poster=thumbnailURL(v);
-    if(poster){
-      const img=document.createElement('img');img.loading='lazy';img.alt='';
-      img.onerror=()=>{img.remove();addPreview(thumb,v);};
-      img.src=poster;thumb.append(img);
-    }else{addPreview(thumb,v);}
-    const play=document.createElement('span');play.className='play';play.textContent='▶';
-    thumb.append(play);thumb.addEventListener('click',()=>openVideo(v));
-    const info=document.createElement('div');info.className='info';
-    const h=document.createElement('h2');h.textContent=videoTitle(v);info.append(h);
-    const dateValue=v.published||v.publishedAt||v.createdAt;
-    let date=null;
-    if(typeof dateValue==='number')date=new Date(dateValue<1e11?dateValue*1000:dateValue);
-    else if(dateValue)date=new Date(dateValue);
-    if(date&&!Number.isNaN(date.getTime())){
-      const meta=document.createElement('div');meta.className='meta';
-      meta.textContent=date.toLocaleDateString('uz-UZ');info.append(meta);
-    }
-    card.append(thumb,info);grid.append(card);
-  }
-}
-
-async function load(){if(loading)return;loading=true;try{const response=await fetch('./uploaded-videos.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw new Error('HTTP '+response.status);const data=await response.json();const items=Array.isArray(data)?data:Array.isArray(data?.videos)?data.videos:[];const seen=new Set();videos=items.filter(v=>{if(!v||typeof v!=='object'||!validVideoURL(v))return false;const key=str(v.id)||videoURL(v);if(seen.has(key))return false;seen.add(key);return true;});render();}catch(e){console.error('F1 Videolar:',e);status.textContent='Videolar ro‘yxatini yuklab bo‘lmadi. uploaded-videos.json faylini tekshiring.';}finally{loading=false;}}
-// Modalni yopish tugmasi va qo‘shimcha yopish usullari.
-closeButton.addEventListener('click', closeVideo);
-viewer.addEventListener('click', event => {
-  if (event.target === viewer) closeVideo();
-});
-document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && viewer.classList.contains('open')) closeVideo();
-});
-load();setInterval(load,300000);
+function openVideo(v){const s=source(v);if(!s)return;lastFocus=document.activeElement;previousOverflow=document.body.style.overflow;frame.replaceChildren();frame.className='frame '+format(v);modalTitle.textContent=title(v);if(s.kind==='drive'){const iframe=document.createElement('iframe');iframe.src=s.url;iframe.title=title(v);iframe.allow='autoplay; fullscreen; picture-in-picture';iframe.allowFullscreen=true;iframe.referrerPolicy='strict-origin-when-cross-origin';frame.append(iframe);}else{const player=document.createElement('video');player.controls=true;player.playsInline=true;player.autoplay=true;player.preload='metadata';player.src=s.url;player.addEventListener('loadedmetadata',()=>{if(!player.videoWidth||!player.videoHeight)return;const ratio=player.videoWidth/player.videoHeight;frame.className='frame '+(ratio<.85?'portrait':ratio>1.15?'landscape':'square');});frame.append(player);player.play().catch(()=>{});}viewer.classList.add('open');document.body.style.overflow='hidden';closeButton.focus();}
+function render(){grid.replaceChildren();status.textContent=videos.length?'':'Hozircha videolar mavjud emas.';for(const v of videos){const card=document.createElement('article');card.className='card';const thumb=document.createElement('button');thumb.type='button';thumb.className='thumb '+format(v);thumb.setAttribute('aria-label',title(v)+' — tomosha qilish');const poster=thumbnail(v);const placeholder=document.createElement('span');placeholder.className='placeholder';placeholder.textContent='🎬';thumb.append(placeholder);if(poster){const img=document.createElement('img');img.loading='lazy';img.decoding='async';img.alt='';img.addEventListener('load',()=>placeholder.remove());img.addEventListener('error',()=>img.remove());img.src=poster;thumb.append(img);}const play=document.createElement('span');play.className='play';play.textContent='▶';thumb.append(play);thumb.addEventListener('click',()=>openVideo(v));const info=document.createElement('div');info.className='info';const h=document.createElement('h2');h.textContent=title(v);info.append(h);const dateValue=v.published||v.publishedAt||v.createdAt;let date=null;if(typeof dateValue==='number')date=new Date(dateValue<1e11?dateValue*1000:dateValue);else if(dateValue)date=new Date(dateValue);if(date&&!Number.isNaN(date.getTime())){const meta=document.createElement('div');meta.className='meta';meta.textContent=date.toLocaleDateString('uz-UZ');info.append(meta);}card.append(thumb,info);grid.append(card);}}
+async function load(){if(loading)return;loading=true;try{const response=await fetch('./uploaded-videos.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);const data=await response.json();const items=Array.isArray(data)?data:Array.isArray(data?.videos)?data.videos:[];const seen=new Set();videos=items.filter(v=>{if(!v||typeof v!=='object'||!source(v))return false;const key=str(v.id)||rawURL(v);if(seen.has(key))return false;seen.add(key);return true;});render();}catch(e){console.error('F1 CINEMA:',e);status.textContent='Videolar ro‘yxatini yuklab bo‘lmadi.';}finally{loading=false;}}
+closeButton.addEventListener('click',closeVideo);viewer.addEventListener('click',e=>{if(e.target===viewer)closeVideo();});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeVideo();});load();setInterval(load,300000);
 })();
 </script>
 </body>
