@@ -1,5 +1,15 @@
 [
   {
+    "platform": "google_drive",
+    "id": "drive-14iX8XMXVMSdQHGOe_aE0XGYtywN86hlh",
+    "url": "https://drive.google.com/file/d/14iX8XMXVMSdQHGOe_aE0XGYtywN86hlh/view",
+    "video_url": "https://drive.google.com/file/d/14iX8XMXVMSdQHGOe_aE0XGYtywN86hlh/view",
+    "title_uz": "Max Verstappen Mercedesni ustidan kulmoqda",
+    "channel": "F1 Uzbekistan TV",
+    "aspect_ratio": "9:16",
+    "published": "2026-11-08T10:15:17.254Z"
+  },
+  {
     "platform": "upload",
     "id": "54ae14e9-75fd-4106-a262-f3f0d13ee1bf",
     "url": "/api/media/videos/54ae14e9-75fd-4106-a262-f3f0d13ee1bf.mp4",
