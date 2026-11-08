@@ -1,8 +1,6 @@
 
 "use strict";
 
-// Cloudflare Pages: functions/api/telegram-webhook.js
-
 const REPO = "nodirbekhonormagicpad2-max/F1Uzbekistan";
 const FILE = "telegram-videos.json";
 const BRANCH = "main";
@@ -10,8 +8,8 @@ const CHANNEL = "f1cinema";
 
 const GH = `https://api.github.com/repos/${REPO}/contents/${FILE}`;
 
-function json(value, status = 200) {
-  return new Response(JSON.stringify(value), {
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data), {
     status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
@@ -41,11 +39,101 @@ function decode(text) {
   );
 }
 
+async function getThumbnail(post, env) {
+  const video = post.video || post.document;
+
+  const thumbs = [
+    ...(video?.thumbnail ? [video.thumbnail] : []),
+    ...(video?.thumb ? [video.thumb] : []),
+    ...(post.photo || []).slice(-1)
+  ];
+
+  const fileId = thumbs[0]?.file_id;
+
+  if (!fileId || !env.IMAGEKIT_PRIVATE_KEY) {
+    return "";
+  }
+
+  try {
+    const infoResponse = await fetch(
+      `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/getFile`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          file_id: fileId
+        })
+      }
+    );
+
+    const info = await infoResponse.json();
+
+    if (!info.ok || !info.result?.file_path) {
+      return "";
+    }
+
+    const imageResponse = await fetch(
+      `https://api.telegram.org/file/bot${env.TELEGRAM_BOT_TOKEN}/${info.result.file_path}`
+    );
+
+    if (!imageResponse.ok) {
+      return "";
+    }
+
+    const imageBlob = await imageResponse.blob();
+
+    const form = new FormData();
+
+    form.append(
+      "file",
+      imageBlob,
+      "telegram-thumbnail.jpg"
+    );
+
+    form.append(
+      "fileName",
+      `f1cinema-${post.message_id}.jpg`
+    );
+
+    form.append("folder", "/f1cinema");
+    form.append("useUniqueFileName", "true");
+
+    const uploadResponse = await fetch(
+      "https://upload.imagekit.io/api/v1/files/upload",
+      {
+        method: "POST",
+        headers: {
+          Authorization:
+            "Basic " + btoa(env.IMAGEKIT_PRIVATE_KEY + ":")
+        },
+        body: form
+      }
+    );
+
+    if (!uploadResponse.ok) {
+      return "";
+    }
+
+    const uploaded = await uploadResponse.json();
+
+    return uploaded.url || "";
+  } catch (error) {
+    console.error("Thumbnail error:", error);
+    return "";
+  }
+}
+
 export async function onRequestPost({ request, env }) {
-  if (!env.TELEGRAM_WEBHOOK_SECRET || !env.GITHUB_TOKEN) {
+  if (
+    !env.TELEGRAM_WEBHOOK_SECRET ||
+    !env.TELEGRAM_BOT_TOKEN ||
+    !env.GITHUB_TOKEN
+  ) {
     return json({
       ok: false,
-      error: "Server sozlamalari yetishmaydi"
+      error: "Cloudflare sozlamalari yetishmaydi"
     }, 503);
   }
 
@@ -83,19 +171,7 @@ export async function onRequestPost({ request, env }) {
     return json({ ok: true, ignored: true });
   }
 
-  const item = {
-    platform: "telegram",
-    id: `telegram-${post.chat.id}-${post.message_id}`,
-    url: `https://t.me/${CHANNEL}/${post.message_id}`,
-    video_url: `https://t.me/${CHANNEL}/${post.message_id}`,
-    title_uz: (post.caption || "F1 CINEMA videosi")
-      .slice(0, 160),
-    channel: "F1 CINEMA",
-    aspect_ratio: "16:9",
-    published: new Date(
-      (post.date || Math.floor(Date.now() / 1000)) * 1000
-    ).toISOString()
-  };
+  const id = `telegram-${post.chat.id}-${post.message_id}`;
 
   const headers = {
     Authorization: `Bearer ${env.GITHUB_TOKEN}`,
@@ -104,10 +180,29 @@ export async function onRequestPost({ request, env }) {
     "User-Agent": "F1CinemaTelegramWebhook"
   };
 
+  const thumbnail = await getThumbnail(post, env);
+
+  const item = {
+    platform: "telegram",
+    id,
+    url: `https://t.me/${CHANNEL}/${post.message_id}`,
+    video_url: `https://t.me/${CHANNEL}/${post.message_id}`,
+    title_uz: (post.caption || "F1 CINEMA videosi")
+      .slice(0, 160),
+    thumbnail,
+    thumbnail_url: thumbnail,
+    channel: "F1 CINEMA",
+    aspect_ratio: "16:9",
+    published: new Date(
+      (post.date || Math.floor(Date.now() / 1000)) * 1000
+    ).toISOString()
+  };
+
   for (let attempt = 0; attempt < 3; attempt++) {
-    const response = await fetch(`${GH}?ref=${BRANCH}`, {
-      headers
-    });
+    const response = await fetch(
+      `${GH}?ref=${BRANCH}`,
+      { headers }
+    );
 
     let videos = [];
     let sha;
@@ -138,8 +233,11 @@ export async function onRequestPost({ request, env }) {
       }, 502);
     }
 
-    if (videos.some(v => v.id === item.id)) {
-      return json({ ok: true, duplicate: true });
+    if (videos.some(v => v.id === id)) {
+      return json({
+        ok: true,
+        duplicate: true
+      });
     }
 
     videos.unshift(item);
@@ -166,10 +264,16 @@ export async function onRequestPost({ request, env }) {
     });
 
     if (saved.ok) {
-      return json({ ok: true });
+      return json({
+        ok: true,
+        thumbnail: Boolean(thumbnail)
+      });
     }
 
-    if (saved.status !== 409 && saved.status !== 422) {
+    if (
+      saved.status !== 409 &&
+      saved.status !== 422
+    ) {
       return json({
         ok: false,
         error: "GitHub'ga saqlab bo‘lmadi"
