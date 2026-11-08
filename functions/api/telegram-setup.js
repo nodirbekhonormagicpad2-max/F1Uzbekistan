@@ -56,7 +56,7 @@ export async function onRequestPost({ request, env }) {
       body: JSON.stringify({
         url: webhookUrl,
         secret_token: env.TELEGRAM_WEBHOOK_SECRET,
-        allowed_updates: ["channel_post"],
+        allowed_updates: ["channel_post", "message"],
         drop_pending_updates: false
       })
     });
