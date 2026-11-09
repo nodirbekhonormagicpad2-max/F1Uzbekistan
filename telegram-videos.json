@@ -1,6 +1,18 @@
 [
   {
     "platform": "telegram",
+    "id": "telegram--1004331486193-6",
+    "url": "https://t.me/f1cinema/6",
+    "video_url": "https://t.me/f1cinema/6",
+    "title_uz": "Poygachilar g'alabasini nishonlashi",
+    "thumbnail": "https://ik.imagekit.io/qgxfsy78f/f1cinema/f1cinema-6_vGDZLvmRX.jpg",
+    "thumbnail_url": "https://ik.imagekit.io/qgxfsy78f/f1cinema/f1cinema-6_vGDZLvmRX.jpg",
+    "channel": "F1 CINEMA",
+    "aspect_ratio": "16:9",
+    "published": "2026-11-09T17:53:39.000Z"
+  },
+  {
+    "platform": "telegram",
     "id": "telegram--1004331486193-5",
     "url": "https://t.me/f1cinema/5",
     "video_url": "https://t.me/f1cinema/5",
