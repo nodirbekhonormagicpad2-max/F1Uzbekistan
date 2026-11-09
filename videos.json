@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-09T03:49:45.578733+00:00",
+  "updated_at": "2026-11-09T04:56:51.758696+00:00",
   "videos": [
     {
       "id": "roEtX53xCfs",
@@ -24,6 +24,14 @@
       "published": "2026-11-08T23:28:02Z",
       "thumbnail": "https://i.ytimg.com/vi/YjTLOPiUVmU/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=YjTLOPiUVmU"
+    },
+    {
+      "id": "Rx2SSSZtv7c",
+      "title": "2011 Bahrain Grand Prix | Weekend Highlights",
+      "channel": "Daniel Croft Racing",
+      "published": "2026-11-08T21:31:11Z",
+      "thumbnail": "https://i.ytimg.com/vi/Rx2SSSZtv7c/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=Rx2SSSZtv7c"
     },
     {
       "id": "lkb5kqDJYXk",
@@ -152,14 +160,6 @@
       "published": "2026-11-05T20:35:41Z",
       "thumbnail": "https://i.ytimg.com/vi/eRhMHdyYgPs/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=eRhMHdyYgPs"
-    },
-    {
-      "id": "w8ISGplSJbc",
-      "title": "Classic F1 Team Mate Crashes",
-      "channel": "f1_fanatix",
-      "published": "2026-11-05T15:24:42Z",
-      "thumbnail": "https://i.ytimg.com/vi/w8ISGplSJbc/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=w8ISGplSJbc"
     },
     {
       "id": "2Xx3FO9Tz_c",
