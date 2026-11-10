@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-10T16:44:57.975588+00:00",
+  "updated_at": "2026-11-10T17:42:01.891894+00:00",
   "videos": [
     {
       "id": "7aOZXazwJVQ",
@@ -154,6 +154,14 @@
       "url": "https://www.youtube.com/watch?v=LViDn4PiK3w"
     },
     {
+      "id": "uPEg97tbdd8",
+      "title": "F1 Drivers Crash during Qualifying Sao Paulo GP | Bortoleto, Stroll, Sainz and Rafael Camara",
+      "channel": "Lambe Racing F1",
+      "published": "2026-11-08T00:15:42Z",
+      "thumbnail": "https://i.ytimg.com/vi/uPEg97tbdd8/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=uPEg97tbdd8"
+    },
+    {
       "id": "5RyZGgxFI8A",
       "title": "Drivers React After Qualifying | 2026 Sao Paulo Grand Prix",
       "channel": "FORMULA 1",
@@ -184,14 +192,6 @@
       "published": "2026-11-06T20:28:13Z",
       "thumbnail": "https://i.ytimg.com/vi/uQxeha7hk20/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=uQxeha7hk20"
-    },
-    {
-      "id": "00PgiN0_Yfk",
-      "title": "RANKING WORST F1 CRASHES IN BRAZIL EVER",
-      "channel": "F1 Rankings",
-      "published": "2026-11-06T17:00:16Z",
-      "thumbnail": "https://i.ytimg.com/vi/00PgiN0_Yfk/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=00PgiN0_Yfk"
     }
   ]
 }
