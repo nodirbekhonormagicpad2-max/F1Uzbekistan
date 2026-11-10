@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-10T17:42:01.891894+00:00",
+  "updated_at": "2026-11-10T18:41:22.326647+00:00",
   "videos": [
     {
       "id": "7aOZXazwJVQ",
@@ -170,14 +170,6 @@
       "url": "https://www.youtube.com/watch?v=5RyZGgxFI8A"
     },
     {
-      "id": "wI0lvTGACok",
-      "title": "Qualifying Highlights | São Paulo Grand Prix 2026",
-      "channel": "Paddock Wire",
-      "published": "2026-11-07T22:22:45Z",
-      "thumbnail": "https://i.ytimg.com/vi/wI0lvTGACok/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=wI0lvTGACok"
-    },
-    {
       "id": "IDGL_XiU_6I",
       "title": "Ranking BOLDEST F1 Overtakes! #f1shorts",
       "channel": "Formula Focus",
@@ -192,6 +184,14 @@
       "published": "2026-11-06T20:28:13Z",
       "thumbnail": "https://i.ytimg.com/vi/uQxeha7hk20/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=uQxeha7hk20"
+    },
+    {
+      "id": "00PgiN0_Yfk",
+      "title": "RANKING WORST F1 CRASHES IN BRAZIL EVER",
+      "channel": "F1 Rankings",
+      "published": "2026-11-06T17:00:16Z",
+      "thumbnail": "https://i.ytimg.com/vi/00PgiN0_Yfk/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=00PgiN0_Yfk"
     }
   ]
 }
