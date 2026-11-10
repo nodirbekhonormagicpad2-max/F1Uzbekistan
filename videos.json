@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-10T20:38:42.996952+00:00",
+  "updated_at": "2026-11-10T21:35:23.261674+00:00",
   "videos": [
     {
       "id": "7aOZXazwJVQ",
@@ -170,6 +170,14 @@
       "url": "https://www.youtube.com/watch?v=7Qv0ZGBWKmo"
     },
     {
+      "id": "mdLuHTlaggo",
+      "title": "How Did Anyone SURVIVE This F1 Crash?! 😱",
+      "channel": "Record man",
+      "published": "2026-11-07T14:28:06Z",
+      "thumbnail": "https://i.ytimg.com/vi/mdLuHTlaggo/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=mdLuHTlaggo"
+    },
+    {
       "id": "pQbBmApm_9c",
       "title": "Ranking INSANE F1 Crash Part 3! #f1 #shorts",
       "channel": "InsanityF1",
@@ -184,14 +192,6 @@
       "published": "2026-11-07T08:55:47Z",
       "thumbnail": "https://i.ytimg.com/vi/IDGL_XiU_6I/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=IDGL_XiU_6I"
-    },
-    {
-      "id": "jq0ms2keGZ4",
-      "title": "F1 2014 ONBOARD CRASH COMPILATION | PART 4 | #f1 #formula1 #crash",
-      "channel": "ZenvoF1",
-      "published": "2026-11-07T00:01:48Z",
-      "thumbnail": "https://i.ytimg.com/vi/jq0ms2keGZ4/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=jq0ms2keGZ4"
     }
   ]
 }
