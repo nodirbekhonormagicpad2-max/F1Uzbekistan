@@ -1,6 +1,14 @@
 {
-  "updated_at": "2026-11-11T11:27:01.196719+00:00",
+  "updated_at": "2026-11-11T12:27:19.938302+00:00",
   "videos": [
+    {
+      "id": "kzGyVJTML-E",
+      "title": "Oscar Piastri uses wet tyre for first time ever! #shorts",
+      "channel": "ClutchTalk",
+      "published": "2026-11-11T12:00:20Z",
+      "thumbnail": "https://i.ytimg.com/vi/kzGyVJTML-E/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=kzGyVJTML-E"
+    },
     {
       "id": "7aOZXazwJVQ",
       "title": "Formula 1 Crashes of 2019! 😱 The Most Terrifying F1 Accidents",
@@ -162,12 +170,20 @@
       "url": "https://www.youtube.com/watch?v=LViDn4PiK3w"
     },
     {
-      "id": "uPEg97tbdd8",
-      "title": "F1 Drivers Crash during Qualifying Sao Paulo GP | Bortoleto, Stroll, Sainz and Rafael Camara",
-      "channel": "Lambe Racing F1",
-      "published": "2026-11-08T00:15:42Z",
-      "thumbnail": "https://i.ytimg.com/vi/uPEg97tbdd8/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=uPEg97tbdd8"
+      "id": "mdLuHTlaggo",
+      "title": "How Did Anyone SURVIVE This F1 Crash?! 😱",
+      "channel": "Record man",
+      "published": "2026-11-07T14:28:06Z",
+      "thumbnail": "https://i.ytimg.com/vi/mdLuHTlaggo/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=mdLuHTlaggo"
+    },
+    {
+      "id": "pQbBmApm_9c",
+      "title": "Ranking INSANE F1 Crash Part 3! #f1 #shorts",
+      "channel": "InsanityF1",
+      "published": "2026-11-07T11:30:02Z",
+      "thumbnail": "https://i.ytimg.com/vi/pQbBmApm_9c/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=pQbBmApm_9c"
     },
     {
       "id": "IDGL_XiU_6I",
@@ -176,22 +192,6 @@
       "published": "2026-11-07T08:55:47Z",
       "thumbnail": "https://i.ytimg.com/vi/IDGL_XiU_6I/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=IDGL_XiU_6I"
-    },
-    {
-      "id": "uQxeha7hk20",
-      "title": "Overtake on the goat #fypシ #fypシ゚viral #f1 #highlights #formulaoneracing #mclaren #shorts",
-      "channel": "Zackfs100",
-      "published": "2026-11-06T20:28:13Z",
-      "thumbnail": "https://i.ytimg.com/vi/uQxeha7hk20/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=uQxeha7hk20"
-    },
-    {
-      "id": "j9eSxxFd28w",
-      "title": "❗Max Verstappen Vs Lewis Hamilton❗Race F1 Sau Paulo Interlagos Brazil #BrazilianGP 2026",
-      "channel": "Conqueror Motorsports",
-      "published": "2026-11-06T10:00:02Z",
-      "thumbnail": "https://i.ytimg.com/vi/j9eSxxFd28w/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=j9eSxxFd28w"
     }
   ]
 }
