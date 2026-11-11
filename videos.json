@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-11T08:18:40.651063+00:00",
+  "updated_at": "2026-11-11T09:25:26.779468+00:00",
   "videos": [
     {
       "id": "7aOZXazwJVQ",
@@ -8,14 +8,6 @@
       "published": "2026-11-10T16:30:00Z",
       "thumbnail": "https://i.ytimg.com/vi/7aOZXazwJVQ/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=7aOZXazwJVQ"
-    },
-    {
-      "id": "OKWyVUkCfQ8",
-      "title": "F1 25 AUSTRALIA QUALIFYING &amp; RACE HIGHLIGHTS PART 1",
-      "channel": "f1 monkey",
-      "published": "2026-11-10T05:58:37Z",
-      "thumbnail": "https://i.ytimg.com/vi/OKWyVUkCfQ8/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=OKWyVUkCfQ8"
     },
     {
       "id": "mg4CQa7OWbM",
@@ -160,6 +152,14 @@
       "published": "2026-11-08T02:24:34Z",
       "thumbnail": "https://i.ytimg.com/vi/LViDn4PiK3w/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=LViDn4PiK3w"
+    },
+    {
+      "id": "uPEg97tbdd8",
+      "title": "F1 Drivers Crash during Qualifying Sao Paulo GP | Bortoleto, Stroll, Sainz and Rafael Camara",
+      "channel": "Lambe Racing F1",
+      "published": "2026-11-08T00:15:42Z",
+      "thumbnail": "https://i.ytimg.com/vi/uPEg97tbdd8/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=uPEg97tbdd8"
     },
     {
       "id": "mdLuHTlaggo",
