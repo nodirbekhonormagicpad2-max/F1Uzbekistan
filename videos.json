@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-12T04:52:12.578135+00:00",
+  "updated_at": "2026-11-12T05:54:34.304593+00:00",
   "videos": [
     {
       "id": "KznaT3m6DRs",
@@ -138,6 +138,14 @@
       "url": "https://www.youtube.com/watch?v=2AanC8ydxSI"
     },
     {
+      "id": "0bBQyt5_N-0",
+      "title": "Niki Lauda Returned to Racing Just 6 Weeks After His Horrific Crash 😳🏎️",
+      "channel": "Buried History",
+      "published": "2026-11-08T13:04:50Z",
+      "thumbnail": "https://i.ytimg.com/vi/0bBQyt5_N-0/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=0bBQyt5_N-0"
+    },
+    {
       "id": "stUiAsaHTfI",
       "title": "LIVE 🔴 | F1 - 2026 SAO PAULO GP - BRAZIL | QUALIFYING | Timing &amp; Commentary with SIM Footage",
       "channel": "RICHIGAMME",
@@ -184,14 +192,6 @@
       "published": "2026-11-08T08:46:51Z",
       "thumbnail": "https://i.ytimg.com/vi/4brmi7-jslo/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=4brmi7-jslo"
-    },
-    {
-      "id": "qJIsu2rziOk",
-      "title": "The home race curse #crash #motorsport #f1",
-      "channel": "Siem2som",
-      "published": "2026-11-08T07:10:04Z",
-      "thumbnail": "https://i.ytimg.com/vi/qJIsu2rziOk/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=qJIsu2rziOk"
     }
   ]
 }
