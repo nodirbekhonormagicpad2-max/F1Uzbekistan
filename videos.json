@@ -1,6 +1,14 @@
 {
-  "updated_at": "2026-11-12T19:26:52.848608+00:00",
+  "updated_at": "2026-11-12T20:21:48.108458+00:00",
   "videos": [
+    {
+      "id": "fznV72Zjo3Y",
+      "title": "3 F1 Disasters That Sound Completely Fake — But Really Happened",
+      "channel": "PitWall Daily",
+      "published": "2026-11-12T19:43:39Z",
+      "thumbnail": "https://i.ytimg.com/vi/fznV72Zjo3Y/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=fznV72Zjo3Y"
+    },
     {
       "id": "sdNGM-1L2AI",
       "title": "Craziest F1 Moments of 2026! 🤯🏎️ Crashes, Teammate Wars &amp; Max vs Lewis",
@@ -184,14 +192,6 @@
       "published": "2026-11-08T13:04:50Z",
       "thumbnail": "https://i.ytimg.com/vi/0bBQyt5_N-0/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=0bBQyt5_N-0"
-    },
-    {
-      "id": "stUiAsaHTfI",
-      "title": "LIVE 🔴 | F1 - 2026 SAO PAULO GP - BRAZIL | QUALIFYING | Timing &amp; Commentary with SIM Footage",
-      "channel": "RICHIGAMME",
-      "published": "2026-11-08T12:09:29Z",
-      "thumbnail": "https://i.ytimg.com/vi/stUiAsaHTfI/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=stUiAsaHTfI"
     }
   ]
 }
