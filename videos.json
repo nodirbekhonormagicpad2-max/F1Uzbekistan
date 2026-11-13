@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-13T01:42:57.763574+00:00",
+  "updated_at": "2026-11-13T02:42:03.920198+00:00",
   "videos": [
     {
       "id": "fznV72Zjo3Y",
@@ -98,14 +98,6 @@
       "url": "https://www.youtube.com/watch?v=OKWyVUkCfQ8"
     },
     {
-      "id": "T6ADOJlMUXg",
-      "title": "Worst F1 Crashes in 2019💥🏎️",
-      "channel": "SportsVortexZone",
-      "published": "2026-11-09T21:00:29Z",
-      "thumbnail": "https://i.ytimg.com/vi/T6ADOJlMUXg/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=T6ADOJlMUXg"
-    },
-    {
       "id": "mg4CQa7OWbM",
       "title": "Alonso Is Still Enjoying That Overtake on Hamilton — And Makes Sure Everyone Knows It #f1 #formula1",
       "channel": "Formula Focus Racing",
@@ -192,6 +184,14 @@
       "published": "2026-11-08T13:35:18Z",
       "thumbnail": "https://i.ytimg.com/vi/2AanC8ydxSI/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=2AanC8ydxSI"
+    },
+    {
+      "id": "0bBQyt5_N-0",
+      "title": "Niki Lauda Returned to Racing Just 6 Weeks After His Horrific Crash 😳🏎️",
+      "channel": "Buried History",
+      "published": "2026-11-08T13:04:50Z",
+      "thumbnail": "https://i.ytimg.com/vi/0bBQyt5_N-0/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=0bBQyt5_N-0"
     }
   ]
 }
