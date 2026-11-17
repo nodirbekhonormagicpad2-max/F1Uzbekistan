@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-17T16:28:53.001332+00:00",
+  "updated_at": "2026-11-17T17:33:56.248219+00:00",
   "videos": [
     {
       "id": "CkBvxQkjARc",
@@ -80,14 +80,6 @@
       "published": "2026-11-14T02:46:59Z",
       "thumbnail": "https://i.ytimg.com/vi/m5LHGGfsqMY/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=m5LHGGfsqMY"
-    },
-    {
-      "id": "R6NYg0GxdTM",
-      "title": "F1 vs Rally crashes🏎️  #racing #f1 #edit #automobile  #rally #redbullracing  #crash #wrc  #shorts",
-      "channel": "RACEPULSE",
-      "published": "2026-11-13T22:40:54Z",
-      "thumbnail": "https://i.ytimg.com/vi/R6NYg0GxdTM/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=R6NYg0GxdTM"
     },
     {
       "id": "qPWjXMQSUyc",
@@ -192,6 +184,14 @@
       "published": "2026-11-11T02:03:50Z",
       "thumbnail": "https://i.ytimg.com/vi/7vC0hoeQipU/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=7vC0hoeQipU"
+    },
+    {
+      "id": "A-N-nxz9cOI",
+      "title": "When F1 Team Mates Crash",
+      "channel": "f1_fanatix",
+      "published": "2026-11-11T01:33:36Z",
+      "thumbnail": "https://i.ytimg.com/vi/A-N-nxz9cOI/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=A-N-nxz9cOI"
     }
   ]
 }
