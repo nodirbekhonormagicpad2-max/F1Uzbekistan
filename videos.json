@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-21T07:44:38.846962+00:00",
+  "updated_at": "2026-11-21T08:45:58.808415+00:00",
   "videos": [
     {
       "id": "3BroUJ6ucFQ",
@@ -8,6 +8,14 @@
       "published": "2026-11-21T07:44:18Z",
       "thumbnail": "https://i.ytimg.com/vi/3BroUJ6ucFQ/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=3BroUJ6ucFQ"
+    },
+    {
+      "id": "GzhNLgK897w",
+      "title": "Racing Bulls &amp; Alpine Shock F1 in Las Vegas! Verstappen Takes Pole",
+      "channel": "F1 News",
+      "published": "2026-11-21T07:42:52Z",
+      "thumbnail": "https://i.ytimg.com/vi/GzhNLgK897w/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=GzhNLgK897w"
     },
     {
       "id": "Be7d0iOiMxA",
@@ -184,14 +192,6 @@
       "published": "2026-11-16T19:38:59Z",
       "thumbnail": "https://i.ytimg.com/vi/oAMiAwjgNu8/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=oAMiAwjgNu8"
-    },
-    {
-      "id": "faJpdRMJx14",
-      "title": "Nobody Expected This Overtake at Full Speed #f1 #shorts  #racing #f1",
-      "channel": "PeakRush TV",
-      "published": "2026-11-16T18:58:38Z",
-      "thumbnail": "https://i.ytimg.com/vi/faJpdRMJx14/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=faJpdRMJx14"
     }
   ]
 }
