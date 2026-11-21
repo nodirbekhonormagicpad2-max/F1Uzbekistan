@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-21T12:46:54.540335+00:00",
+  "updated_at": "2026-11-21T13:53:47.046935+00:00",
   "videos": [
     {
       "id": "z5NXfJ1B2Gk",
@@ -40,14 +40,6 @@
       "published": "2026-11-21T07:42:52Z",
       "thumbnail": "https://i.ytimg.com/vi/GzhNLgK897w/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=GzhNLgK897w"
-    },
-    {
-      "id": "Be7d0iOiMxA",
-      "title": "MAX VERSTAPPEN TAKES POLE! 😱 | 2026 Las Vegas GP Qualifying Highlights",
-      "channel": "Formula 1 - Down The Inside",
-      "published": "2026-11-21T07:15:38Z",
-      "thumbnail": "https://i.ytimg.com/vi/Be7d0iOiMxA/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=Be7d0iOiMxA"
     },
     {
       "id": "Waie23s08D8",
@@ -130,14 +122,6 @@
       "url": "https://www.youtube.com/watch?v=QxhbDf3O2WE"
     },
     {
-      "id": "D1c05wqEk68",
-      "title": "Qualifying Full Highlights | 2026 Las Vegas Grand Prix | F1 Highlights | Formula1 Highlights",
-      "channel": "عالم البساطة مع تيتوشا",
-      "published": "2026-11-21T05:12:46Z",
-      "thumbnail": "https://i.ytimg.com/vi/D1c05wqEk68/hqdefault.jpg",
-      "url": "https://www.youtube.com/watch?v=D1c05wqEk68"
-    },
-    {
       "id": "DaqVdp0j63Y",
       "title": "Worst crashes in Formula 1 history💥... #f1 #crash #formula1",
       "channel": "Oversteer Chaos",
@@ -192,6 +176,22 @@
       "published": "2026-11-16T18:58:38Z",
       "thumbnail": "https://i.ytimg.com/vi/faJpdRMJx14/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=faJpdRMJx14"
+    },
+    {
+      "id": "WDmNRbXjEnM",
+      "title": "Kimi Antonelli overtakes Max Verstappen who immediately takes the lead back at the #SaoPauloGP",
+      "channel": "BerKi GameZ",
+      "published": "2026-11-16T09:30:21Z",
+      "thumbnail": "https://i.ytimg.com/vi/WDmNRbXjEnM/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=WDmNRbXjEnM"
+    },
+    {
+      "id": "eD0ekrZKhYE",
+      "title": "F1 2022 All Crashes and Spins",
+      "channel": "F1 Crashes",
+      "published": "2026-11-16T08:22:37Z",
+      "thumbnail": "https://i.ytimg.com/vi/eD0ekrZKhYE/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=eD0ekrZKhYE"
     }
   ]
 }
