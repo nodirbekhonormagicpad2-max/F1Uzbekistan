@@ -1,6 +1,18 @@
 [
   {
     "platform": "telegram",
+    "id": "telegram--1004331486193-7",
+    "url": "https://t.me/f1cinema/7",
+    "video_url": "https://t.me/f1cinema/7",
+    "title_uz": "🐐🔥",
+    "thumbnail": "https://ik.imagekit.io/qgxfsy78f/f1cinema/f1cinema-7_YxqMzbT9C.jpg",
+    "thumbnail_url": "https://ik.imagekit.io/qgxfsy78f/f1cinema/f1cinema-7_YxqMzbT9C.jpg",
+    "channel": "F1 CINEMA",
+    "aspect_ratio": "16:9",
+    "published": "2026-11-22T13:29:15.000Z"
+  },
+  {
+    "platform": "telegram",
     "id": "telegram--1004331486193-6",
     "url": "https://t.me/f1cinema/6",
     "video_url": "https://t.me/f1cinema/6",
